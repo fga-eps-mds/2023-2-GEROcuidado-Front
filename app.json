@@ -29,7 +29,7 @@
       "bundler": "metro"
     },
     "experiments": {
-      "TypeRoutes": true
+      "typeRoutes": true
     },
 
     "plugins": [
