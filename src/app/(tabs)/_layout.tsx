@@ -1,17 +1,24 @@
 import { MaterialIcons } from "@expo/vector-icons";
 import { Tabs } from "expo-router";
 
-export default function TabRoutesLayout(){
+export default function TabRoutesLayout() {
     return (
-        <Tabs screenOptions={{ headerShown: false}}>
+        <Tabs
+            screenOptions={{
+            headerShown: false,
+            tabBarStyle: { backgroundColor: '#2CCDB5' },
+            tabBarLabelStyle: { color: '#ffffff' },
+            tabBarActiveTintColor: '#ffffff',
+            }}
+        >
             <Tabs.Screen
-                name="rotinas"
-                options={{
-                    title: "Rotinas",
-                    tabBarIcon: ({ size, color }) => (
-                        <MaterialIcons name="date-range" size={size} color={color}/>
-                    )
-                }}
+            name="rotinas"
+            options={{
+                title: "Rotinas",
+                tabBarIcon: ({ size, color }) => (
+                <MaterialIcons name="date-range" size={size} color={color} />
+                ),
+            }}
             />
             <Tabs.Screen
                 name="registros"
@@ -48,7 +55,8 @@ export default function TabRoutesLayout(){
                     title: "Configurações",
                     tabBarIcon: ({ size, color }) => (
                         <MaterialIcons name="settings" size={size} color={color}/>
-                    )
+                    ),
+                    
              }}
              />
         </Tabs>
