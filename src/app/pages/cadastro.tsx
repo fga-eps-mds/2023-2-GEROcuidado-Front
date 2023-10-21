@@ -1,10 +1,10 @@
-import { Text, View } from "react-native";
+import { Button, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native';
 
-export default function Home(){
+export default function Cadastro(){
     return (
         <View style={{ flex: 1, justifyContent: "center", alignItems: "center"}}>
             <Text style={{ fontSize: 44, fontWeight: "700"}}>
-                Rotinas - GEROcuidado
+                Cadastro
             </Text>
         </View>
     )
