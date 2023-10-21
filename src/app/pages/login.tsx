@@ -1,4 +1,5 @@
 import { Text, View } from "react-native";
+import { Link } from 'expo-router';
 
 export default function Login(){
     return (
@@ -6,6 +7,9 @@ export default function Login(){
             <Text style={{ fontSize: 44, fontWeight: "700"}}>
                 Login
             </Text>
+            <Link href="/" asChild>
+                <Text>voltar home</Text>
+            </Link>
         </View>
     )
 }

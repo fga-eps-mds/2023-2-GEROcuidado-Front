@@ -1,9 +1,7 @@
 import {
-  StyleProp,
   StyleSheet,
   Text,
   TouchableOpacity,
-  ViewStyle,
 } from 'react-native';
 import { Link } from 'expo-router';
 
@@ -13,38 +11,35 @@ interface Props {
   backgroundColor?: string;
 };
 
-export function LinkButton({ title, backgroundColor, href }: Props) {
+export function LinkButton({ title, href, backgroundColor }: Props) {
+  backgroundColor = backgroundColor ?? '#2CCDB5';
+
   return (
-    <Link href={href} style={styles.link}>
-      <TouchableOpacity style={buttonStyle(backgroundColor ?? '#2CCDB5')}>
-        <Text style={styles.buttonText}>{title}</Text>
+    <Link href={href} style={styles(backgroundColor).link} asChild>
+      <TouchableOpacity style={styles(backgroundColor).button}>
+        <Text style={styles(backgroundColor).buttonText}>{title}</Text>
       </TouchableOpacity>
     </Link>
   );
 }
 
-const styles = StyleSheet.create({
+const styles = (backgroundColor: string) => StyleSheet.create({
   link: {
-    width: '100%',
-    display: 'flex',
-    justifyContent: 'center',
+    width: "100%",
     marginBottom: 25,
   },
   buttonText: {
     fontSize: 18,
     color: 'white',
-    fontWeight: '700'
+    fontWeight: '700',
   },
-});
-
-const buttonStyle = (backgroundColor: string): StyleProp<ViewStyle> => {
-  return {
-    width: '80%',
+  button: {
+    width: "80%",
     maxWidth: 350,
     paddingVertical: 16,
     paddingHorizontal: 26,
     backgroundColor,
     alignItems: 'center',
     borderRadius: 20,
-  };
-};
+  }
+});
