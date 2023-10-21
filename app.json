@@ -28,6 +28,10 @@
       "favicon": "./assets/favicon.png",
       "bundler": "metro"
     },
+    "experiments": {
+      "TypeRoutes": true
+    },
+
     "plugins": [
       "expo-router"
     ]

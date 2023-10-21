@@ -1,4 +1,6 @@
-import { Text, View } from "react-native";
+import { Button, Text, View } from "react-native";
+
+import { Link } from "expo-router";
 
 export default function Home(){
     return (
@@ -6,6 +8,10 @@ export default function Home(){
             <Text style={{ fontSize: 44, fontWeight: "700"}}>
                 Home - GEROcuidado
             </Text>
+
+            <Link href ="/settings" asChild>
+                <Button title="Configurações" />
+            </Link>
         </View>
     )
 }
