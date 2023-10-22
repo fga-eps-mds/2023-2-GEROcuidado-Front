@@ -13,7 +13,7 @@ import Icon from "react-native-vector-icons/MaterialCommunityIcons";
 import UploadImage from "../../components/UploadImage";
 
 export default function Cadastro() {
-  const [nome, setName] = useState("");
+  const [nome, setNome] = useState("");
   const [email, setEmail] = useState("");
   const [confirmaEmail, setConfirmaEmail] = useState("");
   const [senha, setSenha] = useState("");
@@ -23,11 +23,16 @@ export default function Cadastro() {
 
   return (
     <View style={styles.container}>
+      <Link href="/" asChild>
+        <TouchableOpacity>
+          <Icon name="chevron-left" size={42} />
+        </TouchableOpacity>
+      </Link>
       <UploadImage />
       <View style={styles.field}>
         <Icon name="account-outline" size={20} />
         <TextInput
-          onChangeText={setName}
+          onChangeText={setNome}
           value={nome}
           placeholder="Nome completo"
           style={styles.textInput}
@@ -113,6 +118,7 @@ const styles = StyleSheet.create({
     borderBottomWidth: 1,
     borderBottomColor: "#f2f2f2",
     paddingBottom: 5,
+    textAlign: "center",
   },
   textInput: {
     flex: 1,

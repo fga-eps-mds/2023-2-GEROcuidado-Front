@@ -12,7 +12,7 @@ import * as ImagePicker from "expo-image-picker";
 
 export default function UploadImage() {
   const [temPermissaoGaleria, setTemPermissaoGaleria] = useState(false);
-  const [imagem, setImagem] = useState(null);
+  const [imagem, setImagem] = useState("");
 
   useEffect(() => {
     (async () => {
@@ -33,14 +33,12 @@ export default function UploadImage() {
     console.log(resultado);
 
     if (!resultado.canceled) {
+      setImagem(resultado.assets[0].uri);
     }
+
+    console.log(resultado);
   };
 
-  if (temPermissaoGaleria === false) {
-    return <Text>Sem acesso ao armazenamento interno</Text>;
-  }
-
-  const uploadImage = () => {};
   return (
     <View>
       {imagem && <Image source={{ uri: imagem }} />}
