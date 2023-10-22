@@ -75,11 +75,11 @@ export default function Cadastro() {
           style={styles.textInput}
         />
 
-        <TouchableOpacity  onPress={() => setEscondeSenha(!escondeSenha)}>
+        <TouchableOpacity style={styles.eye} onPress={() => setEscondeSenha(!escondeSenha)}>
           {escondeSenha ? (
-            <Icon style={styles.eye} name="eye-outline" size={20} />
+            <Icon name="eye-outline" size={20} />
           ) : (
-            <Icon style={styles.eye} name="eye-off-outline" size={20} />
+            <Icon name="eye-off-outline" size={20} />
           )}
         </TouchableOpacity>
       </View>
@@ -93,7 +93,7 @@ export default function Cadastro() {
           secureTextEntry={escondeConfirmaSenha}
           style={styles.textInput}
         />
-          <TouchableOpacity onPress={() => setEscondeConfirmaSenha(!escondeConfirmaSenha)}
+          <TouchableOpacity style={styles.eye} onPress={() => setEscondeConfirmaSenha(!escondeConfirmaSenha)}
           >
             {escondeConfirmaSenha ? (
               <Icon  name="eye-outline" size={20} />
@@ -109,7 +109,6 @@ export default function Cadastro() {
       <View style={styles.linkButton}>
         <LinkButton title="Cadastrar" href="/pages/cadastro" />
       </View>
-
     </View>
   );
 }
@@ -146,8 +145,6 @@ const styles = StyleSheet.create({
   },
   linkButton:{
     marginTop: 123,
-    width: "80%", 
-    margin: "auto",
     alignItems: "center",
   },
   foto:{
@@ -162,7 +159,7 @@ const styles = StyleSheet.create({
     borderColor: "#AFB1B6",
     marginBottom: 38,
   },
-  eye:{
+  eye:{    
     
   }
 });
