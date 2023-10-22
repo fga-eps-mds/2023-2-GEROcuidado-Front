@@ -1,6 +1,6 @@
 import { Image, StyleSheet, Text, View } from "react-native";
 
-import Forum from '../../pages/Forum'
+import Forum from '../(Forum)'
 import { LinkButton } from "../../../components/LinkButton";
 import Routes from '../../routes';
 

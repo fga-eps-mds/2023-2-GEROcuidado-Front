@@ -1,5 +1,5 @@
-import Forum from './pages/Forum';
-import Home from './pages/Forum';
+import Forum from './pages/(Forum)';
+import Home from './pages/(Forum)';
 import React from 'react';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 
