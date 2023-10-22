@@ -10,11 +10,9 @@ import {
 import { Link } from "expo-router";
 import { TouchableOpacity } from "react-native-gesture-handler";
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
-import * as ImagePicker from "expo-image-picker";
+import UploadImage from "../../components/UploadImage";
 
 export default function Cadastro() {
-  const [temPermissaoGaleria, setTemPermissaoGaleria] = useState(false);
-  const [imagem, setImagem] = useState(null);
   const [nome, setName] = useState("");
   const [email, setEmail] = useState("");
   const [confirmaEmail, setConfirmaEmail] = useState("");
@@ -23,35 +21,9 @@ export default function Cadastro() {
   const [escondeSenha, setEscondeSenha] = useState(true);
   const [escondeConfirmaSenha, setEscondeConfirmaSenha] = useState(true);
 
-  useEffect(() => {
-    (async () => {
-      const statusGaleria =
-        await ImagePicker.requestMediaLibraryPermissionsAsync();
-      setTemPermissaoGaleria(statusGaleria.status === "granted");
-    })();
-  }, []);
-
-  const escolherImagem = async () => {
-    let resultado = await ImagePicker.launchImageLibraryAsync({
-      mediaTypes: ImagePicker.MediaTypeOptions.Images,
-      allowsEditing: true,
-      aspect: [4, 3],
-      quality: 1,
-    });
-
-    console.log(resultado);
-
-    if (!resultado.canceled) {
-    }
-  };
-
-  if (temPermissaoGaleria === false) {
-    return <Text>Sem acesso ao armazenamento interno</Text>;
-  }
-
   return (
     <View style={styles.container}>
-      <Button title="Escolher foto" onPress={() => escolherImagem()} />
+      <UploadImage />
       <View style={styles.field}>
         <Icon name="account-outline" size={20} />
         <TextInput
