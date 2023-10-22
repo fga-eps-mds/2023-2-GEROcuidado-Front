@@ -40,15 +40,22 @@ export default function UploadImage() {
   };
 
   return (
-    <View>
+    <View style={styles.image}>
       {imagem && <Image source={{ uri: imagem }} />}
       <View>
         <TouchableOpacity onPress={() => escolherImagem()}>
-          <Icon name="image-outline" size={20} />
+          <Icon style={styles.icone} name="image-outline" size={20} />
         </TouchableOpacity>
       </View>
     </View>
   );
 }
 
-const styles = StyleSheet.create({});
+const styles = StyleSheet.create({
+  image:{
+    top: "46%",
+  },
+  icone:{
+    opacity: 0.4,
+  }
+});
