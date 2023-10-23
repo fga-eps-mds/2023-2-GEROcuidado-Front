@@ -1,16 +1,11 @@
 import React, { useState } from "react";
-import {
-  View,
-  TextInput,
-  StyleSheet,
-  ScrollView,
-} from "react-native";
+import { View, TextInput, StyleSheet, ScrollView } from "react-native";
 import { Link } from "expo-router";
 import { TouchableOpacity } from "react-native-gesture-handler";
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
-import UploadImage from "../../components/UploadImage";
-import { CustomButton } from "../../components/CustomButton";
-import UserService from "../services/user.service";
+import UploadImage from "../../../components/UploadImage";
+import { CustomButton } from "../../../components/CustomButton";
+import UserService from "../../services/user.service";
 
 export default function Cadastro() {
   const userService = new UserService();
@@ -26,31 +21,30 @@ export default function Cadastro() {
   const cadastrar = async () => {
     // TODO realizar validações dos inputs
 
-    const body = { nome, email, senha, foto }
+    const body = { nome, email, senha, foto };
 
     try {
       const response = await userService.postUser(body);
       // Setar o usuario em alguma storage da aplicação
       // Navegar para a tela de login
       // chamar serviço de notificação com sucesso
-      console.log('SUCCESS: ', response.message);
-      console.log('DATA: ', response.data);
+      console.log("SUCCESS: ", response.message);
+      console.log("DATA: ", response.data);
     } catch (err) {
       // chamar serviço de notificação com erro
-      console.log('ERROR: ', err)
+      console.log("ERROR: ", err);
     }
-  }
+  };
 
   return (
     <View>
       <Link href="/" asChild>
-        <TouchableOpacity >
+        <TouchableOpacity>
           <Icon name="chevron-left" size={42} />
         </TouchableOpacity>
       </Link>
 
       <ScrollView>
-
         <UploadImage setFoto={setFoto} />
 
         <View style={styles.field}>
@@ -93,7 +87,12 @@ export default function Cadastro() {
             style={styles.passwordInput}
           />
 
-          <Icon onPress={() => setEscondeSenha(!escondeSenha)} style={styles.passwordIcon} name={escondeSenha ? "eye-outline" : "eye-off-outline"} size={20} />
+          <Icon
+            onPress={() => setEscondeSenha(!escondeSenha)}
+            style={styles.passwordIcon}
+            name={escondeSenha ? "eye-outline" : "eye-off-outline"}
+            size={20}
+          />
         </View>
 
         <View style={styles.field}>
@@ -105,14 +104,18 @@ export default function Cadastro() {
             secureTextEntry={escondeConfirmaSenha}
             style={styles.passwordInput}
           />
-          <Icon onPress={() => setEscondeConfirmaSenha(!escondeConfirmaSenha)} style={styles.passwordIcon} name={escondeConfirmaSenha ? "eye-outline" : "eye-off-outline"} size={20} />
+          <Icon
+            onPress={() => setEscondeConfirmaSenha(!escondeConfirmaSenha)}
+            style={styles.passwordIcon}
+            name={escondeConfirmaSenha ? "eye-outline" : "eye-off-outline"}
+            size={20}
+          />
         </View>
 
         <View style={styles.linkButton}>
           <CustomButton title="Cadastrar" callbackFn={cadastrar} />
         </View>
       </ScrollView>
-
     </View>
   );
 }
