@@ -2,11 +2,11 @@ import { Button, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'rea
 
 import Icon from 'react-native-vector-icons/FontAwesome';
 
-export default function Forum() {
+export default function Perfil() {
   return (
 
       <View>
-          <Text>Teste - Forum</Text>
+          <Text>Perfil - Forum</Text>
       </View>
   );
 }
