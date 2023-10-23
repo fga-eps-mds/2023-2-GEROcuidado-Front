@@ -3,15 +3,34 @@ import { Image, StyleSheet, Text, View, TextInput } from "react-native";
 import { Link } from 'expo-router';
 import { TouchableOpacity } from "react-native-gesture-handler";
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
-import UploadImage from "../../components/UploadImage";
 import { LinkButton } from "../../components/LinkButton";
+//import UserService from "../services/user.service";
 
 
 export default function Login(){
-
+    
+    //const userService = new UserService();
     const [email, setEmail] = useState("");
     const [senha, setSenha] = useState("");
     const [escondeSenha, setEscondeSenha] = useState(true);
+
+    /*const logar = async () => {
+        // TODO realizar validações dos inputs
+    
+        const body = {email, senha}
+    
+        try {
+          const response = await userService.postUser(body);
+          // Setar o usuario em alguma storage da aplicação
+          // Navegar para a tela de login
+          // chamar serviço de notificação com sucesso
+          console.log('SUCCESS: ', response.message);
+          console.log('DATA: ', response.data);
+        } catch (err) {
+          // chamar serviço de notificação com erro
+          console.log('ERROR: ', err)
+        }
+    }*/
 
     return (
         <View>
@@ -41,24 +60,20 @@ export default function Login(){
                 />
             </View>
             
+            
             <View style={styles.field}>
-                <Icon name="lock-outline" size={20} />
-                <TextInput
-                    onChangeText={setSenha}
-                    value={senha}
-                    placeholder="Senha"
-                    secureTextEntry={escondeSenha}
-                     style={styles.textInput}
-                />
-  
-                <TouchableOpacity style={styles.eye} onPress={() => setEscondeSenha(!escondeSenha)}>
-                    {escondeSenha ? (
-                        <Icon name="eye-outline" size={20} />
-                    ) : (
-                        <Icon name="eye-off-outline" size={20} />
-                    )}
-                 </TouchableOpacity>
-            </View>
+                <Icon style={styles.iconInput} name="lock-outline" size={20} />
+                    <TextInput
+                        onChangeText={setSenha}
+                        value={senha}
+                        placeholder="Senha"
+                        secureTextEntry={escondeSenha}
+                        style={styles.passwordInput}
+                    />
+
+                <Icon onPress={() => setEscondeSenha(!escondeSenha)} style={styles.passwordIcon} name={escondeSenha ? "eye-outline" : "eye-off-outline"} size={20} />
+        </View>
+
             <View style={styles.linkButton}>
                 <LinkButton title="Entrar" href="/pages/cadastro" />
             </View>
@@ -75,16 +90,17 @@ const styles = StyleSheet.create({
     },
     titulo: {
       fontSize: 28,
-      fontWeight: "400",
+      fontWeight: "300",
       textAlign: "center",
       margin: 20,
-      marginBottom: 70
+      marginBottom: 70,
+      marginTop: 50,
     },
     imagem: {
         flex: 1,
         justifyContent: 'center',
         alignItems: 'center',
-        marginTop: 50,
+        marginTop: 170,
 
     },
     button: {
@@ -107,10 +123,23 @@ const styles = StyleSheet.create({
         height: 30,
         alignSelf: "center",  
     },
-    textInput: {
-        //marginTop: Platform.OS === "ios" ? 0 : -12,
+    iconInput: {
+        width: "10%",
+    },
+    passwordInput: {
         paddingLeft: 10,
         color: "#05375a",
+        width: "80%",
+        fontSize: 17,
+    },
+    passwordIcon: {
+        width: "10%",
+    },
+    textInput: {
+        width: "90%",
+        paddingLeft: 10,
+        color: "#05375a",
+        fontSize: 17,
     },
     arrow: {
         alignSelf: "flex-start",
