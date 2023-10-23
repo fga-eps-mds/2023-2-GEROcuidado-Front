@@ -21,6 +21,30 @@ export default function Forum() {
 
       <View>
           <Text>Teste - Forum</Text>
+
+          {/* Fixed Search Bar */}
+      <View style={{ backgroundColor: 'lightgray', padding: 10 }}>
+        {/* Your search bar component */}
+        <Text>Search Bar</Text>
+      </View>
+
+      {/* Scrollable Posts */}
+      <ScrollView style={{ flex: 1 }}>
+        {posts.map((post) => (
+          <TouchableOpacity
+            key={post.id}
+            onPress={() => {
+              // Navigate to the post detail screen or perform an action when a post is clicked
+            }}
+            style={{ padding: 10, borderBottomWidth: 1, borderBottomColor: 'lightgray' }}
+          >
+            <Text style={{ fontWeight: 'bold' }}>{post.title}</Text>
+            <Text>{post.content}</Text>
+            <Text>{`Likes: ${post.likes} Comments: ${post.comments}`}</Text>
+          </TouchableOpacity>
+        ))}
+      </ScrollView>
+
       </View>
   );
 }
