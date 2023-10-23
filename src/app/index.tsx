@@ -6,9 +6,7 @@ export default function Home() {
   return (
     <View style={styles.center}>
       <Image source={require('../../assets/logo.png')} />
-      <Text style={styles.titulo}>
-        Seja um GEROcuidador!
-      </Text>
+      <Text style={styles.titulo}> Seja um GEROcuidador! </Text>
       <LinkButton title="Acessar Fórum" href="/" />
       <LinkButton title="Login" href="/pages/login" />
       <LinkButton title="Cadastre-se" backgroundColor="#B47B9D" href="/pages/cadastro" />

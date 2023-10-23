@@ -1,20 +1,20 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import {
-  Text,
   View,
   TextInput,
   StyleSheet,
-  Platform,
-  Button,
   ScrollView,
 } from "react-native";
 import { Link } from "expo-router";
 import { TouchableOpacity } from "react-native-gesture-handler";
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
 import UploadImage from "../../components/UploadImage";
-import { LinkButton } from "../../components/LinkButton";
+import { CustomButton } from "../../components/CustomButton";
+import UserService from "../services/user.service";
 
 export default function Cadastro() {
+  const userService = new UserService();
+  const [foto, setFoto] = useState<string | null | undefined>("");
   const [nome, setNome] = useState("");
   const [email, setEmail] = useState("");
   const [confirmaEmail, setConfirmaEmail] = useState("");
@@ -22,6 +22,24 @@ export default function Cadastro() {
   const [confirmaSenha, setConfirmaSenha] = useState("");
   const [escondeSenha, setEscondeSenha] = useState(true);
   const [escondeConfirmaSenha, setEscondeConfirmaSenha] = useState(true);
+
+  const cadastrar = async () => {
+    // TODO realizar validações dos inputs
+
+    const body = { nome, email, senha, foto }
+
+    try {
+      const response = await userService.postUser(body);
+      // Setar o usuario em alguma storage da aplicação
+      // Navegar para a tela de login
+      // chamar serviço de notificação com sucesso
+      console.log('SUCCESS: ', response.message);
+      console.log('DATA: ', response.data);
+    } catch (err) {
+      // chamar serviço de notificação com erro
+      console.log('ERROR: ', err)
+    }
+  }
 
   return (
     <View>
@@ -33,7 +51,7 @@ export default function Cadastro() {
 
       <ScrollView>
 
-        <UploadImage />
+        <UploadImage setFoto={setFoto} />
 
         <View style={styles.field}>
           <Icon style={styles.iconInput} name="account-outline" size={20} />
@@ -91,7 +109,7 @@ export default function Cadastro() {
         </View>
 
         <View style={styles.linkButton}>
-          <LinkButton title="Cadastrar" href="/pages/cadastro" />
+          <CustomButton title="Cadastrar" callbackFn={cadastrar} />
         </View>
       </ScrollView>
 
