@@ -20,7 +20,7 @@ export default function Tutorial2() {
         <Text style={styles.text}>
           <Text style={styles.word}>saúde</Text> do idoso
         </Text>
-        <View style={styles.row}>
+        {/* <View style={styles.row}>
           <Icon
             name="checkbox-blank-circle"
             size={15}
@@ -38,7 +38,7 @@ export default function Tutorial2() {
             title="Prosseguir"
             href="/pages/auth/tutorial3"
           ></LinkButton>
-        </View>
+        </View> */}
       </View>
     </View>
   );

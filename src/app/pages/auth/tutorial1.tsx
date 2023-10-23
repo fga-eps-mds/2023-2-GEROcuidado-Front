@@ -20,7 +20,7 @@ export default function Tutorial1() {
           Gerencie as <Text style={styles.word}>rotinas</Text>
         </Text>
         <Text style={styles.text}>do seu idoso</Text>
-        <View style={styles.row}>
+        {/* <View style={styles.row}>
           <Icon name="checkbox-blank-circle" size={15} style={styles.circle} />
           <Icon
             name="checkbox-blank-circle"
@@ -32,13 +32,13 @@ export default function Tutorial1() {
             size={15}
             style={[styles.circle, styles.notSelectedCircle]}
           />
-        </View>
-        <View style={styles.linkButton}>
+        </View> */}
+        {/* <View style={styles.linkButton}>
           <LinkButton
             title="Prosseguir"
             href="/pages/auth/tutorial2"
           ></LinkButton>
-        </View>
+        </View> */}
       </View>
     </View>
   );
@@ -63,6 +63,9 @@ const styles = StyleSheet.create({
     textAlign: "center",
     fontWeight: "bold",
     color: "gray",
+    marginBottom: 0,
+    paddingBottom: 0,
+
   },
   word: {
     color: "#B4026D",
