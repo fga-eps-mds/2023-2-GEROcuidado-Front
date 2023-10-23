@@ -14,7 +14,7 @@ export default function Home() {
         backgroundColor="#B47B9D"
         href="/pages/auth/cadastro"
       />
-      <Link href="/pages/auth/tutorial1">
+      <Link href="/pages/auth/carousel">
         <Text>Tutorial</Text>
       </Link>
     </View>

@@ -3,7 +3,7 @@ import { Text, TouchableOpacity, View, Image, StyleSheet } from "react-native";
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
 import { LinkButton } from "../../../components/LinkButton";
 
-export default function Tutorial2() {
+export default function Tutorial3() {
   return (
     <View>
       <View>
