@@ -117,7 +117,6 @@ const styles = StyleSheet.create({
  
   button: {
     width: "80%",
-    maxWidth: 350,
     paddingVertical: 16,
     paddingHorizontal: 26,
     alignItems: "center",
@@ -144,6 +143,7 @@ const styles = StyleSheet.create({
     alignSelf: "flex-start",
   },
   linkButton:{
+    maxWidth: 900,
     marginTop: 123,
     alignItems: "center",
   },
@@ -160,6 +160,6 @@ const styles = StyleSheet.create({
     marginBottom: 38,
   },
   eye:{    
-    
+    marginLeft: 100,
   }
 });
