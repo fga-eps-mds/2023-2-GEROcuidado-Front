@@ -39,6 +39,13 @@ export default function Forum() {
       />
       </View>
 
+      <View style={{ backgroundColor: 'lightgray', padding: 10, flexDirection: 'row', justifyContent: 'space-between' }}>
+        <Text>Publicacoes</Text>
+        <Button title="New post" onPress={() => {
+          // chamar funcao de novo post
+        }} />
+      </View>
+
       {/* Scrollable Posts */}
       <ScrollView style={{ flex: 1 }}>
         {posts.map((post) => (
