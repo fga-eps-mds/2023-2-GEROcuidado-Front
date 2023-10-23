@@ -1,59 +1,84 @@
-import React, { useRef, useState } from "react";
+import React, { useState } from "react";
 import { Text, TouchableOpacity, View, Image, StyleSheet } from "react-native";
-import Icon from "react-native-vector-icons/MaterialCommunityIcons";
-import { LinkButton } from "../../../components/LinkButton";
 import Swiper from "react-native-swiper";
-import { Link } from "expo-router";
-import { NextButton } from "../../../components/NextButton";
-import Tutorial1 from "./tutorial1";
-import Tutorial2 from "./tutorial2";
-import Tutorial3 from "./tutorial3";
+import Tutorial from "./tutorial";
+import { CustomButton } from "../../../components/CustomButton";
+import { router } from "expo-router";
 
 export default function Carousel() {
 
-    /* const [currentIndex, setCurrentIndex] = useState(0);
-    const swiperRef = useRef(null) as any;
-  
-    const handleNextButtonPress = () => {
-      if (currentIndex < 2) {
-        const nextIndex = currentIndex + 1;
-        setCurrentIndex(nextIndex);
-        swiperRef.current.scrollBy(1, true); 
-      } else {
-        
-      }
-    }; */
+    const [index, setIndex] = useState(0);
+
+    const textEl1 = (
+        <Text style={styles.text}>
+            Gerencie as <Text style={styles.word}>rotinas</Text>
+        </Text>
+    )
+
+    const textEl2 = (
+        <Text style={styles.text}>
+            Colete os dados da <Text style={styles.word}>saúde</Text> do idoso
+        </Text>
+    )
+
+    const textEl3 = (
+        <Text style={styles.text}>
+            Obtenha ajuda no <Text style={styles.word}>portal</Text>
+        </Text>
+    )
+
+    const navigateHome = () => {
+        router.replace("/")
+    }
 
     return (
         <View style={styles.carousel} >
-            <Swiper  dotColor="#D9D9D9" activeDotColor="#9E9696" showsButtons={true} loop={false}>
-                <View>
-                     <Tutorial1></Tutorial1>
-                </View>
-                <View>
-                    <Tutorial2></Tutorial2>
-                </View>
-                <View>
-                    <Tutorial3></Tutorial3>
-                </View>
+            <TouchableOpacity onPress={navigateHome}>
+                <Text style={styles.skip}>Pular</Text>
+            </TouchableOpacity>
+            <Swiper index={index} onIndexChanged={(newIndex) => setIndex(newIndex)} dotColor="#D9D9D9" activeDotColor="#9E9696" showsButtons={true} loop={false}>
+                <Tutorial imageSrc={require("../../../../assets/img_tutor1.png")} textEl={textEl1}></Tutorial>
+                <Tutorial imageSrc={require("../../../../assets/img_tutor2.png")} textEl={textEl2}></Tutorial>
+                <Tutorial imageSrc={require("../../../../assets/img_tutor3.png")} textEl={textEl3}></Tutorial>
             </Swiper>
-            <View style={styles.linkButton}>
-                <LinkButton
-                    title="Prosseguir"
-                    href="/"
-                ></LinkButton>
-             </View>
-       </View>
+            <View style={styles.center}>
+                <CustomButton title="Avançar" callbackFn={() => index > 1 ? navigateHome() : setIndex(index + 1)} />
+            </View>
+        </View>
     );
 }
 
 
 const styles = StyleSheet.create({
+    text: {
+        fontSize: 32,
+        textAlign: "center",
+        fontWeight: "bold",
+        color: "gray",
+        marginBottom: 0,
+        paddingBottom: 0,
+
+    },
+    word: {
+        color: "#B4026D",
+    },
     linkButton: {
         alignItems: "center",
         marginTop: 27,
     },
-    carousel:{
-        height:"100%",
+    carousel: {
+        height: "90%",
     },
+    skip: {
+        textAlign: "right",
+        marginTop: 10,
+        marginBottom: 10,
+        marginRight: 30,
+        fontWeight: "bold",
+        color: "gray",
+    },
+    center: {
+        alignItems: "center",
+        width: "100%",
+    }
 });
