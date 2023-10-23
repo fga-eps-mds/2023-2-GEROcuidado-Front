@@ -3,20 +3,27 @@ import { Image, View, StyleSheet, TouchableOpacity } from 'react-native';
 import * as ImagePicker from 'expo-image-picker';
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
 
-export default function UploadImage() {
-  const [image, setImage] = useState('');
+interface IProps {
+  setFoto: (foto: string | null | undefined) => void
+}
 
-  const pickImage = async () => {
-    let result = await ImagePicker.launchImageLibraryAsync({
+export default function UploadImage({ setFoto } : IProps) {
+  const [image, setImage] = useState<string | null>(null);
+
+  const pickImage = () => {
+    ImagePicker.launchImageLibraryAsync({
       mediaTypes: ImagePicker.MediaTypeOptions.All,
       allowsEditing: true,
       aspect: [4, 3],
-      quality: 1,
+      base64: true,
+      quality: 0,
+    }).then((result) => {
+      if (result.canceled) return;
+
+      setImage(result.assets[0].uri);
+      setFoto(result.assets[0].base64);
     });
 
-    if (!result.canceled) {
-      setImage(result.assets[0].uri);
-    }
   };
 
   return (
