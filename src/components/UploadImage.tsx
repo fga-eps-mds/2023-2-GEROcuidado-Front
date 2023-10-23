@@ -1,61 +1,67 @@
-import React, { useState, useEffect } from "react";
-import {
-  Image,
-  View,
-  Platform,
-  TouchableOpacity,
-  Text,
-  StyleSheet,
-} from "react-native";
+import React, { useState, useEffect } from 'react';
+import { Image, View, StyleSheet, TouchableOpacity } from 'react-native';
+import * as ImagePicker from 'expo-image-picker';
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
-import * as ImagePicker from "expo-image-picker";
 
 export default function UploadImage() {
-  const [temPermissaoGaleria, setTemPermissaoGaleria] = useState(false);
-  const [imagem, setImagem] = useState("");
+  const [image, setImage] = useState('');
 
-  useEffect(() => {
-    (async () => {
-      const statusGaleria =
-        await ImagePicker.requestMediaLibraryPermissionsAsync();
-      setTemPermissaoGaleria(statusGaleria.status === "granted");
-    })();
-  }, []);
-
-  const escolherImagem = async () => {
-    let resultado = await ImagePicker.launchImageLibraryAsync({
-      mediaTypes: ImagePicker.MediaTypeOptions.Images,
+  const pickImage = async () => {
+    let result = await ImagePicker.launchImageLibraryAsync({
+      mediaTypes: ImagePicker.MediaTypeOptions.All,
       allowsEditing: true,
       aspect: [4, 3],
       quality: 1,
     });
 
-    console.log(resultado);
-
-    if (!resultado.canceled) {
-      setImagem(resultado.assets[0].uri);
+    if (!result.canceled) {
+      setImage(result.assets[0].uri);
     }
-
-    console.log(resultado);
   };
 
   return (
-    <View style={styles.image}>
-      {imagem && <Image source={{ uri: imagem }} />}
-      <View>
-        <TouchableOpacity onPress={() => escolherImagem()}>
-          <Icon style={styles.icone} name="image-outline" size={20} />
-        </TouchableOpacity>
-      </View>
+    <View style={styles.foto}>
+      <Icon style={styles.icone} name="image-outline" size={20} />
+      <TouchableOpacity style={styles.botao} onPress={pickImage} />
+      {image && <Image source={{ uri: image }} style={styles.imagem} />}
     </View>
   );
 }
 
 const styles = StyleSheet.create({
-  image:{
-    top: "46%",
+  imagem: {
+    position: "absolute",
+    width: 170,
+    height: 170,
+    zIndex: 2,
+    borderRadius: 25,
   },
-  icone:{
+  foto: {
+    position: "relative",
+    backgroundColor: "#EFEFF0",
+    borderRadius: 25,
+    alignItems: "center",
+    display: "flex",
+    width: 170,
+    height: 170,
+    alignSelf: "center",
+    borderWidth: 1,
+    borderColor: "#AFB1B6",
+    marginBottom: 38,
+  },
+  botao: {
+    width: 167,
+    height: 174,
+    backgroundColor: "transparent",
+    zIndex: 3,
+  },
+  icone: {
+    position: "absolute",
+    right: "44%",
+    bottom: "44%",
     opacity: 0.4,
-  }
+    margin: "auto",
+    alignSelf: "center",
+    zIndex: 1,
+  },
 });

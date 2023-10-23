@@ -31,12 +31,10 @@ export default function Cadastro() {
         </TouchableOpacity>
       </Link>
 
-      <View style={styles.foto}>
-        <UploadImage />
-      </View>
+      <UploadImage />
 
       <View style={styles.field}>
-        <Icon name="account-outline" size={20} />
+        <Icon style={styles.iconInput} name="account-outline" size={20} />
         <TextInput
           onChangeText={setNome}
           value={nome}
@@ -46,7 +44,7 @@ export default function Cadastro() {
       </View>
 
       <View style={styles.field}>
-        <Icon name="email-outline" size={20} />
+        <Icon style={styles.iconInput} name="email-outline" size={20} />
         <TextInput
           onChangeText={setEmail}
           value={email}
@@ -56,7 +54,7 @@ export default function Cadastro() {
       </View>
 
       <View style={styles.field}>
-        <Icon name="email-outline" size={20} />
+        <Icon style={styles.iconInput} name="email-outline" size={20} />
         <TextInput
           onChangeText={setConfirmaEmail}
           value={confirmaEmail}
@@ -66,46 +64,30 @@ export default function Cadastro() {
       </View>
 
       <View style={styles.field}>
-        <Icon name="lock-outline" size={20} />
+        <Icon style={styles.iconInput} name="lock-outline" size={20} />
         <TextInput
           onChangeText={setSenha}
           value={senha}
           placeholder="Senha"
           secureTextEntry={escondeSenha}
-          style={styles.textInput}
+          style={styles.passwordInput}
         />
 
-        <TouchableOpacity style={styles.eye} onPress={() => setEscondeSenha(!escondeSenha)}>
-          {escondeSenha ? (
-            <Icon name="eye-outline" size={20} />
-          ) : (
-            <Icon name="eye-off-outline" size={20} />
-          )}
-        </TouchableOpacity>
+        <Icon onPress={() => setEscondeSenha(!escondeSenha)} style={styles.passwordIcon} name={escondeSenha ? "eye-outline" : "eye-off-outline"} size={20} />
       </View>
 
       <View style={styles.field}>
-        <Icon name="lock-outline" size={20} />
+        <Icon style={styles.iconInput} name="lock-outline" size={20} />
         <TextInput
           onChangeText={setConfirmaSenha}
           value={confirmaSenha}
           placeholder="Confirme sua senha"
           secureTextEntry={escondeConfirmaSenha}
-          style={styles.textInput}
+          style={styles.passwordInput}
         />
-          <TouchableOpacity style={styles.eye} onPress={() => setEscondeConfirmaSenha(!escondeConfirmaSenha)}
-          >
-            {escondeConfirmaSenha ? (
-              <Icon  name="eye-outline" size={20} />
-              ) : (
-                <Icon  name="eye-off-outline" size={20} />
-                )}
-          </TouchableOpacity>
+        <Icon onPress={() => setEscondeConfirmaSenha(!escondeConfirmaSenha)} style={styles.passwordIcon} name={escondeConfirmaSenha ? "eye-outline" : "eye-off-outline"} size={20} />
       </View>
 
-      {/* <TouchableOpacity style={styles.button}>
-        <Text>Cadastrar</Text>
-      </TouchableOpacity> */}
       <View style={styles.linkButton}>
         <LinkButton title="Cadastrar" href="/pages/cadastro" />
       </View>
@@ -114,7 +96,7 @@ export default function Cadastro() {
 }
 
 const styles = StyleSheet.create({
- 
+
   button: {
     width: "80%",
     maxWidth: 350,
@@ -133,33 +115,30 @@ const styles = StyleSheet.create({
     paddingBottom: 5,
     width: 320,
     height: 30,
-    alignSelf: "center",  
+    alignSelf: "center",
+    marginBottom: 20,
+  },
+  iconInput: {
+    width: "10%",
+  },
+  passwordInput: {
+    paddingLeft: 10,
+    color: "#05375a",
+    width: "80%",
+  },
+  passwordIcon: {
+    width: "10%",
   },
   textInput: {
-    //marginTop: Platform.OS === "ios" ? 0 : -12,
+    width: "90%",
     paddingLeft: 10,
     color: "#05375a",
   },
   arrow: {
     alignSelf: "flex-start",
   },
-  linkButton:{
-    marginTop: 123,
+  linkButton: {
+    marginTop: 90,
     alignItems: "center",
   },
-  foto:{
-    backgroundColor: "#EFEFF0",
-    borderRadius: 25,
-    alignItems: "center",
-    display: "flex",
-    width: 167,
-    height: 174,
-    alignSelf: "center",
-    borderWidth: 1,
-    borderColor: "#AFB1B6",
-    marginBottom: 38,
-  },
-  eye:{    
-    
-  }
 });
