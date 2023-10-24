@@ -27,25 +27,6 @@ export default function Forum() {
   return (
 
       <View>
-        {/* Fixed Search Bar */}
-        <View style={{ backgroundColor: 'lightgray', padding: 10 }}>
-
-        <Text>Fórum Gero Cuidado</Text>
-        
-        <TextInput
-        style={{ height: 40, borderColor: 'gray', borderWidth: 1, margin: 10, padding: 5 }}
-        placeholder="Search..."
-        // onChangeText={(text) => setSearchText(text)}
-      />
-      </View>
-
-      <View style={{ backgroundColor: 'lightgray', padding: 10, flexDirection: 'row', justifyContent: 'space-between' }}>
-        <Text>Publicacoes</Text>
-        <Button title="New post" onPress={() => {
-          // chamar funcao de novo post
-        }} />
-      </View>
-
       {/* Scrollable Posts */}
       <ScrollView style={{ flex: 1 }}>
         {posts.map((post) => (

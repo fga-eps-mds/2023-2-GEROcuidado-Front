@@ -2,7 +2,7 @@ import { Button, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'rea
 
 import Icon from 'react-native-vector-icons/FontAwesome';
 
-export default function Registros() {
+export default function Rotinas() {
   return (
 
       <View>

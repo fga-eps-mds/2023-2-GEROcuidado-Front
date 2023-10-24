@@ -1,0 +1,13 @@
+version: '3'
+services:
+  expo:
+    build:
+      context: .  
+      dockerfile: Dockerfile  
+    container_name: gerocuidado
+    ports:
+      - "19000:19000"
+      - "19001:19001"
+    volumes:
+      - ./gerocuidado:/app  
+    command: ["expo", "start"]
