@@ -1,4 +1,5 @@
-import { FlatList, Image, Text, View, TextInput, Button, StyleSheet, TouchableOpacity } from 'react-native';
+import { Button, FlatList, Image, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native';
+
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
 import React from 'react';
 
@@ -28,7 +29,7 @@ export default function HomeScreen() {
       </View>
 
       <View style={{ backgroundColor: 'white', padding: 10, flexDirection: 'row', justifyContent: 'space-between', alignItems:'center'}}>
-        <Text style={{fontFamily:'Work Sans', fontSize:24, fontWeight:'600'}}>Publicacoes</Text>
+        <Text style={{fontSize:24, fontWeight:'600'}}>Publicacoes</Text>
         <TouchableOpacity style={styles.botao} onPress={() => {}}>
           <Text style={styles.textoBotao}>Crie uma publicação </Text>
           <Icon name='pencil' color={'white'} size={25}></Icon>
@@ -64,7 +65,7 @@ export default function HomeScreen() {
 }
 const styles = StyleSheet.create({
   titulo:{
-    fontFamily:'Inter', 
+    
     fontWeight:'bold', 
     color:'white', 
     textAlign:'center',
@@ -91,7 +92,7 @@ const styles = StyleSheet.create({
   },
   textoBotao: {
     color:'white',
-    fontFamily:'Work Sans',
+
     fontWeight:'600',
     fontSize:16,
   },
