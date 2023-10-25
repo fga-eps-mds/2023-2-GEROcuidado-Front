@@ -1,11 +1,20 @@
 import React, { useEffect, useState } from "react";
 import { View, TextInput, StyleSheet, ScrollView, Text } from "react-native";
-import { Link } from "expo-router";
+import { Link, router } from "expo-router";
 import { TouchableOpacity } from "react-native-gesture-handler";
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
 import UploadImage from "../../components/UploadImage";
 import { CustomButton } from "../../components/CustomButton";
 import UserService from "../services/user.service";
+import { ErrorMessage } from "../../components/ErrorMessage";
+
+interface IErrors {
+  nome?: string,
+  email?: string,
+  confirmaEmail?: string,
+  senha?: string,
+  confirmaSenha?: string,
+}
 
 export default function Cadastro() {
   const userService = new UserService();
@@ -17,99 +26,66 @@ export default function Cadastro() {
   const [confirmaSenha, setConfirmaSenha] = useState("");
   const [escondeSenha, setEscondeSenha] = useState(true);
   const [escondeConfirmaSenha, setEscondeConfirmaSenha] = useState(true);
-  const [erros, setErros] = useState({
-    nome: "string",
-    email: "",
-    confirmaEmail: "",
-    senha: "",
-    confirmaSenha: "",
-  });
-  const [isFormValid, setIsFormValid] = useState(false);
+  const [erros, setErros] = useState<IErrors>({});
+  const [showErrors, setShowErrors] = useState(false);
 
   const cadastrar = async () => {
-    // TODO realizar validações dos inputs
+    if (Object.keys(erros).length > 0) {
+      setShowErrors(true);
+      return
+    }
 
     const body = { nome, email, senha, foto };
 
     try {
       const response = await userService.postUser(body);
-      // Setar o usuario em alguma storage da aplicação
-      // Navegar para a tela de login
-      // chamar serviço de notificação com sucesso
+      router.push('/pages/login')
+      // TODO fazer um notify
       console.log("SUCCESS: ", response.message);
-      console.log("DATA: ", response.data);
     } catch (err) {
-      // chamar serviço de notificação com erro
+      // TODO fazer um notify
       console.log("ERROR: ", err);
     }
   };
 
-  useEffect(() => {
-    validateForm();
-  }, [nome, email, confirmaEmail, senha, confirmaSenha]);
+  useEffect(() => handleErrors(), [nome, email, confirmaEmail, senha, confirmaSenha]);
 
-  const validateForm = () => {
-    let erros = {
-      nome: "",
-      email: "",
-      confirmaEmail: "",
-      senha: "",
-      confirmaSenha: "",
-    };
-
-    let errorsCount = 0;
+  const handleErrors = () => {
+    let erros: IErrors = {};
 
     if (!nome) {
-      erros.nome = 'O campo "Nome completo" está vazio';
-      errorsCount++;
+      erros.nome = 'Campo obrigatório!';
+    } else if (nome.length < 5) {
+      erros.nome = 'O nome completo deve ter pelo menos 5 caractéres.';
+    } else if (nome.length > 60) {
+      erros.nome = 'O nome completo deve ter no máximo 60 caractéres.';
     }
 
     if (!email) {
-      erros.email = 'O campo "Email" está vazio';
-      errorsCount++;
+      erros.email = 'Campo Obrigatório!';
     } else if (!/\S+@\S+\.\S+/.test(email)) {
-      erros.email = 'O campo "Email" está inválido';
-      errorsCount++;
+      erros.email = 'Email inválido!';
     }
 
     if (!confirmaEmail) {
-      erros.confirmaEmail = 'O campo "Confirme seu Email" está vazio';
-      errorsCount++;
+      erros.confirmaEmail = 'Campo Obrigatório!';
+    } else if (confirmaEmail !== email) {
+      erros.confirmaEmail = "Os emails precisam ser iguais!";
     }
 
     if (!senha) {
-      erros.senha = 'O campo "Senha" está vazio';
-      errorsCount++;
+      erros.senha = 'Campo Obrigatório!';
+    } else if (senha.length < 6) {
+      erros.senha = "Senha deve ter no mínimo 6 caractéres";
     }
 
     if (!confirmaSenha) {
-      erros.confirmaSenha = 'O campo "Confirme sua senha" está vazio';
-      errorsCount++;
-    }
-
-    if (confirmaEmail !== email) {
-      erros.confirmaEmail = "Os Emails precisam ser iguais";
-      errorsCount++;
-    }
-
-    if (confirmaSenha !== senha) {
+      erros.confirmaSenha = 'Campo Obrigatório';
+    } else if (confirmaSenha !== senha) {
       erros.confirmaSenha = "As senhas precisam ser iguais";
-      errorsCount++;
     }
 
     setErros(erros);
-    console.log(erros);
-    console.log(errorsCount);
-    console.log(Object.keys(erros).length);
-    setIsFormValid(errorsCount === 0);
-  };
-
-  const handleSubmit = () => {
-    if (isFormValid) {
-      cadastrar();
-    } else {
-      console.log("error");
-    }
   };
 
   return (
@@ -123,78 +99,88 @@ export default function Cadastro() {
       <ScrollView>
         <UploadImage setFoto={setFoto} />
 
-        <View style={styles.field}>
-          <Icon style={styles.iconInput} name="account-outline" size={20} />
-          <TextInput
-            onChangeText={setNome}
-            value={nome}
-            placeholder="Nome completo"
-            style={styles.textInput}
-          />
+        <View style={styles.formControl}>
+          <View style={styles.field}>
+            <Icon style={styles.iconInput} name="account-outline" size={20} />
+            <TextInput
+              onChangeText={setNome}
+              value={nome}
+              placeholder="Nome completo"
+              style={styles.textInput}
+            />
+          </View>
+          <ErrorMessage show={showErrors} text={erros.nome} />
         </View>
 
-        <View style={styles.field}>
-          <Icon style={styles.iconInput} name="email-outline" size={20} />
-          <TextInput
-            onChangeText={setEmail}
-            value={email}
-            placeholder="Email"
-            style={styles.textInput}
-          />
+        <View style={styles.formControl}>
+          <View style={styles.field}>
+            <Icon style={styles.iconInput} name="email-outline" size={20} />
+            <TextInput
+              onChangeText={setEmail}
+              value={email}
+              placeholder="Email"
+              style={styles.textInput}
+            />
+          </View>
+          <ErrorMessage show={showErrors} text={erros.email} />
         </View>
 
-        <View style={styles.field}>
-          <Icon style={styles.iconInput} name="email-outline" size={20} />
-          <TextInput
-            onChangeText={setConfirmaEmail}
-            value={confirmaEmail}
-            placeholder="Confirme seu Email"
-            style={styles.textInput}
-          />
+        <View style={styles.formControl}>
+          <View style={styles.field}>
+            <Icon style={styles.iconInput} name="email-outline" size={20} />
+            <TextInput
+              onChangeText={setConfirmaEmail}
+              value={confirmaEmail}
+              placeholder="Confirme seu Email"
+              style={styles.textInput}
+            />
+          </View>
+          <ErrorMessage show={showErrors} text={erros.confirmaEmail} />
         </View>
 
-        <View style={styles.field}>
-          <Icon style={styles.iconInput} name="lock-outline" size={20} />
-          <TextInput
-            onChangeText={setSenha}
-            value={senha}
-            placeholder="Senha"
-            secureTextEntry={escondeSenha}
-            style={styles.passwordInput}
-          />
+        <View style={styles.formControl}>
+          <View style={styles.field}>
+            <Icon style={styles.iconInput} name="lock-outline" size={20} />
+            <TextInput
+              onChangeText={setSenha}
+              value={senha}
+              placeholder="Senha"
+              secureTextEntry={escondeSenha}
+              style={styles.passwordInput}
+            />
 
-          <Icon
-            onPress={() => setEscondeSenha(!escondeSenha)}
-            style={styles.passwordIcon}
-            name={escondeSenha ? "eye-outline" : "eye-off-outline"}
-            size={20}
-          />
+            <Icon
+              onPress={() => setEscondeSenha(!escondeSenha)}
+              style={styles.passwordIcon}
+              name={escondeSenha ? "eye-outline" : "eye-off-outline"}
+              size={20}
+            />
+          </View>
+          <ErrorMessage show={showErrors} text={erros.senha} />
         </View>
 
-        <View style={styles.field}>
-          <Icon style={styles.iconInput} name="lock-outline" size={20} />
-          <TextInput
-            onChangeText={setConfirmaSenha}
-            value={confirmaSenha}
-            placeholder="Confirme sua senha"
-            secureTextEntry={escondeConfirmaSenha}
-            style={styles.passwordInput}
-          />
-          <Icon
-            onPress={() => setEscondeConfirmaSenha(!escondeConfirmaSenha)}
-            style={styles.passwordIcon}
-            name={escondeConfirmaSenha ? "eye-outline" : "eye-off-outline"}
-            size={20}
-          />
+        <View style={styles.formControl}>
+          <View style={styles.field}>
+            <Icon style={styles.iconInput} name="lock-outline" size={20} />
+            <TextInput
+              onChangeText={setConfirmaSenha}
+              value={confirmaSenha}
+              placeholder="Confirme sua senha"
+              secureTextEntry={escondeConfirmaSenha}
+              style={styles.passwordInput}
+            />
+            <Icon
+              onPress={() => setEscondeConfirmaSenha(!escondeConfirmaSenha)}
+              style={styles.passwordIcon}
+              name={escondeConfirmaSenha ? "eye-outline" : "eye-off-outline"}
+              size={20}
+            />
+          </View>
+          <ErrorMessage show={showErrors} text={erros.confirmaSenha} />
         </View>
-        {Object.values(erros).map((error: string, index: number) => (
-          <Text key={index}>{error}</Text>
-        ))}
 
         <View style={styles.linkButton}>
-          <TouchableOpacity onPress={handleSubmit} disabled={!isFormValid}>
-            <CustomButton title="Cadastrar" callbackFn={handleSubmit} />
-          </TouchableOpacity>
+          <CustomButton title="Cadastrar" callbackFn={cadastrar} />
         </View>
       </ScrollView>
     </View>
@@ -202,6 +188,13 @@ export default function Cadastro() {
 }
 
 const styles = StyleSheet.create({
+  formControl: {
+    flexDirection: "column",
+    width: 320,
+    alignItems: "flex-start",
+    alignSelf: "center",
+    marginTop: 10,
+  },
   button: {
     width: "80%",
     maxWidth: 350,
@@ -214,14 +207,13 @@ const styles = StyleSheet.create({
   },
   field: {
     flexDirection: "row",
-    marginTop: 10,
+    width: 320,
     borderBottomWidth: 1,
     borderBottomColor: "#AFB1B6",
     paddingBottom: 5,
-    width: 320,
     height: 30,
     alignSelf: "center",
-    marginBottom: 20,
+    marginBottom: 5,
   },
   iconInput: {
     width: "10%",
@@ -245,8 +237,8 @@ const styles = StyleSheet.create({
     alignSelf: "flex-start",
   },
   linkButton: {
-    marginTop: 90,
-    marginBottom: 60,
+    marginTop: 60,
+    marginBottom: 40,
     alignItems: "center",
   },
 });
