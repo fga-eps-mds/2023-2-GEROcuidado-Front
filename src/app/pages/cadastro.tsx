@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   View,
   TextInput,
@@ -13,6 +13,7 @@ import { CustomButton } from "../../components/CustomButton";
 import UserService from "../services/user.service";
 
 export default function Cadastro() {
+
   const userService = new UserService();
   const [foto, setFoto] = useState<string | null | undefined>("");
   const [nome, setNome] = useState("");
@@ -22,6 +23,8 @@ export default function Cadastro() {
   const [confirmaSenha, setConfirmaSenha] = useState("");
   const [escondeSenha, setEscondeSenha] = useState(true);
   const [escondeConfirmaSenha, setEscondeConfirmaSenha] = useState(true);
+  const [erros, setErros] = useState({nome: "string", email: "", confirmaEmail: "", senha: "", confirmaSenha: ""});
+  const [isFormValid, setIsFormValid] = useState(false);
 
   const cadastrar = async () => {
     // TODO realizar validações dos inputs
@@ -40,6 +43,58 @@ export default function Cadastro() {
       console.log('ERROR: ', err)
     }
   }
+
+  useEffect (() => {
+    validateForm();
+
+  }, [nome, email, confirmaEmail, senha, confirmaSenha]);
+
+  const validateForm = () => {
+    let erros = {nome: "", email: "", confirmaEmail: "", senha: "", confirmaSenha: ""};
+
+    if(!nome){
+      erros.nome = 'O campo "Nome completo" está vazio';
+    }
+
+    if(!email){
+      erros.email = 'O campo "Email" está vazio';
+    }
+
+    if(!confirmaEmail){
+      erros.confirmaEmail = 'O campo "Confirme seu Email" está vazio';
+    }
+    
+    if(!senha){
+      erros.senha = 'O campo "Senha" está vazio';
+    }
+
+    if(!confirmaSenha){
+      erros.confirmaSenha = 'O campo "Confirme sua senha" está vazio';
+    }
+
+    if(confirmaEmail !== email){
+      erros.confirmaEmail = 'Os Emails precisam ser iguais';
+    }
+    
+    if(confirmaSenha !== senha){
+      erros.confirmaSenha = 'As senhas precisam ser iguais';
+    }
+
+    setErros(erros);
+    console.log(erros)  
+    console.log(Object.keys(erros).length)
+    setIsFormValid(Object.keys(erros).length === 0)
+  };
+
+  const handleSubmit = () => {
+    if(isFormValid){
+      //Enivar pro back
+      console.log("certo")
+    }
+    else{
+      console.log("error")
+    }
+  };
 
   return (
     <View>
@@ -109,7 +164,9 @@ export default function Cadastro() {
         </View>
 
         <View style={styles.linkButton}>
-          <CustomButton title="Cadastrar" callbackFn={cadastrar} />
+          <TouchableOpacity onPress={handleSubmit} disabled={!isFormValid}>
+           <CustomButton title="Cadastrar" callbackFn={cadastrar} />
+          </TouchableOpacity>
         </View>
       </ScrollView>
 
