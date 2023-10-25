@@ -1,18 +1,23 @@
-FROM node:14
+# Instala a ultima versao do node no container
+FROM node:latest
 
-WORKDIR /app
+# Cria o diretorio app/src
+RUN mkdir -p /app/src
 
+# Coloca o diretorio app/src como workdir
+WORKDIR /app/src
+
+# Copia o package.json do projeto para o workdir
+COPY package.json .
+
+# instala o que tem no package.json
+RUN npm install
+
+# Copia tudo da pasta atual para o workdir
 COPY . .
 
-RUN npm install -g expo-cli
+ARG PORT=19002
+ENV PORT $PORT
+EXPOSE $PORT 19001 19002
 
-RUN npm install expo@^49.0.0
-RUN npx expo install react-native-web@~0.19.6 react-dom@18.2.0 @expo/webpack-config@^19.0.0
-
-EXPOSE 19000
-
-EXPOSE 19002
-
-EXPOSE 19006
-
-CMD ["expo", "start"]
+CMD [ "npx", "expo", "start" ]
