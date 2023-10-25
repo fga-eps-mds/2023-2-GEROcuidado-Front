@@ -1,10 +1,5 @@
 import React, { useEffect, useState } from "react";
-import {
-  View,
-  TextInput,
-  StyleSheet,
-  ScrollView,
-} from "react-native";
+import { View, TextInput, StyleSheet, ScrollView, Text } from "react-native";
 import { Link } from "expo-router";
 import { TouchableOpacity } from "react-native-gesture-handler";
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
@@ -13,7 +8,6 @@ import { CustomButton } from "../../components/CustomButton";
 import UserService from "../services/user.service";
 
 export default function Cadastro() {
-
   const userService = new UserService();
   const [foto, setFoto] = useState<string | null | undefined>("");
   const [nome, setNome] = useState("");
@@ -23,89 +17,110 @@ export default function Cadastro() {
   const [confirmaSenha, setConfirmaSenha] = useState("");
   const [escondeSenha, setEscondeSenha] = useState(true);
   const [escondeConfirmaSenha, setEscondeConfirmaSenha] = useState(true);
-  const [erros, setErros] = useState({nome: "string", email: "", confirmaEmail: "", senha: "", confirmaSenha: ""});
+  const [erros, setErros] = useState({
+    nome: "string",
+    email: "",
+    confirmaEmail: "",
+    senha: "",
+    confirmaSenha: "",
+  });
   const [isFormValid, setIsFormValid] = useState(false);
 
   const cadastrar = async () => {
     // TODO realizar validações dos inputs
 
-    const body = { nome, email, senha, foto }
+    const body = { nome, email, senha, foto };
 
     try {
       const response = await userService.postUser(body);
       // Setar o usuario em alguma storage da aplicação
       // Navegar para a tela de login
       // chamar serviço de notificação com sucesso
-      console.log('SUCCESS: ', response.message);
-      console.log('DATA: ', response.data);
+      console.log("SUCCESS: ", response.message);
+      console.log("DATA: ", response.data);
     } catch (err) {
       // chamar serviço de notificação com erro
-      console.log('ERROR: ', err)
+      console.log("ERROR: ", err);
     }
-  }
+  };
 
-  useEffect (() => {
+  useEffect(() => {
     validateForm();
-
   }, [nome, email, confirmaEmail, senha, confirmaSenha]);
 
   const validateForm = () => {
-    let erros = {nome: "", email: "", confirmaEmail: "", senha: "", confirmaSenha: ""};
+    let erros = {
+      nome: "",
+      email: "",
+      confirmaEmail: "",
+      senha: "",
+      confirmaSenha: "",
+    };
 
-    if(!nome){
+    let errorsCount = 0;
+
+    if (!nome) {
       erros.nome = 'O campo "Nome completo" está vazio';
+      errorsCount++;
     }
 
-    if(!email){
+    if (!email) {
       erros.email = 'O campo "Email" está vazio';
+      errorsCount++;
+    } else if (!/\S+@\S+\.\S+/.test(email)) {
+      erros.email = 'O campo "Email" está inválido';
+      errorsCount++;
     }
 
-    if(!confirmaEmail){
+    if (!confirmaEmail) {
       erros.confirmaEmail = 'O campo "Confirme seu Email" está vazio';
+      errorsCount++;
     }
-    
-    if(!senha){
+
+    if (!senha) {
       erros.senha = 'O campo "Senha" está vazio';
+      errorsCount++;
     }
 
-    if(!confirmaSenha){
+    if (!confirmaSenha) {
       erros.confirmaSenha = 'O campo "Confirme sua senha" está vazio';
+      errorsCount++;
     }
 
-    if(confirmaEmail !== email){
-      erros.confirmaEmail = 'Os Emails precisam ser iguais';
+    if (confirmaEmail !== email) {
+      erros.confirmaEmail = "Os Emails precisam ser iguais";
+      errorsCount++;
     }
-    
-    if(confirmaSenha !== senha){
-      erros.confirmaSenha = 'As senhas precisam ser iguais';
+
+    if (confirmaSenha !== senha) {
+      erros.confirmaSenha = "As senhas precisam ser iguais";
+      errorsCount++;
     }
 
     setErros(erros);
-    console.log(erros)  
-    console.log(Object.keys(erros).length)
-    setIsFormValid(Object.keys(erros).length === 0)
+    console.log(erros);
+    console.log(errorsCount);
+    console.log(Object.keys(erros).length);
+    setIsFormValid(errorsCount === 0);
   };
 
   const handleSubmit = () => {
-    if(isFormValid){
-      //Enivar pro back
-      console.log("certo")
-    }
-    else{
-      console.log("error")
+    if (isFormValid) {
+      cadastrar();
+    } else {
+      console.log("error");
     }
   };
 
   return (
     <View>
       <Link href="/" asChild>
-        <TouchableOpacity >
+        <TouchableOpacity>
           <Icon name="chevron-left" size={42} />
         </TouchableOpacity>
       </Link>
 
       <ScrollView>
-
         <UploadImage setFoto={setFoto} />
 
         <View style={styles.field}>
@@ -148,7 +163,12 @@ export default function Cadastro() {
             style={styles.passwordInput}
           />
 
-          <Icon onPress={() => setEscondeSenha(!escondeSenha)} style={styles.passwordIcon} name={escondeSenha ? "eye-outline" : "eye-off-outline"} size={20} />
+          <Icon
+            onPress={() => setEscondeSenha(!escondeSenha)}
+            style={styles.passwordIcon}
+            name={escondeSenha ? "eye-outline" : "eye-off-outline"}
+            size={20}
+          />
         </View>
 
         <View style={styles.field}>
@@ -160,16 +180,23 @@ export default function Cadastro() {
             secureTextEntry={escondeConfirmaSenha}
             style={styles.passwordInput}
           />
-          <Icon onPress={() => setEscondeConfirmaSenha(!escondeConfirmaSenha)} style={styles.passwordIcon} name={escondeConfirmaSenha ? "eye-outline" : "eye-off-outline"} size={20} />
+          <Icon
+            onPress={() => setEscondeConfirmaSenha(!escondeConfirmaSenha)}
+            style={styles.passwordIcon}
+            name={escondeConfirmaSenha ? "eye-outline" : "eye-off-outline"}
+            size={20}
+          />
         </View>
+        {Object.values(erros).map((error: string, index: number) => (
+          <Text key={index}>{error}</Text>
+        ))}
 
         <View style={styles.linkButton}>
           <TouchableOpacity onPress={handleSubmit} disabled={!isFormValid}>
-           <CustomButton title="Cadastrar" callbackFn={cadastrar} />
+            <CustomButton title="Cadastrar" callbackFn={handleSubmit} />
           </TouchableOpacity>
         </View>
       </ScrollView>
-
     </View>
   );
 }
