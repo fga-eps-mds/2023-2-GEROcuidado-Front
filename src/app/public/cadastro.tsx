@@ -1,13 +1,13 @@
 import React, { useEffect, useState } from "react";
-import { View, TextInput, StyleSheet, ScrollView, Text } from "react-native";
-import { Link, router } from "expo-router";
-import { TouchableOpacity } from "react-native-gesture-handler";
+import { View, TextInput, StyleSheet, ScrollView } from "react-native";
+import { router } from "expo-router";
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
 import UploadImage from "../../components/UploadImage";
 import { CustomButton } from "../../components/CustomButton";
 import { ErrorMessage } from "../../components/ErrorMessage";
 import Toast from 'react-native-toast-message';
 import { postUser } from "../services/user.service";
+import { BackButton } from "../../components/BackButton";
 
 
 interface IErrors {
@@ -98,11 +98,7 @@ export default function Cadastro() {
 
   return (
     <View>
-      <Link href="/" asChild style={styles.voltar}>
-        <TouchableOpacity>
-          <Icon name="chevron-left" size={42} />
-        </TouchableOpacity>
-      </Link>
+      <BackButton />
 
       <ScrollView>
         <UploadImage setFoto={setFoto} />

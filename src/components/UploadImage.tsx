@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Image, View, StyleSheet, TouchableOpacity } from 'react-native';
+import { Image, View, StyleSheet, Pressable } from 'react-native';
 import * as ImagePicker from 'expo-image-picker';
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
 
@@ -29,7 +29,7 @@ export default function UploadImage({ setFoto } : IProps) {
   return (
     <View style={styles.foto}>
       <Icon style={styles.icone} name="image-outline" size={20} />
-      <TouchableOpacity style={styles.botao} onPress={pickImage} />
+      <Pressable style={styles.botao} onPress={pickImage} />
       {image && <Image source={{ uri: image }} style={styles.imagem} />}
     </View>
   );

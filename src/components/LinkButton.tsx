@@ -3,7 +3,7 @@ import {
   StyleSheet,
   Text,
 } from 'react-native';
-import { Link } from 'expo-router';
+import { router } from 'expo-router';
 
 interface Props {
   title: string;
@@ -14,27 +14,24 @@ interface Props {
 export function LinkButton({ title, href, backgroundColor }: Props) {
   backgroundColor = backgroundColor ?? '#2CCDB5';
 
+  const navigate = () => router.push(href);
+
   return (
-    <Link href={href} style={styles(backgroundColor).link} asChild>
-      <Pressable style={styles(backgroundColor).button}>
-        <Text style={styles(backgroundColor).buttonText}>{title}</Text>
-      </Pressable>
-    </Link>
+    <Pressable style={styles(backgroundColor).button} onPress={navigate}>
+      <Text style={styles(backgroundColor).buttonText}>{title}</Text>
+    </Pressable>
   );
 }
 
 const styles = (backgroundColor: string) => StyleSheet.create({
-  link: {
-    width: "100%",
-    marginBottom: 25,
-  },
   buttonText: {
     fontSize: 18,
     color: 'white',
     fontWeight: '700',
   },
   button: {
-    width: "80%",
+    width: "100%",
+    marginBottom: 25,
     maxWidth: 350,
     paddingVertical: 16,
     paddingHorizontal: 26,

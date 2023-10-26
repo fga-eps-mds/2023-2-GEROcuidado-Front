@@ -1,13 +1,13 @@
 import React, { useState, useEffect } from "react";
 import { Image, StyleSheet, Text, View, TextInput } from "react-native";
-import { Link, router } from 'expo-router';
-import { TouchableOpacity } from "react-native-gesture-handler";
+import { router } from 'expo-router';
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
 import { CustomButton } from "../../components/CustomButton";
 import Toast from 'react-native-toast-message';
 import { ErrorMessage } from "../../components/ErrorMessage";
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { loginUser } from "../services/user.service";
+import { BackButton } from "../../components/BackButton";
 
 interface IErrors {
     email?: string,
@@ -71,11 +71,7 @@ export default function Login() {
 
     return (
         <View>
-            <Link href="/" asChild style={styles.voltar}>
-                <TouchableOpacity >
-                    <Icon name="chevron-left" size={42} />
-                </TouchableOpacity>
-            </Link>
+            <BackButton />
 
             <View style={styles.imagem}>
                 <Image
