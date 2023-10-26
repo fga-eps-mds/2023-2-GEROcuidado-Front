@@ -1,6 +1,6 @@
+import { Link } from "expo-router";
 import React from "react";
-import { Text } from "react-native";
 
 export default function Perfil() {
-  return <Text>Perfil works!</Text>;
+  return <Link href="/private/pages/editarPerfil">Perfil works!</Link>;
 }
