@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { Image, StyleSheet, Text, View, TextInput } from "react-native";
-import { Link } from 'expo-router';
+import { Link, router } from 'expo-router';
 import { TouchableOpacity } from "react-native-gesture-handler";
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
 import { CustomButton } from "../../components/CustomButton";
@@ -39,7 +39,7 @@ export default function Login() {
                 text2: response.message as string,
             });
             await AsyncStorage.setItem('token', response.data);
-            // Navegar pras tabs
+            router.push('/private/tabs/rotinas')
         } catch (err) {
             const error = err as { message: string }
             Toast.show({
@@ -153,9 +153,8 @@ const styles = StyleSheet.create({
         fontSize: 28,
         fontWeight: "300",
         textAlign: "center",
-        margin: 20,
-        marginBottom: 70,
-        marginTop: 25,
+        marginBottom: 60,
+        marginTop: 65,
     },
     imagem: {
         flex: 1,

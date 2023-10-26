@@ -1,7 +1,7 @@
 import { IResponse } from "../interfaces/response.interface";
 import { IUser, IUserBody, IUserLogin } from "../interfaces/user.interface";
 
-const baseUrl = 'http://localhost:3001/api/usuario'
+const baseUrl = 'http://ec2-3-80-226-110.compute-1.amazonaws.com:3001/api/usuario'
 
 export default class UserService {
   async postUser(body: IUserBody): Promise<IResponse<IUser | null>>{
