@@ -1,13 +1,10 @@
+import React, { useState } from "react";
 import {
-  Button,
-  Platform,
   ScrollView,
   StyleSheet,
-  Text,
   TextInput,
   View,
 } from "react-native";
-import React, { useEffect, useState } from "react";
 
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
 import { Link } from "expo-router";

@@ -22,7 +22,8 @@
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#ffffff"
-      }
+      },
+      "package": "com.eduardogurgel.GEROcuidado"
     },
     "web": {
       "favicon": "./assets/favicon.png",
@@ -31,9 +32,16 @@
     "experiments": {
       "typeRoutes": true
     },
-
     "plugins": [
       "expo-router"
-    ]
+    ],
+    "extra": {
+      "router": {
+        "origin": false
+      },
+      "eas": {
+        "projectId": "1c3cf6d4-5926-44df-b2ce-95faae2d57aa"
+      }
+    }
   }
 }

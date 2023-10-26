@@ -1,6 +1,5 @@
 import { Image, StyleSheet, Text, View } from "react-native";
 
-import { Link } from "expo-router";
 import { LinkButton } from "../components/LinkButton";
 
 export default function Home() {

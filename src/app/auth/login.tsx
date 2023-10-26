@@ -2,7 +2,6 @@ import { Image, StyleSheet, Text, TextInput, View } from "react-native";
 import React, { useEffect, useState } from "react";
 
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
-import { Link } from 'expo-router';
 import { LinkButton } from "../../components/LinkButton";
 import { TouchableOpacity } from "react-native-gesture-handler";
 
