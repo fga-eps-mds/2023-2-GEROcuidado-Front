@@ -1,7 +1,6 @@
 import { Stack } from "expo-router";
 import { View } from "react-native";
-import Toast from 'react-native-toast-message';
-
+import Toast from "react-native-toast-message";
 
 export default function PagesLayout() {
   return (
@@ -11,5 +10,5 @@ export default function PagesLayout() {
       </View>
       <Stack screenOptions={{ headerShown: false }} />
     </>
-  )
+  );
 }

@@ -1,25 +1,24 @@
+import { router } from "expo-router";
 import React, { useEffect, useState } from "react";
 import { View, TextInput, StyleSheet, ScrollView } from "react-native";
-import { Link, router } from "expo-router";
-import { TouchableOpacity } from "react-native-gesture-handler";
+import Toast from "react-native-toast-message";
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
-import UploadImage from "../../components/UploadImage";
-import { CustomButton } from "../../components/CustomButton";
-import UserService from "../services/user.service";
-import { ErrorMessage } from "../../components/ErrorMessage";
-import Toast from 'react-native-toast-message';
 
+import { BackButton } from "../../components/BackButton";
+import { CustomButton } from "../../components/CustomButton";
+import { ErrorMessage } from "../../components/ErrorMessage";
+import UploadImage from "../../components/UploadImage";
+import { postUser } from "../services/user.service";
 
 interface IErrors {
-  nome?: string,
-  email?: string,
-  confirmaEmail?: string,
-  senha?: string,
-  confirmaSenha?: string,
+  nome?: string;
+  email?: string;
+  confirmaEmail?: string;
+  senha?: string;
+  confirmaSenha?: string;
 }
 
 export default function Cadastro() {
-  const userService = new UserService();
   const [foto, setFoto] = useState<string | null | undefined>("");
   const [nome, setNome] = useState("");
   const [email, setEmail] = useState("");
@@ -34,62 +33,65 @@ export default function Cadastro() {
   const cadastrar = async () => {
     if (Object.keys(erros).length > 0) {
       setShowErrors(true);
-      return
+      return;
     }
 
     const body = { nome, email, senha, foto };
 
     try {
-      const response = await userService.postUser(body);
+      const response = await postUser(body);
       Toast.show({
-        type: 'success',
-        text1: 'Sucesso!',
+        type: "success",
+        text1: "Sucesso!",
         text2: response.message as string,
       });
-      router.push('/public/login')
+      router.push("/public/login");
     } catch (err) {
-      const error = err as { message: string }
+      const error = err as { message: string };
       Toast.show({
-        type: 'error',
-        text1: 'Erro!',
+        type: "error",
+        text1: "Erro!",
         text2: error.message,
       });
     }
   };
 
-  useEffect(() => handleErrors(), [nome, email, confirmaEmail, senha, confirmaSenha]);
+  useEffect(
+    () => handleErrors(),
+    [nome, email, confirmaEmail, senha, confirmaSenha],
+  );
 
   const handleErrors = () => {
-    let erros: IErrors = {};
+    const erros: IErrors = {};
 
     if (!nome) {
-      erros.nome = 'Campo obrigatório!';
+      erros.nome = "Campo obrigatório!";
     } else if (nome.length < 5) {
-      erros.nome = 'O nome completo deve ter pelo menos 5 caractéres.';
+      erros.nome = "O nome completo deve ter pelo menos 5 caractéres.";
     } else if (nome.length > 60) {
-      erros.nome = 'O nome completo deve ter no máximo 60 caractéres.';
+      erros.nome = "O nome completo deve ter no máximo 60 caractéres.";
     }
 
     if (!email) {
-      erros.email = 'Campo Obrigatório!';
+      erros.email = "Campo Obrigatório!";
     } else if (!/\S+@\S+\.\S+/.test(email)) {
-      erros.email = 'Email inválido!';
+      erros.email = "Email inválido!";
     }
 
     if (!confirmaEmail) {
-      erros.confirmaEmail = 'Campo Obrigatório!';
+      erros.confirmaEmail = "Campo Obrigatório!";
     } else if (confirmaEmail !== email) {
       erros.confirmaEmail = "Os emails precisam ser iguais!";
     }
 
     if (!senha) {
-      erros.senha = 'Campo Obrigatório!';
+      erros.senha = "Campo Obrigatório!";
     } else if (senha.length < 6) {
       erros.senha = "Senha deve ter no mínimo 6 caractéres";
     }
 
     if (!confirmaSenha) {
-      erros.confirmaSenha = 'Campo Obrigatório';
+      erros.confirmaSenha = "Campo Obrigatório";
     } else if (confirmaSenha !== senha) {
       erros.confirmaSenha = "As senhas precisam ser iguais";
     }
@@ -99,11 +101,7 @@ export default function Cadastro() {
 
   return (
     <View>
-      <Link href="/" asChild style={styles.voltar}>
-        <TouchableOpacity>
-          <Icon name="chevron-left" size={42} />
-        </TouchableOpacity>
-      </Link>
+      <BackButton />
 
       <ScrollView>
         <UploadImage setFoto={setFoto} />
@@ -198,7 +196,7 @@ export default function Cadastro() {
 
 const styles = StyleSheet.create({
   voltar: {
-    marginTop: 5
+    marginTop: 5,
   },
   formControl: {
     flexDirection: "column",

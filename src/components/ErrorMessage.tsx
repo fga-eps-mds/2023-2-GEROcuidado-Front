@@ -6,13 +6,13 @@ import {
 
 interface Props {
   text: string | undefined;
-  show: boolean
-};
+  show: boolean;
+}
 
 export function ErrorMessage({ text, show }: Readonly<Props>) {
   return (
     <View>
-      <Text style={styles.error}>{show ? text : '   '}</Text>
+      <Text style={styles.error}>{show ? text : "   "}</Text>
     </View>
   );
 }
@@ -22,5 +22,5 @@ const styles = StyleSheet.create({
     height: 15,
     color: "#FF7F7F",
     fontSize: 12,
-  }
+  },
 });

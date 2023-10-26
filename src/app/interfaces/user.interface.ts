@@ -1,14 +1,14 @@
-export interface IUserBody {
-  nome: string;
+export interface IUserLogin {
   email: string;
   senha: string;
 }
 
-export interface IUser {
-  id: number;
+export interface IUserBody extends IUserLogin {
   nome: string;
-  email: string;
-  senha: string;
+}
+
+export interface IUser extends IUserBody {
+  id: number;
   foto?: string;
   admin: boolean;
 }

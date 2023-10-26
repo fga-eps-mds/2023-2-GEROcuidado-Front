@@ -1,14 +1,10 @@
-import {
-  Pressable,
-  StyleSheet,
-  Text,
-} from 'react-native';
+import { Pressable, StyleSheet, Text } from "react-native";
 
 interface Props {
   title: string;
   callbackFn: () => unknown;
   backgroundColor?: string;
-};
+}
 
 export function CustomButton({ title, callbackFn, backgroundColor }: Readonly<Props>) {
   const background = backgroundColor ?? '#2CCDB5';
@@ -20,19 +16,20 @@ export function CustomButton({ title, callbackFn, backgroundColor }: Readonly<Pr
   );
 }
 
-const styles = (backgroundColor: string) => StyleSheet.create({
-  buttonText: {
-    fontSize: 18,
-    color: 'white',
-    fontWeight: '700',
-  },
-  button: {
-    width: "80%",
-    maxWidth: 350,
-    paddingVertical: 16,
-    paddingHorizontal: 26,
-    backgroundColor,
-    alignItems: 'center',
-    borderRadius: 20,
-  }
-});
+const styles = (backgroundColor: string) =>
+  StyleSheet.create({
+    buttonText: {
+      fontSize: 18,
+      color: "white",
+      fontWeight: "700",
+    },
+    button: {
+      width: "80%",
+      maxWidth: 350,
+      paddingVertical: 16,
+      paddingHorizontal: 26,
+      backgroundColor,
+      alignItems: "center",
+      borderRadius: 20,
+    },
+  });
