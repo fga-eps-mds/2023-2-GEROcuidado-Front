@@ -8,8 +8,8 @@ export default function Home() {
       <Image source={require('../../assets/logo.png')} />
       <Text style={styles.titulo}> Seja um GEROcuidador! </Text>
       <LinkButton title="Acessar Fórum" href="/" />
-      <LinkButton title="Login" href="/pages/login" />
-      <LinkButton title="Cadastre-se" backgroundColor="#B47B9D" href="/pages/cadastro" />
+      <LinkButton title="Login" href="/public/login" />
+      <LinkButton title="Cadastre-se" backgroundColor="#B47B9D" href="/public/cadastro" />
     </View>
   )
 }

@@ -7,6 +7,8 @@ import UploadImage from "../../components/UploadImage";
 import { CustomButton } from "../../components/CustomButton";
 import UserService from "../services/user.service";
 import { ErrorMessage } from "../../components/ErrorMessage";
+import Toast from 'react-native-toast-message';
+
 
 interface IErrors {
   nome?: string,
@@ -39,12 +41,19 @@ export default function Cadastro() {
 
     try {
       const response = await userService.postUser(body);
-      router.push('/pages/login')
-      // TODO fazer um notify
-      console.log("SUCCESS: ", response.message);
+      Toast.show({
+        type: 'success',
+        text1: 'Sucesso!',
+        text2: response.message as string,
+      });
+      router.push('/public/login')
     } catch (err) {
-      // TODO fazer um notify
-      console.log("ERROR: ", err);
+      const error = err as { message: string }
+      Toast.show({
+        type: 'error',
+        text1: 'Erro!',
+        text2: error.message,
+      });
     }
   };
 
@@ -90,7 +99,7 @@ export default function Cadastro() {
 
   return (
     <View>
-      <Link href="/" asChild>
+      <Link href="/" asChild style={styles.voltar}>
         <TouchableOpacity>
           <Icon name="chevron-left" size={42} />
         </TouchableOpacity>
@@ -188,6 +197,9 @@ export default function Cadastro() {
 }
 
 const styles = StyleSheet.create({
+  voltar: {
+    marginTop: 5
+  },
   formControl: {
     flexDirection: "column",
     width: 320,
