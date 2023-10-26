@@ -5,9 +5,9 @@ import { TouchableOpacity } from "react-native-gesture-handler";
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
 import UploadImage from "../../components/UploadImage";
 import { CustomButton } from "../../components/CustomButton";
-import UserService from "../services/user.service";
 import { ErrorMessage } from "../../components/ErrorMessage";
 import Toast from 'react-native-toast-message';
+import { postUser } from "../services/user.service";
 
 
 interface IErrors {
@@ -19,7 +19,6 @@ interface IErrors {
 }
 
 export default function Cadastro() {
-  const userService = new UserService();
   const [foto, setFoto] = useState<string | null | undefined>("");
   const [nome, setNome] = useState("");
   const [email, setEmail] = useState("");
@@ -40,7 +39,7 @@ export default function Cadastro() {
     const body = { nome, email, senha, foto };
 
     try {
-      const response = await userService.postUser(body);
+      const response = await postUser(body);
       Toast.show({
         type: 'success',
         text1: 'Sucesso!',

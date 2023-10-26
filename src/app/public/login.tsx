@@ -5,9 +5,9 @@ import { TouchableOpacity } from "react-native-gesture-handler";
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
 import { CustomButton } from "../../components/CustomButton";
 import Toast from 'react-native-toast-message';
-import UserService from "../services/user.service";
 import { ErrorMessage } from "../../components/ErrorMessage";
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { loginUser } from "../services/user.service";
 
 interface IErrors {
     email?: string,
@@ -16,7 +16,6 @@ interface IErrors {
 
 export default function Login() {
 
-    const userService = new UserService()
     const [email, setEmail] = useState("");
     const [senha, setSenha] = useState("");
     const [escondeSenha, setEscondeSenha] = useState(true);
@@ -32,7 +31,7 @@ export default function Login() {
         const body = { email, senha };
 
         try {
-            const response = await userService.loginUser(body);
+            const response = await loginUser(body)
             Toast.show({
                 type: 'success',
                 text1: 'Sucesso!',
