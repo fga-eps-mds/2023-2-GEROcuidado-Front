@@ -38,7 +38,7 @@ export default function Login() {
         text2: response.message as string,
       });
       await AsyncStorage.setItem("token", response.data);
-      router.push("/private/tabs/rotinas");
+      router.push("/public/tutorial");
     } catch (err) {
       const error = err as { message: string };
       Toast.show({
