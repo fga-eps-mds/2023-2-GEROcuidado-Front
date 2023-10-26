@@ -5,5 +5,5 @@ export default function Registros() {
     <>
       <Text>Registros works!</Text>
     </>
-  )
+  );
 }

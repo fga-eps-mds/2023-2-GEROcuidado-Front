@@ -5,5 +5,5 @@ export default function Perfil() {
     <>
       <Text>Perfil works!</Text>
     </>
-  )
+  );
 }

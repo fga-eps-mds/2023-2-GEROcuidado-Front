@@ -1,13 +1,13 @@
-import React, { useState, useEffect } from 'react';
-import { Image, View, StyleSheet, Pressable } from 'react-native';
-import * as ImagePicker from 'expo-image-picker';
+import * as ImagePicker from "expo-image-picker";
+import React, { useState } from "react";
+import { Image, View, StyleSheet, Pressable } from "react-native";
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
 
 interface IProps {
-  setFoto: (foto: string | null | undefined) => void
+  setFoto: (foto: string | null | undefined) => void;
 }
 
-export default function UploadImage({ setFoto } : IProps) {
+export default function UploadImage({ setFoto }: IProps) {
   const [image, setImage] = useState<string | null>(null);
 
   const pickImage = () => {
@@ -23,7 +23,6 @@ export default function UploadImage({ setFoto } : IProps) {
       setImage(result.assets[0].uri);
       setFoto(result.assets[0].base64);
     });
-
   };
 
   return (

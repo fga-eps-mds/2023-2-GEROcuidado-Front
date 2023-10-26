@@ -5,5 +5,5 @@ export default function Rotinas() {
     <>
       <Text>Rotinas works!</Text>
     </>
-  )
+  );
 }

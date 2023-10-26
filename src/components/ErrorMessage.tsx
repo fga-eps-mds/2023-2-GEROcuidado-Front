@@ -1,19 +1,14 @@
-import {
-  Pressable,
-  StyleSheet,
-  Text,
-  View,
-} from 'react-native';
+import { StyleSheet, Text, View } from "react-native";
 
 interface IProps {
   text: string | undefined;
-  show: boolean
-};
+  show: boolean;
+}
 
 export function ErrorMessage({ text, show }: IProps) {
   return (
     <View>
-      <Text style={styles.error}>{show ? text : '   '}</Text>
+      <Text style={styles.error}>{show ? text : "   "}</Text>
     </View>
   );
 }
@@ -23,5 +18,5 @@ const styles = StyleSheet.create({
     height: 15,
     color: "#FF7F7F",
     fontSize: 12,
-  }
+  },
 });

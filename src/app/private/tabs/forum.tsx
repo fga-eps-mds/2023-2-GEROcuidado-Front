@@ -5,5 +5,5 @@ export default function Forum() {
     <>
       <Text>Forum works!</Text>
     </>
-  )
+  );
 }

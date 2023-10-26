@@ -1,6 +1,6 @@
 import { Tabs } from "expo-router";
-import { Platform, StyleSheet, Text, View } from "react-native";
-import Toast from 'react-native-toast-message';
+import { Platform, StyleSheet, View } from "react-native";
+import Toast from "react-native-toast-message";
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
 
 export default function TabsLayout() {
@@ -11,16 +11,16 @@ export default function TabsLayout() {
       </View>
       <Tabs
         screenOptions={{
-          tabBarActiveTintColor: 'lightgrey',
+          tabBarActiveTintColor: "lightgrey",
           tabBarStyle: {
-            backgroundColor: '#2CCDB5',
+            backgroundColor: "#2CCDB5",
             height: 70,
           },
           tabBarLabelStyle: {
-            marginBottom: Platform.OS == 'ios' ? -15 : 10,
-            fontWeight: '600',
-            color: '#fff',
-            fontSize: 14
+            marginBottom: Platform.OS === "ios" ? -15 : 10,
+            fontWeight: "600",
+            color: "#fff",
+            fontSize: 14,
           },
         }}
       >
@@ -30,7 +30,11 @@ export default function TabsLayout() {
             title: "Rotinas",
             headerShown: false,
             tabBarIcon: ({ size, focused }) => (
-              <Icon name={focused ? "calendar" : "calendar-outline"} style={styles.itemIcon} size={size} />
+              <Icon
+                name={focused ? "calendar" : "calendar-outline"}
+                style={styles.itemIcon}
+                size={size}
+              />
             ),
           }}
         />
@@ -40,7 +44,11 @@ export default function TabsLayout() {
             title: "Registros",
             headerShown: false,
             tabBarIcon: ({ size, focused }) => (
-              <Icon name={focused ? "heart" : "heart-outline"} style={styles.itemIcon} size={size} />
+              <Icon
+                name={focused ? "heart" : "heart-outline"}
+                style={styles.itemIcon}
+                size={size}
+              />
             ),
           }}
         />
@@ -50,7 +58,11 @@ export default function TabsLayout() {
             title: "Forum",
             headerShown: false,
             tabBarIcon: ({ size, focused }) => (
-              <Icon name={focused ? "message" : "message-outline"} style={styles.itemIcon} size={size} />
+              <Icon
+                name={focused ? "message" : "message-outline"}
+                style={styles.itemIcon}
+                size={size}
+              />
             ),
           }}
         />
@@ -60,19 +72,23 @@ export default function TabsLayout() {
             title: "Perfil",
             headerShown: false,
             tabBarIcon: ({ size, focused }) => (
-              <Icon name={focused ? "account" : "account-outline"} style={styles.itemIcon} size={size} />
+              <Icon
+                name={focused ? "account" : "account-outline"}
+                style={styles.itemIcon}
+                size={size}
+              />
             ),
           }}
         />
       </Tabs>
     </>
-  )
+  );
 }
 
 const styles = StyleSheet.create({
   itemIcon: {
     color: "#fff",
-    marginTop: Platform.OS == 'ios' ? 10 : 0,
-    marginBottom: Platform.OS == 'ios' ? 0 : -10,
-  }
-})
+    marginTop: Platform.OS === "ios" ? 10 : 0,
+    marginBottom: Platform.OS === "ios" ? 0 : -10,
+  },
+});
