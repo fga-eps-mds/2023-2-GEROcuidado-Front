@@ -1,13 +1,13 @@
-import React, { useState, useEffect } from 'react';
-import { Image, View, StyleSheet, TouchableOpacity } from 'react-native';
+import React, { useState } from 'react';
+import { Image, View, StyleSheet, Pressable } from 'react-native';
 import * as ImagePicker from 'expo-image-picker';
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
 
-interface IProps {
+interface Props {
   setFoto: (foto: string | null | undefined) => void
 }
 
-export default function UploadImage({ setFoto } : IProps) {
+export default function UploadImage({ setFoto } : Readonly<Props>) {
   const [image, setImage] = useState<string | null>(null);
 
   const pickImage = () => {
@@ -23,13 +23,12 @@ export default function UploadImage({ setFoto } : IProps) {
       setImage(result.assets[0].uri);
       setFoto(result.assets[0].base64);
     });
-
   };
 
   return (
     <View style={styles.foto}>
       <Icon style={styles.icone} name="image-outline" size={20} />
-      <TouchableOpacity style={styles.botao} onPress={pickImage} />
+      <Pressable style={styles.botao} onPress={pickImage} />
       {image && <Image source={{ uri: image }} style={styles.imagem} />}
     </View>
   );

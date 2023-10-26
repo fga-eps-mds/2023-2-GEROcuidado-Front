@@ -1,5 +1,5 @@
-import { Link } from "expo-router";
 import { Image, StyleSheet, Text, View } from "react-native";
+
 import { LinkButton } from "../components/LinkButton";
 
 export default function Home() {
@@ -8,15 +8,12 @@ export default function Home() {
       <Image source={require("../../assets/logo.png")} />
       <Text style={styles.titulo}> Seja um GEROcuidador! </Text>
       <LinkButton title="Acessar Fórum" href="/" />
-      <LinkButton title="Login" href="/pages/auth/login" />
+      <LinkButton title="Login" href="/public/login" />
       <LinkButton
         title="Cadastre-se"
         backgroundColor="#B47B9D"
-        href="/pages/auth/cadastro"
+        href="/public/cadastro"
       />
-      <Link href="/pages/auth/carousel">
-        <Text>Tutorial</Text>
-      </Link>
     </View>
   );
 }

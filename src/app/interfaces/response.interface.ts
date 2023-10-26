@@ -1,4 +1,4 @@
 export interface IResponse<T> {
-  data: T,
-  message: string | null,
+  data: T;
+  message: string | null;
 }
