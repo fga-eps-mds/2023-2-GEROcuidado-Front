@@ -3,66 +3,110 @@ import { Image, StyleSheet, Text, View, TextInput } from "react-native";
 import { Link } from 'expo-router';
 import { TouchableOpacity } from "react-native-gesture-handler";
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
-import { LinkButton } from "../../components/LinkButton";
-//import UserService from "../services/user.service";
+import { CustomButton } from "../../components/CustomButton";
+import Toast from 'react-native-toast-message';
+import UserService from "../services/user.service";
+import { ErrorMessage } from "../../components/ErrorMessage";
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
+interface IErrors {
+    email?: string,
+    senha?: string,
+}
 
-export default function Login(){
-    
-    //const userService = new UserService();
+export default function Login() {
+
+    const userService = new UserService()
     const [email, setEmail] = useState("");
     const [senha, setSenha] = useState("");
     const [escondeSenha, setEscondeSenha] = useState(true);
+    const [erros, setErros] = useState<IErrors>({});
+    const [showErrors, setShowErrors] = useState(false);
 
-    /*const logar = async () => {
-        // TODO realizar validações dos inputs
-    
-        const body = {email, senha}
-    
-        try {
-          const response = await userService.postUser(body);
-          // Setar o usuario em alguma storage da aplicação
-          // Navegar para a tela de login
-          // chamar serviço de notificação com sucesso
-          console.log('SUCCESS: ', response.message);
-          console.log('DATA: ', response.data);
-        } catch (err) {
-          // chamar serviço de notificação com erro
-          console.log('ERROR: ', err)
+    const login = async () => {
+        if (Object.keys(erros).length > 0) {
+            setShowErrors(true);
+            return
         }
-    }*/
+
+        const body = { email, senha };
+
+        try {
+            const response = await userService.loginUser(body);
+            Toast.show({
+                type: 'success',
+                text1: 'Sucesso!',
+                text2: response.message as string,
+            });
+            await AsyncStorage.setItem('token', response.data);
+            // Navegar pras tabs
+        } catch (err) {
+            const error = err as { message: string }
+            Toast.show({
+                type: 'error',
+                text1: 'Erro!',
+                text2: error.message,
+            });
+        }
+
+
+    };
+
+    useEffect(() => handleErrors(), [email, senha]);
+
+    const handleErrors = () => {
+        let erros: IErrors = {};
+
+        if (!email) {
+            erros.email = 'Campo Obrigatório!';
+        } else if (!/\S+@\S+\.\S+/.test(email)) {
+            erros.email = 'Email inválido!';
+        }
+
+        if (!senha) {
+            erros.senha = 'Campo Obrigatório!';
+        }
+
+        setErros(erros);
+    };
 
     return (
         <View>
-
-            <Link href="/" asChild>
+            <Link href="/" asChild style={styles.voltar}>
                 <TouchableOpacity >
                     <Icon name="chevron-left" size={42} />
                 </TouchableOpacity>
             </Link>
-            <View style = {styles.imagem}>   
-                <Image 
-                    source={require('../../../assets/logo2.png')} 
-                    style={{ width: 350, height: 90}}
+
+            <View style={styles.imagem}>
+                <Image
+                    source={require('../../../assets/logo2.png')}
+                    style={{ width: 280, height: 90 }}
                 />
             </View>
+
             <Text style={styles.titulo}>
                 Bem Vindo de volta!
             </Text>
 
-            <View style={styles.field}>
-                <Icon name="email-outline" size={20} />
-                <TextInput
-                    onChangeText={setEmail}
-                    value={email}
-                    placeholder="Email"
-                    style={styles.textInput}
-                />
+            <View style={styles.formControl}>
+                <View style={styles.field}>
+                    <Icon style={styles.iconInput} name="email-outline" size={20} />
+                    <TextInput
+                        onChangeText={setEmail}
+                        value={email}
+                        placeholder="Email"
+                        style={styles.textInput}
+                    />
+                </View>
+                <ErrorMessage show={showErrors} text={erros.email} />
             </View>
-            
-            
-            <View style={styles.field}>
-                <Icon style={styles.iconInput} name="lock-outline" size={20} />
+
+
+            <View style={styles.formControl}>
+
+                <View style={styles.field}>
+                    <Icon style={styles.iconInput} name="lock-outline" size={20} />
                     <TextInput
                         onChangeText={setSenha}
                         value={senha}
@@ -71,11 +115,18 @@ export default function Login(){
                         style={styles.passwordInput}
                     />
 
-                <Icon onPress={() => setEscondeSenha(!escondeSenha)} style={styles.passwordIcon} name={escondeSenha ? "eye-outline" : "eye-off-outline"} size={20} />
-        </View>
+                    <Icon
+                        onPress={() => setEscondeSenha(!escondeSenha)}
+                        style={styles.passwordIcon}
+                        name={escondeSenha ? "eye-outline" : "eye-off-outline"}
+                        size={20}
+                    />
+                </View>
+                <ErrorMessage show={showErrors} text={erros.senha} />
+            </View>
 
             <View style={styles.linkButton}>
-                <LinkButton title="Entrar" href="/pages/cadastro" />
+                <CustomButton title="Entrar" callbackFn={login} />
             </View>
         </View>
     )
@@ -83,24 +134,34 @@ export default function Login(){
 
 
 const styles = StyleSheet.create({
+    voltar: {
+        marginTop: 5
+    },
+    formControl: {
+        flexDirection: "column",
+        width: 320,
+        alignItems: "flex-start",
+        alignSelf: "center",
+        marginTop: 10,
+    },
     center: {
-      flex: 1,
-      justifyContent: "center",
-      alignItems: "center"
+        flex: 1,
+        justifyContent: "center",
+        alignItems: "center"
     },
     titulo: {
-      fontSize: 28,
-      fontWeight: "300",
-      textAlign: "center",
-      margin: 20,
-      marginBottom: 70,
-      marginTop: 50,
+        fontSize: 28,
+        fontWeight: "300",
+        textAlign: "center",
+        margin: 20,
+        marginBottom: 70,
+        marginTop: 25,
     },
     imagem: {
         flex: 1,
         justifyContent: 'center',
         alignItems: 'center',
-        marginTop: 170,
+        marginTop: 100,
 
     },
     button: {
@@ -121,7 +182,7 @@ const styles = StyleSheet.create({
         paddingBottom: 5,
         width: 320,
         height: 30,
-        alignSelf: "center",  
+        alignSelf: "center",
     },
     iconInput: {
         width: "10%",
@@ -144,11 +205,11 @@ const styles = StyleSheet.create({
     arrow: {
         alignSelf: "flex-start",
     },
-    linkButton:{
-        marginTop: 123,
+    linkButton: {
+        marginTop: 90,
         alignItems: "center",
     },
-    foto:{
+    foto: {
         backgroundColor: "#EFEFF0",
         borderRadius: 25,
         alignItems: "center",
@@ -160,7 +221,7 @@ const styles = StyleSheet.create({
         borderColor: "#AFB1B6",
         marginBottom: 38,
     },
-    eye:{    
+    eye: {
         marginLeft: 100,
     }
 })
