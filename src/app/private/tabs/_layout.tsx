@@ -1,9 +1,11 @@
 import { Tabs } from "expo-router";
-import { StyleSheet, Text, View } from "react-native";
+import { Platform, StyleSheet, Text, View } from "react-native";
 import Toast from 'react-native-toast-message';
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
 
-
+const IOSTabBarLabelStyle = { marginBottom: -15 }
+const ANDROIDTabBarLabelStyle = {}
+const selectedTabBarLabelStyle = Platform.OS == 'ios' ? IOSTabBarLabelStyle : ANDROIDTabBarLabelStyle
 
 export default function TabsLayout() {
   return (
@@ -18,8 +20,11 @@ export default function TabsLayout() {
             backgroundColor: '#2CCDB5',
             height: 70,
           },
-          tabBarLabelStyle: {
-            marginBottom: -15, fontWeight: '600', color: '#fff', fontSize: 14
+          tabBarLabelStyle: { 
+            ...selectedTabBarLabelStyle,
+            fontWeight: '600',
+            color: '#fff',
+            fontSize: 14
           },
         }}
       >
