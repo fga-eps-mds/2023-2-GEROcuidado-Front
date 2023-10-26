@@ -1,11 +1,11 @@
 import React, { useState } from "react";
-import { Text, TouchableOpacity, View, Image, StyleSheet } from "react-native";
+import { Text, TouchableOpacity, View, StyleSheet } from "react-native";
 import Swiper from "react-native-swiper";
-import Tutorial from "./tutorial";
-import { CustomButton } from "../../../components/CustomButton";
+import ItemTutorial from "../../components/ItemTutorial";
+import { CustomButton } from "../../components/CustomButton";
 import { router } from "expo-router";
 
-export default function Carousel() {
+export default function Tutorial() {
   const [index, setIndex] = useState(0);
 
   const textEl1 = (
@@ -26,40 +26,43 @@ export default function Carousel() {
     </Text>
   );
 
-  const navigateHome = () => {
-    router.replace("/");
+  const skip = () => {
+    router.push("/private/tabs/rotinas");
   };
 
   return (
     <View style={styles.carousel}>
-      <TouchableOpacity onPress={navigateHome}>
+      <TouchableOpacity onPress={skip}>
         <Text style={styles.skip}>Pular</Text>
       </TouchableOpacity>
+
       <Swiper
         index={index}
         onIndexChanged={(newIndex) => setIndex(newIndex)}
         dotColor="#D9D9D9"
         activeDotColor="#9E9696"
-        showsButtons={true}
+        showsButtons={false}
+        scrollEnabled={false}
         loop={false}
       >
-        <Tutorial
-          imageSrc={require("../../../../assets/img_tutor1.png")}
+        <ItemTutorial
+          imageSrc={require("../../../assets/img_tutor1.png")}
           textEl={textEl1}
-        ></Tutorial>
-        <Tutorial
-          imageSrc={require("../../../../assets/img_tutor2.png")}
+        />
+        <ItemTutorial
+          imageSrc={require("../../../assets/img_tutor2.png")}
           textEl={textEl2}
-        ></Tutorial>
-        <Tutorial
-          imageSrc={require("../../../../assets/img_tutor3.png")}
+        />
+        <ItemTutorial
+          imageSrc={require("../../../assets/img_tutor3.png")}
           textEl={textEl3}
-        ></Tutorial>
+        />
       </Swiper>
+
       <View style={styles.center}>
         <CustomButton
           title="Avançar"
-          callbackFn={() => (index > 1 ? navigateHome() : setIndex(index + 1))}
+          callbackFn={() => (index > 1 ? skip() : setIndex(index + 1))}
         />
       </View>
     </View>
@@ -68,7 +71,7 @@ export default function Carousel() {
 
 const styles = StyleSheet.create({
   text: {
-    fontSize: 32,
+    fontSize: 28,
     textAlign: "center",
     fontWeight: "bold",
     color: "gray",
@@ -87,9 +90,9 @@ const styles = StyleSheet.create({
   },
   skip: {
     textAlign: "right",
-    marginTop: 10,
+    marginTop: 15,
     marginBottom: 10,
-    marginRight: 30,
+    marginRight: 20,
     fontWeight: "bold",
     color: "gray",
   },

@@ -6,8 +6,12 @@ interface Props {
   backgroundColor?: string;
 }
 
-export function CustomButton({ title, callbackFn, backgroundColor }: Readonly<Props>) {
-  const background = backgroundColor ?? '#2CCDB5';
+export function CustomButton({
+  title,
+  callbackFn,
+  backgroundColor,
+}: Readonly<Props>) {
+  const background = backgroundColor ?? "#2CCDB5";
 
   return (
     <Pressable style={styles(background).button} onPress={() => callbackFn()}>
