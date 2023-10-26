@@ -3,31 +3,24 @@ import {
   StyleSheet,
   Text,
 } from 'react-native';
-import { Link } from 'expo-router';
 
 interface Props {
   title: string;
-  href: string;
+  callbackFn: () => unknown;
   backgroundColor?: string;
 };
 
-export function LinkButton({ title, href, backgroundColor }: Props) {
-  backgroundColor = backgroundColor ?? '#2CCDB5';
+export function CustomButton({ title, callbackFn, backgroundColor }: Readonly<Props>) {
+  const background = backgroundColor ?? '#2CCDB5';
 
   return (
-    <Link href={href} style={styles(backgroundColor).link} asChild>
-      <Pressable style={styles(backgroundColor).button}>
-        <Text style={styles(backgroundColor).buttonText}>{title}</Text>
-      </Pressable>
-    </Link>
+    <Pressable style={styles(background).button} onPress={() => callbackFn()}>
+      <Text style={styles(background).buttonText}>{title}</Text>
+    </Pressable>
   );
 }
 
 const styles = (backgroundColor: string) => StyleSheet.create({
-  link: {
-    width: "100%",
-    marginBottom: 25,
-  },
   buttonText: {
     fontSize: 18,
     color: 'white',
