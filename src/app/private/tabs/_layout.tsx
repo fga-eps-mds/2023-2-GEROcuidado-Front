@@ -3,10 +3,6 @@ import { Platform, StyleSheet, Text, View } from "react-native";
 import Toast from 'react-native-toast-message';
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
 
-const IOSTabBarLabelStyle = { marginBottom: -15 }
-const ANDROIDTabBarLabelStyle = {}
-const selectedTabBarLabelStyle = Platform.OS == 'ios' ? IOSTabBarLabelStyle : ANDROIDTabBarLabelStyle
-
 export default function TabsLayout() {
   return (
     <>
@@ -20,8 +16,8 @@ export default function TabsLayout() {
             backgroundColor: '#2CCDB5',
             height: 70,
           },
-          tabBarLabelStyle: { 
-            ...selectedTabBarLabelStyle,
+          tabBarLabelStyle: {
+            marginBottom: Platform.OS == 'ios' ? -15 : 10,
             fontWeight: '600',
             color: '#fff',
             fontSize: 14
@@ -34,10 +30,7 @@ export default function TabsLayout() {
             title: "Rotinas",
             headerShown: false,
             tabBarIcon: ({ size, focused }) => (
-              <View style={styles.item}>
-                <Icon name={focused ? "calendar" : "calendar-outline"} style={styles.itemIcon} size={size} />
-                {/* <Text style={styles.itemText}>Rotinas</Text> */}
-              </View>
+              <Icon name={focused ? "calendar" : "calendar-outline"} style={styles.itemIcon} size={size} />
             ),
           }}
         />
@@ -47,10 +40,7 @@ export default function TabsLayout() {
             title: "Registros",
             headerShown: false,
             tabBarIcon: ({ size, focused }) => (
-              <View style={styles.item}>
-                <Icon name={focused ? "heart" : "heart-outline"} style={styles.itemIcon} size={size} />
-                {/* <Text style={styles.itemText}>Registros</Text> */}
-              </View>
+              <Icon name={focused ? "heart" : "heart-outline"} style={styles.itemIcon} size={size} />
             ),
           }}
         />
@@ -60,10 +50,7 @@ export default function TabsLayout() {
             title: "Forum",
             headerShown: false,
             tabBarIcon: ({ size, focused }) => (
-              <View style={styles.item}>
-                <Icon name={focused ? "message" : "message-outline"} style={styles.itemIcon} size={size} />
-                {/* <Text style={styles.itemText}>Forum</Text> */}
-              </View>
+              <Icon name={focused ? "message" : "message-outline"} style={styles.itemIcon} size={size} />
             ),
           }}
         />
@@ -73,10 +60,7 @@ export default function TabsLayout() {
             title: "Perfil",
             headerShown: false,
             tabBarIcon: ({ size, focused }) => (
-              <View style={styles.item}>
-                <Icon name={focused ? "account" : "account-outline"} style={styles.itemIcon} size={size} />
-                {/* <Text style={styles.itemText}>Perfil</Text> */}
-              </View>
+              <Icon name={focused ? "account" : "account-outline"} style={styles.itemIcon} size={size} />
             ),
           }}
         />
@@ -86,7 +70,9 @@ export default function TabsLayout() {
 }
 
 const styles = StyleSheet.create({
-  item: { flexDirection: 'column', alignItems: 'center', justifyContent: 'center' },
-  itemText: { marginTop: 3, fontWeight: '600', color: '#fff' },
-  itemIcon: { color: "#fff", marginTop: 10, zIndex: 1 }
+  itemIcon: {
+    color: "#fff",
+    marginTop: Platform.OS == 'ios' ? 10 : 0,
+    marginBottom: Platform.OS == 'ios' ? 0 : -10,
+  }
 })
