@@ -1,13 +1,13 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { Image, View, StyleSheet, TouchableOpacity } from 'react-native';
 import * as ImagePicker from 'expo-image-picker';
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
 
-interface IProps {
+interface Props {
   setFoto: (foto: string | null | undefined) => void
 }
 
-export default function UploadImage({ setFoto } : IProps) {
+export default function UploadImage({ setFoto } : Readonly<Props>) {
   const [image, setImage] = useState<string | null>(null);
 
   const pickImage = () => {

@@ -1,16 +1,15 @@
 import {
-  Pressable,
   StyleSheet,
   Text,
   View,
 } from 'react-native';
 
-interface IProps {
+interface Props {
   text: string | undefined;
   show: boolean
 };
 
-export function ErrorMessage({ text, show }: IProps) {
+export function ErrorMessage({ text, show }: Readonly<Props>) {
   return (
     <View>
       <Text style={styles.error}>{show ? text : '   '}</Text>

@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { View, TextInput, StyleSheet, ScrollView, Text } from "react-native";
+import { View, TextInput, StyleSheet, ScrollView } from "react-native";
 import { Link, router } from "expo-router";
 import { TouchableOpacity } from "react-native-gesture-handler";
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
