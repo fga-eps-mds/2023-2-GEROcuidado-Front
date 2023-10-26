@@ -4,6 +4,14 @@ import Toast from "react-native-toast-message";
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
 
 export default function TabsLayout() {
+  const iconComponent = (focused: boolean, size: number, iconName: string) => (
+    <Icon
+      name={focused ? iconName : `${iconName}-outline`}
+      style={styles.itemIcon}
+      size={size}
+    />
+  );
+
   return (
     <>
       <View style={{ zIndex: 9999 }}>
@@ -29,13 +37,9 @@ export default function TabsLayout() {
           options={{
             title: "Rotinas",
             headerShown: false,
-            tabBarIcon: ({ size, focused }) => (
-              <Icon
-                name={focused ? "calendar" : "calendar-outline"}
-                style={styles.itemIcon}
-                size={size}
-              />
-            ),
+            tabBarIcon: ({ size, focused }) => {
+              return iconComponent(focused, size, "calendar");
+            },
           }}
         />
         <Tabs.Screen
@@ -43,13 +47,9 @@ export default function TabsLayout() {
           options={{
             title: "Registros",
             headerShown: false,
-            tabBarIcon: ({ size, focused }) => (
-              <Icon
-                name={focused ? "heart" : "heart-outline"}
-                style={styles.itemIcon}
-                size={size}
-              />
-            ),
+            tabBarIcon: ({ size, focused }) => {
+              return iconComponent(focused, size, "heart");
+            },
           }}
         />
         <Tabs.Screen
@@ -57,13 +57,9 @@ export default function TabsLayout() {
           options={{
             title: "Forum",
             headerShown: false,
-            tabBarIcon: ({ size, focused }) => (
-              <Icon
-                name={focused ? "message" : "message-outline"}
-                style={styles.itemIcon}
-                size={size}
-              />
-            ),
+            tabBarIcon: ({ size, focused }) => {
+              return iconComponent(focused, size, "message");
+            },
           }}
         />
         <Tabs.Screen
@@ -71,13 +67,9 @@ export default function TabsLayout() {
           options={{
             title: "Perfil",
             headerShown: false,
-            tabBarIcon: ({ size, focused }) => (
-              <Icon
-                name={focused ? "account" : "account-outline"}
-                style={styles.itemIcon}
-                size={size}
-              />
-            ),
+            tabBarIcon: ({ size, focused }) => {
+              return iconComponent(focused, size, "account");
+            },
           }}
         />
       </Tabs>

@@ -2,11 +2,11 @@ import { router } from "expo-router";
 import { Pressable } from "react-native";
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
 
-interface IProps {
+interface Props {
   canGoBack?: boolean;
 }
 
-export function BackButton({ canGoBack = true }: IProps) {
+export function BackButton({ canGoBack = true }: Readonly<Props>) {
   const goBack = () => (canGoBack ? router.back() : false);
 
   return (
