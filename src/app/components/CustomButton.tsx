@@ -1,3 +1,4 @@
+import React from "react";
 import { Pressable, StyleSheet, Text } from "react-native";
 
 interface Props {
@@ -6,7 +7,7 @@ interface Props {
   backgroundColor?: string;
 }
 
-export function CustomButton({
+export default function CustomButton({
   title,
   callbackFn,
   backgroundColor,

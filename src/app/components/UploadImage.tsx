@@ -1,13 +1,13 @@
-import React, { useState } from 'react';
-import { Image, View, StyleSheet, Pressable } from 'react-native';
-import * as ImagePicker from 'expo-image-picker';
+import React, { useState } from "react";
+import { Image, View, StyleSheet, Pressable } from "react-native";
+import * as ImagePicker from "expo-image-picker";
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
 
 interface Props {
-  setFoto: (foto: string | null | undefined) => void
+  setFoto: (foto: string | null | undefined) => void;
 }
 
-export default function UploadImage({ setFoto } : Readonly<Props>) {
+export default function UploadImage({ setFoto }: Readonly<Props>) {
   const [image, setImage] = useState<string | null>(null);
 
   const pickImage = () => {

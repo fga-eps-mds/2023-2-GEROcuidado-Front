@@ -1,15 +1,13 @@
-import {
-  StyleSheet,
-  Text,
-  View,
-} from 'react-native';
+import React from "react";
+import { View } from "react-native";
+import { StyleSheet, Text } from "react-native";
 
 interface Props {
   text: string | undefined;
   show: boolean;
 }
 
-export function ErrorMessage({ text, show }: Readonly<Props>) {
+export default function ErrorMessage({ text, show }: Readonly<Props>) {
   return (
     <View>
       <Text style={styles.error}>{show ? text : "   "}</Text>

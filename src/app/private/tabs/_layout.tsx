@@ -1,7 +1,8 @@
-import { Tabs } from "expo-router";
-import { Platform, StyleSheet, View } from "react-native";
+import React from "react";
 import Toast from "react-native-toast-message";
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
+import { Platform, StyleSheet, View } from "react-native";
+import { Tabs } from "expo-router";
 
 export default function TabsLayout() {
   const iconComponent = (focused: boolean, size: number, iconName: string) => (

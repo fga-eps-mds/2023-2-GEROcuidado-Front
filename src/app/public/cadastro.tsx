@@ -4,10 +4,10 @@ import { View, TextInput, StyleSheet, ScrollView } from "react-native";
 import Toast from "react-native-toast-message";
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
 
-import { BackButton } from "../../components/BackButton";
-import { CustomButton } from "../../components/CustomButton";
-import { ErrorMessage } from "../../components/ErrorMessage";
-import UploadImage from "../../components/UploadImage";
+import BackButton from "../components/BackButton";
+import CustomButton from "../components/CustomButton";
+import ErrorMessage from "../components/ErrorMessage";
+import UploadImage from "../components/UploadImage";
 import { postUser } from "../services/user.service";
 
 interface IErrors {

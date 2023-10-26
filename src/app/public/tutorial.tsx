@@ -1,8 +1,8 @@
 import React, { useState } from "react";
 import { Text, TouchableOpacity, View, StyleSheet } from "react-native";
 import Swiper from "react-native-swiper";
-import ItemTutorial from "../../components/ItemTutorial";
-import { CustomButton } from "../../components/CustomButton";
+import ItemTutorial from "../components/ItemTutorial";
+import CustomButton from "../components/CustomButton";
 import { router } from "expo-router";
 
 export default function Tutorial() {

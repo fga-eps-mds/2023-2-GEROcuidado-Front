@@ -8,12 +8,11 @@
         "buildType": "apk"
       }
     },
-
     "development": {
       "developmentClient": true,
       "distribution": "internal"
     },
-    "preview2": {     
+    "preview2": {
       "distribution": "internal"
     },
     "production": {}

@@ -5,9 +5,9 @@ import { Image, StyleSheet, Text, View, TextInput } from "react-native";
 import Toast from "react-native-toast-message";
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
 
-import { BackButton } from "../../components/BackButton";
-import { CustomButton } from "../../components/CustomButton";
-import { ErrorMessage } from "../../components/ErrorMessage";
+import BackButton from "../components/BackButton";
+import CustomButton from "../components/CustomButton";
+import ErrorMessage from "../components/ErrorMessage";
 import { loginUser } from "../services/user.service";
 
 interface IErrors {

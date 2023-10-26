@@ -1,5 +1,4 @@
 import { Pressable, StyleSheet, Text } from "react-native";
-
 import React from "react";
 import { router } from "expo-router";
 
@@ -9,14 +8,14 @@ interface Props {
   backgroundColor?: string;
 }
 
-export function LinkButton({ title, href, backgroundColor }: Props) {
-  backgroundColor = backgroundColor ?? "#2CCDB5";
+export default function LinkButton({ title, href, backgroundColor }: Props) {
+  const background = backgroundColor ?? "#2CCDB5";
 
   const navigate = () => router.push(href);
 
   return (
-    <Pressable style={styles(backgroundColor).button} onPress={navigate}>
-      <Text style={styles(backgroundColor).buttonText}>{title}</Text>
+    <Pressable style={styles(background).button} onPress={navigate}>
+      <Text style={styles(background).buttonText}>{title}</Text>
     </Pressable>
   );
 }

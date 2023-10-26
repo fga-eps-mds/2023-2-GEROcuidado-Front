@@ -5,13 +5,12 @@ import { router } from "expo-router";
 
 interface Props {
   canGoBack?: boolean;
-  color?: string;
-  size?: number;
-  style: any;
 }
 
-export function BackButton({ canGoBack = true }: Readonly<Props>) {
-  const goBack = () => (canGoBack ? router.back() : false);
+export default function BackButton({ canGoBack = true }: Readonly<Props>) {
+  const goBack = () => {
+    canGoBack && router.canGoBack() ? router.back() : false;
+  };
 
   return (
     <Pressable onPress={goBack}>

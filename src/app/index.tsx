@@ -1,6 +1,6 @@
 import { Image, StyleSheet, Text, View } from "react-native";
 
-import { LinkButton } from "../components/LinkButton";
+import LinkButton from "./components/LinkButton";
 import React from "react";
 
 export default function Home() {
