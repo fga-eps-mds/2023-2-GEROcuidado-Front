@@ -1,9 +1,9 @@
 import { render } from '@testing-library/react-native'
-import Home from './index'
+import Login from '../app/public/login'
 
-describe('<Home/>', () => {
+describe('<Login/>', () => {
  it('should be defined', () => {
-  const component = render(<Home />)
+  const component = render(<Login />)
    expect(component).toBeTruthy()
    expect(component).toBeDefined()
  })

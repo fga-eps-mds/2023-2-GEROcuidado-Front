@@ -1,5 +1,5 @@
 import { render } from '@testing-library/react-native'
-import Cadastro from './cadastro'
+import Cadastro from '../app/public/cadastro'
 
 describe('<Cadastro/>', () => {
  it('should be defined', () => {
