@@ -1,6 +1,7 @@
 import { FlatList, Image, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native';
 import React, { useState } from 'react';
 
+import { BackButton } from "../../../components/BackButton";
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 
 // CRIANDO OBJETOS DE COMENTÁRIOS
@@ -126,14 +127,16 @@ export default function HomeScreen() {
 
   return (
     <View style={{ flex: 1, backgroundColor: 'white' }}>
+      
       <View>
         {/* BARRA DE PESQUISA */}
+        
         <View style={{ backgroundColor: "#2CCDB5", padding: 10 }}>
+        <BackButton color={'white'} size={60} style={{position:'absolute', left:-20}}/>
           <View style={{alignItems:'center'}}>
-            <Icon name='chevron-left' color={'white'} size={60} style={{position:'absolute', left:-20}}></Icon>
+            {/*<Icon name='chevron-left' color={'white'} size={60} style={{position:'absolute', left:-20}}></Icon>*/}
             <Text style={styles.titulo}>Fórum Gero Cuidado</Text>
           </View>
-
           <View style={{flexDirection: 'row', alignItems: 'center',}}>
             <TextInput
               style={styles.barraDePesquisa}
@@ -159,7 +162,7 @@ export default function HomeScreen() {
         renderItem={({ item }) => (
           <View style={styles.postContainer}>
             <View style={styles.postHeader}>
-              <Image source={require('../../../assets/amelia.png')} style={styles.avatar} />
+              <Image source={require('../../../../assets/amelia.png')} style={styles.avatar} />
               <View style={styles.userInfo}>
                 <Text style={styles.username}>{item.username}</Text>
                 <Text style={styles.date}>{item.date}</Text>

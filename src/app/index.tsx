@@ -1,13 +1,14 @@
 import { Image, StyleSheet, Text, View } from "react-native";
 
 import { LinkButton } from "../components/LinkButton";
+import React from "react";
 
 export default function Home() {
   return (
     <View style={styles.center}>
       <Image source={require("../../assets/logo.png")} />
       <Text style={styles.titulo}> Seja um GEROcuidador! </Text>
-      <LinkButton title="Acessar Fórum" href="/" />
+      <LinkButton title="Acessar Fórum" href="/private/tabs/forum" />
       <LinkButton title="Login" href="/public/login" />
       <LinkButton
         title="Cadastre-se"
