@@ -6,7 +6,7 @@ interface Props {
   textEl: ReactNode;
 }
 
-export default function ItemTutorial({ imageSrc, textEl }: Props) {
+export default function ItemTutorial({ imageSrc, textEl }: Readonly<Props>) {
   return (
     <View style={styles.container}>
       <Image style={styles.image} source={imageSrc} />
