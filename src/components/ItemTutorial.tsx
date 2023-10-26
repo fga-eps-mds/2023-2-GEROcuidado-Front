@@ -6,21 +6,22 @@ interface Props {
   textEl: ReactNode;
 }
 
-export default function Tutorial({ imageSrc, textEl }: Props) {
+export default function ItemTutorial({ imageSrc, textEl }: Props) {
   return (
-    <View>
-      <Image
-        style={styles.image}
-        source={imageSrc}
-      />
-      { textEl }
+    <View style={styles.container}>
+      <Image style={styles.image} source={imageSrc} />
+      {textEl}
     </View>
   );
 }
 
 const styles = StyleSheet.create({
+  container: {
+    marginBottom: 30,
+  },
   image: {
     alignSelf: "center",
+    aspectRatio: 3 / 4,
     marginBottom: 28,
     marginTop: 32,
   },
