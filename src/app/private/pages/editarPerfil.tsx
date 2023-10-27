@@ -30,7 +30,6 @@ export default function EditarPerfil() {
   const [showErrors, setShowErrors] = useState(false);
   const [modalVisible, setModalVisible] = useState(false);
 
-
   const getUser = async () => {
     if (token) return;
 
@@ -115,12 +114,12 @@ export default function EditarPerfil() {
   };
 
   const confirmation = () => {
-    setModalVisible(!modalVisible)
-  }
-  
+    setModalVisible(!modalVisible);
+  };
+
   const closeModal = () => {
-    setModalVisible(false)
-  }
+    setModalVisible(false);
+  };
 
   useEffect(() => handleErrors(), [nome]);
 
@@ -142,7 +141,10 @@ export default function EditarPerfil() {
 
   return (
     <View>
-      <BackButton />
+
+      <Pressable onPress={() => {router.replace("/private/tabs/perfil")}}>
+        <Icon name="chevron-left" size={40} />
+      </Pressable>
 
       {foto && <UploadImage setFoto={setFoto} uri={foto} />}
       {!foto && <UploadImage setFoto={setFoto} />}
@@ -174,7 +176,11 @@ export default function EditarPerfil() {
       <Pressable onPress={confirmation}>
         <Text style={styles.apagar}>Apagar Conta</Text>
       </Pressable>
-      <ModalConfirmation visible={modalVisible} callbackFn={apagarConta} closeModal={closeModal}/>
+      <ModalConfirmation
+        visible={modalVisible}
+        callbackFn={apagarConta}
+        closeModal={closeModal}
+      />
     </View>
   );
 }
