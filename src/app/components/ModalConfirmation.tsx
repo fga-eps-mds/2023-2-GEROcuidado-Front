@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 import { Modal, StyleSheet, Text, Pressable, View } from "react-native";
 
 interface IProps {
@@ -14,11 +14,7 @@ export default function ModalConfirmation({
 }: IProps) {
   return (
     <View style={styles.centeredView}>
-      <Modal
-        animationType="fade"
-        transparent={true}
-        visible={visible}
-      >
+      <Modal animationType="fade" transparent={true} visible={visible}>
         <View style={styles.centeredView}>
           <View style={styles.modalView}>
             <Text style={styles.modalText}>
@@ -50,7 +46,7 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: "center",
     alignItems: "center",
-    marginTop: 22,
+    backgroundColor: "#00000098",
   },
   modalView: {
     margin: 20,
@@ -90,7 +86,7 @@ const styles = StyleSheet.create({
     textAlign: "center",
   },
   modalText: {
-    marginBottom: 15,
+    marginBottom: 35,
     textAlign: "center",
     fontWeight: "bold",
   },

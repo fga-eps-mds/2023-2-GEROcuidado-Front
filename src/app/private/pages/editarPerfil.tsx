@@ -1,60 +1,29 @@
 import React, { useEffect, useState } from "react";
 import { Pressable, StyleSheet, Text, View } from "react-native";
-import BackButton from "../../components/BackButton";
 import Toast from "react-native-toast-message";
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
 import { TextInput } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import {
-  deleteUserById,
-  getUserById,
-  updateUser,
-} from "../../services/user.service";
-import { router } from "expo-router";
+import { deleteUserById, updateUser } from "../../services/user.service";
+import { router, useLocalSearchParams } from "expo-router";
 import ErrorMessage from "../../components/ErrorMessage";
 import CustomButton from "../../components/CustomButton";
 import { IUser } from "../../interfaces/user.interface";
 import UploadImage from "../../components/UploadImage";
 import ModalConfirmation from "../../components/ModalConfirmation";
+import BackButton from "../../components/BackButton";
 
 interface IErrors {
   nome?: string;
 }
 
 export default function EditarPerfil() {
-  const [foto, setFoto] = useState<string | undefined | null>(null);
-  const [nome, setNome] = useState("");
-  const [token, setToken] = useState("");
+  const user = useLocalSearchParams() as unknown as IUser;
+  const [foto, setFoto] = useState<string | undefined | null>(user.foto);
+  const [nome, setNome] = useState(user.nome);
   const [erros, setErros] = useState<IErrors>({});
-  const [user, setUser] = useState<IUser | null>(null);
   const [showErrors, setShowErrors] = useState(false);
   const [modalVisible, setModalVisible] = useState(false);
-
-  const getUser = async () => {
-    if (token) return;
-
-    const payloadToken = (await AsyncStorage.getItem("token")) as string;
-    const userInfo = JSON.parse(atob(payloadToken.split(".")[1])) as IUser;
-    setToken(payloadToken as string);
-
-    try {
-      const response = await getUserById(userInfo.id, payloadToken);
-      const responseUser = response.data as IUser & {
-        foto: { data: Uint8Array };
-      };
-
-      setUser(responseUser);
-      setNome(responseUser.nome);
-      setFoto(responseUser.foto);
-    } catch (err) {
-      const error = err as { message: string };
-      Toast.show({
-        type: "error",
-        text1: "Erro!",
-        text2: error.message,
-      });
-    }
-  };
 
   const salvar = async () => {
     if (Object.keys(erros).length > 0) {
@@ -66,12 +35,7 @@ export default function EditarPerfil() {
     const token = await AsyncStorage.getItem("token");
 
     try {
-      const id = user?.id as number;
-      const response = await updateUser(id, body, token as string);
-      const responseUser = response.data as IUser;
-      setUser(responseUser);
-      setNome(responseUser.nome);
-      setFoto(responseUser.foto ?? "");
+      const response = await updateUser(user.id, body, token as string);
 
       Toast.show({
         type: "success",
@@ -90,12 +54,10 @@ export default function EditarPerfil() {
   };
 
   const apagarConta = async () => {
-    // TODO fazer modal de confirmação
     const token = await AsyncStorage.getItem("token");
 
     try {
-      const id = user?.id as number;
-      const response = await deleteUserById(id, token as string);
+      const response = await deleteUserById(user.id, token as string);
 
       Toast.show({
         type: "success",
@@ -137,14 +99,9 @@ export default function EditarPerfil() {
     setErros(erros);
   };
 
-  getUser();
-
   return (
     <View>
-
-      <Pressable onPress={() => {router.replace("/private/tabs/perfil")}}>
-        <Icon name="chevron-left" size={40} />
-      </Pressable>
+      <BackButton route="/private/tabs/perfil" />
 
       {foto && <UploadImage setFoto={setFoto} uri={foto} />}
       {!foto && <UploadImage setFoto={setFoto} />}
@@ -165,7 +122,7 @@ export default function EditarPerfil() {
       <View style={(styles.formControl, styles.disabled)}>
         <View style={styles.field}>
           <Icon style={styles.iconInput} name="email-outline" size={20} />
-          <Text style={styles.textInput}>{user?.email}</Text>
+          <Text style={styles.textInput}>{user.email}</Text>
         </View>
       </View>
 
@@ -176,6 +133,7 @@ export default function EditarPerfil() {
       <Pressable onPress={confirmation}>
         <Text style={styles.apagar}>Apagar Conta</Text>
       </Pressable>
+
       <ModalConfirmation
         visible={modalVisible}
         callbackFn={apagarConta}
