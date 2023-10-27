@@ -1,22 +1,28 @@
 import React from "react";
-import { Pressable, StyleSheet, Text } from "react-native";
+import { ActivityIndicator, Pressable, StyleSheet, Text } from "react-native";
 
 interface Props {
   title: string;
   callbackFn: () => unknown;
   backgroundColor?: string;
+  showLoading?: boolean;
 }
 
 export default function CustomButton({
   title,
   callbackFn,
   backgroundColor,
+  showLoading,
 }: Readonly<Props>) {
   const background = backgroundColor ?? "#2CCDB5";
 
   return (
     <Pressable style={styles(background).button} onPress={() => callbackFn()}>
-      <Text style={styles(background).buttonText}>{title}</Text>
+      {showLoading ? (
+        <ActivityIndicator size="small" color="#fff" />
+      ) : (
+        <Text style={styles(background).buttonText}>{title}</Text>
+      )}
     </Pressable>
   );
 }
