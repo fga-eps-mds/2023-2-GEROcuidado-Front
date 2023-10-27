@@ -22,6 +22,7 @@ jobs:
         with:
           node-version: 16.x
           cache: yarn
+          cache-dependency-path: subdir/package-lock.json
 
       - name: Setup Expo
         uses: expo/expo-github-action@v7
