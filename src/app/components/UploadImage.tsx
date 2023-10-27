@@ -4,11 +4,12 @@ import * as ImagePicker from "expo-image-picker";
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
 
 interface Props {
-  setFoto: (foto: string | null | undefined) => void;
+  setFoto: (foto: string) => void;
+  uri?: string | null;
 }
 
-export default function UploadImage({ setFoto }: Readonly<Props>) {
-  const [image, setImage] = useState<string | null>(null);
+export default function UploadImage({ setFoto, uri = null }: Readonly<Props>) {
+  const [image, setImage] = useState<string | undefined | null>(uri);
 
   const pickImage = () => {
     ImagePicker.launchImageLibraryAsync({
@@ -21,7 +22,7 @@ export default function UploadImage({ setFoto }: Readonly<Props>) {
       if (result.canceled) return;
 
       setImage(result.assets[0].uri);
-      setFoto(result.assets[0].base64);
+      setFoto(result.assets[0].base64 as string);
     });
   };
 
