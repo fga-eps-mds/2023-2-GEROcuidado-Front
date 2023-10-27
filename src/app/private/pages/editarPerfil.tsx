@@ -15,6 +15,7 @@ import ErrorMessage from "../../components/ErrorMessage";
 import CustomButton from "../../components/CustomButton";
 import { IUser } from "../../interfaces/user.interface";
 import UploadImage from "../../components/UploadImage";
+import ModalConfirmation from "../../components/ModalConfirmation";
 
 interface IErrors {
   nome?: string;
@@ -27,6 +28,8 @@ export default function EditarPerfil() {
   const [erros, setErros] = useState<IErrors>({});
   const [user, setUser] = useState<IUser | null>(null);
   const [showErrors, setShowErrors] = useState(false);
+  const [modalVisible, setModalVisible] = useState(false);
+
 
   const getUser = async () => {
     if (token) return;
@@ -111,6 +114,14 @@ export default function EditarPerfil() {
     }
   };
 
+  const confirmation = () => {
+    setModalVisible(!modalVisible)
+  }
+  
+  const closeModal = () => {
+    setModalVisible(false)
+  }
+
   useEffect(() => handleErrors(), [nome]);
 
   const handleErrors = () => {
@@ -160,9 +171,10 @@ export default function EditarPerfil() {
         <CustomButton title="Salvar" callbackFn={salvar} />
       </View>
 
-      <Pressable onPress={apagarConta}>
+      <Pressable onPress={confirmation}>
         <Text style={styles.apagar}>Apagar Conta</Text>
       </Pressable>
+      <ModalConfirmation visible={modalVisible} callbackFn={apagarConta} closeModal={closeModal}/>
     </View>
   );
 }
