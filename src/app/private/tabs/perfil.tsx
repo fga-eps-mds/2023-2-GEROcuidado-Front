@@ -26,7 +26,6 @@ export default function Perfil() {
         const responseUser = response.data as IUser & {
           foto: { data: Uint8Array };
         };
-        console.log(responseUser);
         setUser(responseUser);
       })
       .catch((err) => {
