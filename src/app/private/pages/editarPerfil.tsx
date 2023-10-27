@@ -153,60 +153,35 @@ const styles = StyleSheet.create({
   disabled: {
     opacity: 0.5,
   },
-  voltar: {
-    marginTop: 5,
-  },
   formControl: {
-    flexDirection: "column",
     width: 320,
-    alignItems: "flex-start",
-    alignSelf: "center",
+    flexDirection: "column",
     marginTop: 10,
-  },
-  button: {
-    width: "80%",
-    maxWidth: 350,
-    paddingVertical: 16,
-    paddingHorizontal: 26,
-    alignItems: "center",
-    borderRadius: 20,
-    backgroundColor: "#2CCDB5",
-    textAlign: "center",
+    alignSelf: "center",
+    alignItems: "flex-start",
   },
   field: {
-    flexDirection: "row",
     width: 320,
+    height: 30,
     borderBottomWidth: 1,
     borderBottomColor: "#AFB1B6",
+    flexDirection: "row",
     paddingBottom: 5,
-    height: 30,
-    alignSelf: "center",
     marginBottom: 5,
+    alignSelf: "center",
   },
   iconInput: {
     width: "10%",
   },
-  passwordInput: {
-    paddingLeft: 10,
-    color: "#05375a",
-    width: "80%",
-    fontSize: 17,
-  },
-  passwordIcon: {
-    width: "10%",
-  },
   textInput: {
+    color: "#05375a",
     width: "90%",
     paddingLeft: 10,
-    color: "#05375a",
     fontSize: 17,
   },
-  arrow: {
-    alignSelf: "flex-start",
-  },
   linkButton: {
+    alignItems: "center",
     marginTop: 60,
     marginBottom: 60,
-    alignItems: "center",
   },
 });
