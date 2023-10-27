@@ -37,7 +37,8 @@
     "react-native-swiper": "^1.6.0",
     "react-native-toast-message": "^2.1.7",
     "react-native-vector-icons": "^10.0.0",
-    "react-native-web": "~0.19.6"
+    "react-native-web": "~0.19.6",
+    "expo-updates": "~0.18.17"
   },
   "devDependencies": {
     "@babel/core": "^7.20.0",
