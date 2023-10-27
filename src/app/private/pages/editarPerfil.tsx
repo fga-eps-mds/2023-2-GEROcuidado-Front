@@ -1,8 +1,7 @@
 import React, { useEffect, useState } from "react";
-import { Pressable, StyleSheet, Text, View } from "react-native";
+import { Pressable, StyleSheet, Text, View, TextInput } from "react-native";
 import Toast from "react-native-toast-message";
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
-import { TextInput } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { deleteUserById, updateUser } from "../../services/user.service";
 import { router, useLocalSearchParams } from "expo-router";

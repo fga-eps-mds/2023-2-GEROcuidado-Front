@@ -11,7 +11,7 @@ export default function ModalConfirmation({
   visible,
   callbackFn,
   closeModal,
-}: IProps) {
+}: Readonly<IProps>) {
   return (
     <View style={styles.centeredView}>
       <Modal animationType="fade" transparent={true} visible={visible}>
