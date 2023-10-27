@@ -9,6 +9,6 @@ export interface IUserBody extends IUserLogin {
 
 export interface IUser extends IUserBody {
   id: number;
-  foto?: string;
+  foto?: string | null;
   admin: boolean;
 }
