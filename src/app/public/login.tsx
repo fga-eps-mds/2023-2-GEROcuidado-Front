@@ -28,7 +28,7 @@ export default function Login() {
       return;
     }
 
-    const body = { email, senha };
+    const body = { email: email.toLowerCase().trim(), senha };
 
     try {
       const response = await loginUser(body);
