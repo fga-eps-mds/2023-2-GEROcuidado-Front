@@ -37,7 +37,7 @@ export default function Cadastro() {
       return;
     }
 
-    const body = { nome, email, senha, foto };
+    const body = { nome, email: email.toLowerCase().trim(), senha, foto };
 
     try {
       setShowLoading(true);
