@@ -21,6 +21,7 @@ export default function Login() {
   const [escondeSenha, setEscondeSenha] = useState(true);
   const [erros, setErros] = useState<IErrors>({});
   const [showErrors, setShowErrors] = useState(false);
+  const [showLoading, setShowLoading] = useState(false);
 
   const login = async () => {
     if (Object.keys(erros).length > 0) {
@@ -31,6 +32,7 @@ export default function Login() {
     const body = { email: email.toLowerCase().trim(), senha };
 
     try {
+      setShowLoading(true);
       const response = await loginUser(body);
       Toast.show({
         type: "success",
@@ -46,6 +48,8 @@ export default function Login() {
         text1: "Erro!",
         text2: error.message,
       });
+    } finally {
+      setShowLoading(false);
     }
   };
 
@@ -115,7 +119,11 @@ export default function Login() {
       </View>
 
       <View style={styles.linkButton}>
-        <CustomButton title="Entrar" callbackFn={login} />
+        <CustomButton
+          title="Entrar"
+          callbackFn={login}
+          showLoading={showLoading}
+        />
       </View>
     </View>
   );

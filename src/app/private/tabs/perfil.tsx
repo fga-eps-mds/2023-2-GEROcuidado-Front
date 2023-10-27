@@ -8,9 +8,11 @@ import { getUserById } from "../../services/user.service";
 import Toast from "react-native-toast-message";
 import JWT from "expo-jwt";
 import { router } from "expo-router";
+import Loading from "../../components/Loading";
 
 export default function Perfil() {
   const [user, setUser] = useState<IUser | undefined>(undefined);
+  const [showLoading, setShowLoading] = useState(false);
 
   const logout = () => {
     AsyncStorage.removeItem("token").then(() => router.replace("/"));
@@ -21,6 +23,7 @@ export default function Perfil() {
   };
 
   const getUser = (id: number, token: string) => {
+    setShowLoading(true);
     getUserById(id, token)
       .then((response) => {
         const responseUser = response.data as IUser & {
@@ -35,7 +38,8 @@ export default function Perfil() {
           text1: "Erro!",
           text2: error.message,
         });
-      });
+      })
+      .finally(() => setShowLoading(false));
   };
 
   const handleUser = () => {
@@ -69,7 +73,9 @@ export default function Perfil() {
     );
   };
 
-  return (
+  return showLoading ? (
+    <Loading />
+  ) : (
     <View>
       <View style={styles.header}>
         {getFoto(user?.foto)}
