@@ -51,9 +51,9 @@ export default function HomeScreen() {
   const handleComment = (postId: string) => {
     // Quando clicar no comentário o que acontece???
   };
-  
+
   const novaPublicacao = () => {
-    router.push({ pathname: "/private/tabs/perfil"});
+    router.push({ pathname: "/private/tabs/cria_publicacao" });
   };
 
   return (
@@ -61,10 +61,10 @@ export default function HomeScreen() {
       <View>
         {/* BARRA DE PESQUISA */}
         <View style={{ backgroundColor: "#2CCDB5", padding: 10 }}>
-          <View style={{flexDirection:"row", alignItems:"center"}}>
+          <View style={{ flexDirection: "row", alignItems: "center" }}>
             <View>
               <Link href="">
-                <Icon name="chevron-left" size={60} style={{color:"white", alignSelf: "flex-start" }} />
+                <Icon name="chevron-left" size={60} style={{ color: "white", alignSelf: "flex-start" }} />
               </Link>
             </View>
             <View>
@@ -72,25 +72,25 @@ export default function HomeScreen() {
             </View>
           </View>
 
-          <View style={{flexDirection: 'row', alignItems: 'center',}}>
+          <View style={{ flexDirection: 'row', alignItems: 'center', }}>
             <TextInput
               style={styles.barraDePesquisa}
               placeholder="Pesquise uma notícia"
-              // onChangeText={(text) => setSearchText(text)}
+            // onChangeText={(text) => setSearchText(text)}
             />
-            <Pressable style={styles.botao} onPress={() => {}}>
-              <Icon style={{position:'absolute', right:15}} name='magnify' color={'#ADADAD'} size={30}></Icon>
+            <Pressable style={styles.botao} onPress={() => { }}>
+              <Icon style={{ position: 'absolute', right: 15 }} name='magnify' color={'#ADADAD'} size={30}></Icon>
             </Pressable>
           </View>
 
         </View>
-        <View style={{ backgroundColor: 'white', padding: 10, flexDirection: 'row', justifyContent: 'space-between', alignItems:'center'}}>
-            <Text style={{fontSize:24, fontWeight:'600'}}>Publicações</Text>
-            <Pressable style={styles.botao} onPress={novaPublicacao}>
-              <Text style={styles.textoBotao}>Crie uma publicação </Text>
-              <Icon name='pencil' color={'white'} size={25}></Icon>
-            </Pressable>
-          </View>   
+        <View style={{ backgroundColor: 'white', padding: 10, flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}>
+          <Text style={{ fontSize: 24, fontWeight: '600' }}>Publicações</Text>
+          <Pressable style={styles.botao} onPress={novaPublicacao}>
+            <Text style={styles.textoBotao}>Crie uma publicação </Text>
+            <Icon name='pencil' color={'white'} size={25}></Icon>
+          </Pressable>
+        </View>
       </View>
       <FlatList
         data={posts}
@@ -136,36 +136,36 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.5,
     shadowRadius: 2,
   },
-  titulo:{
+  titulo: {
 
-    fontWeight:'bold', 
-    color:'white',
+    fontWeight: 'bold',
+    color: 'white',
     fontSize: 24,
-    padding:20,
+    padding: 20,
   },
-  barraDePesquisa:{
-    flex:1, height: 40, 
-    borderColor: 'white', 
-    textAlign:'center', 
-    color:'#ADADAD', 
-    backgroundColor:'white', 
-    borderWidth: 1, 
-    margin: 10, 
-    padding: 5, 
-    borderRadius:14
+  barraDePesquisa: {
+    flex: 1, height: 40,
+    borderColor: 'white',
+    textAlign: 'center',
+    color: '#ADADAD',
+    backgroundColor: 'white',
+    borderWidth: 1,
+    margin: 10,
+    padding: 5,
+    borderRadius: 14
   },
   botao: {
-    flexDirection:'row',
-    alignItems:'center',
+    flexDirection: 'row',
+    alignItems: 'center',
     backgroundColor: '#B4026D',
     padding: 1,
     borderRadius: 14,
   },
   textoBotao: {
-    color:'white',
+    color: 'white',
 
-    fontWeight:'600',
-    fontSize:16,
+    fontWeight: '600',
+    fontSize: 16,
   },
   avatar: {
     height: 50,
