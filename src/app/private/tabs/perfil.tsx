@@ -1,166 +1,83 @@
-import React, { useEffect, useState } from "react";
+import { Link } from "expo-router";
+import React from "react";
+import { Pressable, Image, StyleSheet, Text, TextInput, View } from "react-native";
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
-import { AntDesign } from "@expo/vector-icons";
-import { Text, View, StyleSheet, Image, Pressable } from "react-native";
-import AsyncStorage from "@react-native-async-storage/async-storage";
-import { IUser } from "../../interfaces/user.interface";
-import { getUserById } from "../../services/user.service";
-import Toast from "react-native-toast-message";
-import JWT from "expo-jwt";
-import { router } from "expo-router";
-import Loading from "../../components/Loading";
 
 export default function Perfil() {
-  const [user, setUser] = useState<IUser | undefined>(undefined);
-  const [showLoading, setShowLoading] = useState(false);
-
-  const logout = () => {
-    AsyncStorage.removeItem("token").then(() => router.replace("/"));
-  };
-
-  const navigate = () => {
-    router.push({ pathname: "/private/pages/editarPerfil", params: user });
-  };
-
-  const getUser = (id: number, token: string) => {
-    setShowLoading(true);
-    getUserById(id, token)
-      .then((response) => {
-        const responseUser = response.data as IUser & {
-          foto: { data: Uint8Array };
-        };
-        setUser(responseUser);
-      })
-      .catch((err) => {
-        const error = err as { message: string };
-        Toast.show({
-          type: "error",
-          text1: "Erro!",
-          text2: error.message,
-        });
-      })
-      .finally(() => setShowLoading(false));
-  };
-
-  const handleUser = () => {
-    AsyncStorage.getItem("token").then((token) => {
-      const key = process.env.EXPO_PUBLIC_JWT_TOKEN_SECRET as string;
-      const userInfo = JWT.decode(token as string, key) as unknown as IUser;
-      getUser(userInfo.id, token as string);
-    });
-  };
-
-  useEffect(() => handleUser(), []);
-
-  const hasFoto = (foto: string | null | undefined) => {
-    if (!foto) return false;
-
-    const raw = foto.split("data:image/png;base64,")[1];
-    return raw.length > 0;
-  };
-
-  const getFoto = (foto: string | null | undefined) => {
-    if (hasFoto(foto)) {
-      return (
-        <Image source={{ uri: foto as string }} style={styles.fotoPerfil} />
-      );
-    }
-
-    return (
-      <View style={[styles.semFoto, styles.fotoPerfil]}>
-        <Icon style={styles.semFotoIcon} name="image-outline" size={15} />
-      </View>
-    );
-  };
-
-  return showLoading ? (
-    <Loading />
-  ) : (
+  return (
     <View>
-      <View style={styles.header}>
-        {getFoto(user?.foto)}
-        <Text style={styles.nomeUsuario}>Olá, {user?.nome}!</Text>
+      <View style={{ backgroundColor: "#2CCDB5", padding: 10 }}>
+        <View style={{flexDirection:"row", alignItems:"center"}}>
+
+          <View>
+            <Link href="private/tabs/forum">
+              <Icon name="chevron-left" size={60} style={styles.botaoVoltar} />
+            </Link>
+          </View>
+
+          <View>
+            <Text style={styles.pagina}>Portal GERO cuidado</Text>
+          </View>
+
+          <View>
+            <Link href="private/tabs/forum">
+              <Icon name="share-variant" size={45} style={styles.botaoShare} />
+            </Link>
+          </View>
+
+        </View>
       </View>
 
-      <View style={styles.options}>
-        <Pressable style={styles.option} onPress={navigate}>
-          <AntDesign name="setting" size={45} color="#2f2f2f" />
-
-          <View style={styles.optionText}>
-            <Text style={styles.optionTextTitle}>Perfil</Text>
-            <Text style={styles.optionTextSubTitle}>Edite seu perfil</Text>
-          </View>
-        </Pressable>
-
-        <Pressable style={styles.option} onPress={logout}>
-          <Icon name="logout-variant" size={45} color="#2f2f2f" />
-
-          <View style={styles.optionText}>
-            <Text style={styles.optionTextTitle}>Logout</Text>
-            <Text style={styles.optionTextSubTitle}>Sair da sua conta</Text>
-          </View>
+      <View style={styles.editar}>
+       <Pressable style={styles.editar}>
+          <Text style={styles.textoEditar}>Editar</Text>
+          <Icon name="pencil" size={20} color={'white'}/>
         </Pressable>
       </View>
+
+      <View>
+        <Text style={styles.resposta}>Respostas</Text>
+      </View>
+
     </View>
-  );
-}
+
+    );
+  }
 
 const styles = StyleSheet.create({
-  header: {
-    backgroundColor: "#2CCDB5",
-    width: "100%",
-    padding: 10,
-    flexDirection: "row",
-    alignItems: "center",
+  pagina:{
+    fontWeight:'bold',
+    color:'white',
+    fontSize:24,
+    padding:20,
   },
-  fotoPerfil: {
-    width: 60,
-    aspectRatio: 1,
-    borderRadius: 100,
+  botaoVoltar:{
+    color:"white",
+    alignSelf: "flex-start"
   },
-  semFoto: { position: "relative", backgroundColor: "#EFEFF0" },
-  semFotoIcon: {
-    position: "absolute",
-    right: "38%",
-    bottom: "38%",
-    opacity: 0.4,
-    margin: "auto",
-    alignSelf: "center",
-    zIndex: 1,
+  botaoShare:{
+    color:"white",
+    alignSelf: "flex-start",
   },
-  nomeUsuario: {
-    color: "#FFFFFF",
-    fontWeight: "bold",
-    fontSize: 16,
-    marginLeft: 20,
+  editar:{
+    backgroundColor: '#2CCDB5',
+    flexDirection:'row',
+    alignItems:'center',
+    padding: 5,
+    margin: 15,
+    borderRadius: 14,
   },
-  options: {
-    flexDirection: "column",
-    width: "100%",
-    height: "100%",
-    alignItems: "center",
+  textoEditar:{
+    color:"white",
+    fontSize: 18,
+    margin: 5,
   },
-  option: {
-    flexDirection: "row",
-    width: "90%",
-    marginTop: 25,
-    text: "#000",
-    backgroundColor: "#FFF",
-    borderRadius: 16,
-    padding: 20,
+  resposta:{
+    fontWeight:'bold',
+    color:'black',
+    fontSize:24,
+    padding:20,
   },
-  optionText: {
-    flexDirection: "column",
-    marginVertical: "auto",
-    marginLeft: 15,
-  },
-  optionTextTitle: {
-    color: "#000",
-    fontWeight: "700",
-    fontSize: 20,
-  },
-  optionTextSubTitle: {
-    color: "#989898",
-    fontWeight: "500",
-  },
-});
+
+  });
+
