@@ -2,8 +2,6 @@ import { FlatList, Image, Pressable, StyleSheet, Text, TextInput, TouchableOpaci
 import React, { useState } from 'react';
 
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
-import BackButton from '../../components/BackButton';
-import LinkButton from '../../components/LinkButton';
 import { Link, router } from 'expo-router';
 
 // CRIANDO OBJETOS DE COMENTÁRIOS
@@ -60,34 +58,34 @@ export default function HomeScreen() {
     <View style={{ flex: 1, backgroundColor: 'white' }}>
       <View>
         {/* BARRA DE PESQUISA */}
-        <View style={{ backgroundColor: "#2CCDB5", padding: 10 }}>
-          <View style={{ flexDirection: "row", alignItems: "center" }}>
+        <View style={styles.cabecalho}>
+          <View style={styles.titulo}>
             <View>
               <Link href="">
-                <Icon name="chevron-left" size={60} style={{ color: "white", alignSelf: "flex-start" }} />
+                <Icon name="chevron-left" size={60} style={styles.iconeVoltar} />
               </Link>
             </View>
             <View>
-              <Text style={styles.titulo}>Fórum Gero Cuidado</Text>
+              <Text style={styles.textoTitulo}>Fórum Gero Cuidado</Text>
             </View>
           </View>
 
-          <View style={{ flexDirection: 'row', alignItems: 'center', }}>
+          <View style={styles.barraDePesquisa}>
             <TextInput
-              style={styles.barraDePesquisa}
+              style={styles.inputBarraDePesquisa}
               placeholder="Pesquise uma notícia"
             // onChangeText={(text) => setSearchText(text)}
             />
-            <Pressable style={styles.botao} onPress={() => { }}>
-              <Icon style={{ position: 'absolute', right: 15 }} name='magnify' color={'#ADADAD'} size={30}></Icon>
+            <Pressable style={styles.botaoPesquisar} onPress={() => { }}>
+              <Icon style={styles.iconePesquisar} name='magnify' size={30}></Icon>
             </Pressable>
           </View>
 
         </View>
-        <View style={{ backgroundColor: 'white', padding: 10, flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}>
-          <Text style={{ fontSize: 24, fontWeight: '600' }}>Publicações</Text>
-          <Pressable style={styles.botao} onPress={novaPublicacao}>
-            <Text style={styles.textoBotao}>Crie uma publicação </Text>
+        <View style={styles.publicacao}>
+          <Text style={styles.textoPublicacoes}>Publicações</Text>
+          <Pressable style={styles.botaoCriarPublicacao} onPress={novaPublicacao}>
+            <Text style={styles.textoBotaoPesquisar}>Crie uma publicação </Text>
             <Icon name='pencil' color={'white'} size={25}></Icon>
           </Pressable>
         </View>
@@ -107,16 +105,7 @@ export default function HomeScreen() {
               </View>
             </View>
             <Text style={styles.postContent}>{item.content}</Text>
-            <View style={styles.actions}>
-              <TouchableOpacity onPress={() => handleLike(item.id)}>
-                <Icon name="heart" color="red" size={30} />
-                <Text>{item.likes}</Text>
-              </TouchableOpacity>
-              <TouchableOpacity onPress={() => handleComment(item.id)}>
-                <Icon name="comment" color="blue" size={30} />
-                <Text>{item.comments}</Text>
-              </TouchableOpacity>
-            </View>
+
           </View>
         )}
         keyExtractor={(item) => item.id}
@@ -136,14 +125,29 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.5,
     shadowRadius: 2,
   },
+  cabecalho: {
+    backgroundColor: "#2CCDB5",
+    padding: 10
+  },
+  iconeVoltar: {
+    color: "white",
+    alignSelf: "flex-start"
+  },
   titulo: {
-
+    flexDirection: "row",
+    alignItems: "center"
+  },
+  textoTitulo: {
     fontWeight: 'bold',
     color: 'white',
     fontSize: 24,
     padding: 20,
   },
   barraDePesquisa: {
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  inputBarraDePesquisa: {
     flex: 1, height: 40,
     borderColor: 'white',
     textAlign: 'center',
@@ -154,18 +158,39 @@ const styles = StyleSheet.create({
     padding: 5,
     borderRadius: 14
   },
-  botao: {
+  iconePesquisar: {
+    position: 'absolute',
+    right: 15,
+    color: "#ADADAD"
+  },
+  botaoPesquisar: {
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: '#B4026D',
     padding: 1,
     borderRadius: 14,
   },
-  textoBotao: {
+  textoBotaoPesquisar: {
     color: 'white',
-
     fontWeight: '600',
     fontSize: 16,
+  },
+  textoPublicacoes: {
+    fontSize: 24,
+    fontWeight: '600'
+  },
+  botaoCriarPublicacao: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    backgroundColor: '#B4026D',
+    padding: 5,
+    borderRadius: 14,
+  },
+  publicacao: {
+    backgroundColor: 'white',
+    padding: 10,
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center'
   },
   avatar: {
     height: 50,
