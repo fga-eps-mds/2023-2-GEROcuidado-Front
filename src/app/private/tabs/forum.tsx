@@ -53,7 +53,7 @@ export default function HomeScreen() {
   };
 
   const novaPublicacao = () => {
-    router.push({ pathname: "/private/tabs/cria_publicacao" });
+    router.push({ pathname: "/private/stack/cria_publicacao" });
   };
 
   return (
