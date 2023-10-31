@@ -4,16 +4,12 @@ import { Pressable, Image, StyleSheet, Text, TextInput, View } from "react-nativ
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
 import { SelectList } from "react-native-dropdown-select-list";
 import { ScrollView } from "react-native-gesture-handler";
+import { ECategoriaPublicacao } from "../../interfaces/forum.interface";
 
-export default function Perfil() {
+export default function CriaPublicacao() {
     const [selected, setSelected] = React.useState("");
 
-    enum ECategoriaPublicacao {
-        SAUDE = 'Saúde',
-        ALIMENTACAO = 'Alimentação',
-        EXERCICIOS = 'Exercícios',
-        GERAL = 'Geral',
-    }
+    
     const data = [
         { key: 'GERAL', value: ECategoriaPublicacao.GERAL },
         { key: 'SAUDE', value: ECategoriaPublicacao.SAUDE },

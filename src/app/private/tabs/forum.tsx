@@ -35,6 +35,8 @@ export default function HomeScreen() {
 
   ]);
 
+  
+
   const handleLike = (postId: string) => {
     // Aqui quando clica no like, dai aumenta o número de like.
     const updatedPosts = posts.map((post) => {
@@ -94,6 +96,7 @@ export default function HomeScreen() {
         data={posts}
         renderItem={({ item }) => (
           <View style={styles.postContainer}>
+
             <View style={styles.postHeader}>
               <Image
                 style={styles.avatar}
@@ -104,6 +107,7 @@ export default function HomeScreen() {
                 <Text style={styles.date}>{item.date}</Text>
               </View>
             </View>
+
             <Text style={styles.postContent}>{item.content}</Text>
 
           </View>
