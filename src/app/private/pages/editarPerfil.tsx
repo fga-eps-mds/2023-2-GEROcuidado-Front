@@ -41,9 +41,15 @@ export default function EditarPerfil() {
     const body = { nome, foto };
     const token = await AsyncStorage.getItem("token");
 
+    if (body.foto && isBase64Image(body.foto)) {
+      delete body.foto;
+    }
+
     try {
       setShowLoading(true);
       const response = await updateUser(user.id, body, token as string);
+
+      AsyncStorage.setItem("usuario", JSON.stringify(response.data)).then();
 
       Toast.show({
         type: "success",
@@ -61,6 +67,13 @@ export default function EditarPerfil() {
     } finally {
       setShowLoading(false);
     }
+  };
+
+  const isBase64Image = (str: string): boolean => {
+    const expression = `data:image\/([a-zA-Z]*);base64,([^\"]*)`;
+    const regex = new RegExp(expression);
+
+    return regex.test(str);
   };
 
   const apagarConta = async () => {
