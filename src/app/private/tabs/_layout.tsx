@@ -60,7 +60,16 @@ export default function TabsLayout() {
             title: "",
             tabBarIcon: ({ focused }: { focused : boolean}) => {
               return(
-                <View style={{                  
+                <View style={{
+                  elevation: focused ? 5 : 0,
+                  ...Platform.select({
+                    ios: {
+                      shadowColor: focused ? 'rgba(0, 0, 0, 0.5)' : 'transparent',
+                      shadowOffset: focused ? { width: 0, height: 2 } : { width: 0, height: 0 },
+                      shadowOpacity: focused ? 0.8 : 0,
+                      shadowRadius: focused ? 4 : 0,
+                    },
+                  }),                  
                   justifyContent: 'center',
                   alignItems: 'center',
                   backgroundColor: "#B4026D",
@@ -68,7 +77,6 @@ export default function TabsLayout() {
                   height: 70,
                   top: -7,
                   borderRadius: 35,
-
                 }}>
                   <Icon name="plus" size={50} color="white" />
                 </View>
