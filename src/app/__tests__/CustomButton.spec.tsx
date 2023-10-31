@@ -5,6 +5,6 @@ import CustomButton from "../components/CustomButton";
 describe('CustomButton', () => {
     it('renderiza corretamente', () => {
         const { toJSON } = render(<CustomButton title="teste" callbackFn={jest.fn()}/>);
-        expect(toJSON())
+        expect(toJSON()).toBeTruthy()
     })
 })
