@@ -26,6 +26,74 @@ export const postUser = async (
   return json;
 };
 
+export const updateUser = async (
+  id: number,
+  body: Partial<IUser>,
+  token: string,
+): Promise<IResponse<IUser | null>> => {
+  const response = await fetch(`${BASE_URL}/${id}`, {
+    method: "PATCH",
+    headers: {
+      Accept: "application/json",
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${token}`,
+    },
+    body: JSON.stringify(body),
+  });
+
+  const json = await response.json();
+
+  if (response.status !== 200) {
+    throw new Error(json.message as string);
+  }
+
+  return json;
+};
+
+export const getUserById = async (
+  id: number,
+  token: string,
+): Promise<IResponse<IUser | null>> => {
+  const response = await fetch(`${BASE_URL}/${id}`, {
+    method: "GET",
+    headers: {
+      Accept: "application/json",
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${token}`,
+    },
+  });
+
+  const json = await response.json();
+
+  if (response.status !== 200) {
+    throw new Error(json.message as string);
+  }
+
+  return json;
+};
+
+export const deleteUserById = async (
+  id: number,
+  token: string,
+): Promise<IResponse<IUser | null>> => {
+  const response = await fetch(`${BASE_URL}/${id}`, {
+    method: "DELETE",
+    headers: {
+      Accept: "application/json",
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${token}`,
+    },
+  });
+
+  const json = await response.json();
+
+  if (response.status !== 200) {
+    throw new Error(json.message as string);
+  }
+
+  return json;
+};
+
 export const loginUser = async (
   body: IUserLogin,
 ): Promise<IResponse<string>> => {

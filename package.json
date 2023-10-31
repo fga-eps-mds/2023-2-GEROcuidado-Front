@@ -22,6 +22,7 @@
     "expo": "^49.0.0",
     "expo-constants": "~14.4.2",
     "expo-image-picker": "~14.3.2",
+    "expo-jwt": "^1.6.5",
     "expo-linking": "~5.0.2",
     "expo-router": "^2.0.4",
     "expo-status-bar": "~1.6.0",
@@ -37,7 +38,8 @@
     "react-native-swiper": "^1.6.0",
     "react-native-toast-message": "^2.1.7",
     "react-native-vector-icons": "^10.0.0",
-    "react-native-web": "~0.19.6"
+    "react-native-web": "~0.19.6",
+    "expo-updates": "~0.18.17"
   },
   "devDependencies": {
     "@babel/core": "^7.20.0",
@@ -63,9 +65,6 @@
       "!**/node_modules/**",
       "!**/babel.config.js",
       "!**/jest.setup.js"
-    ],
-    "setupFilesAfterEnv": [
-      "@testing-library/jest-native/extend-expect"
     ]
   }
 }
