@@ -7,12 +7,14 @@ const BASE_URL = `${API_URL}:${API_PORT}/api/forum`;
 
 export const postPublicacao = async (
   body: IPublicacaoBody,
+  token: string,
 ): Promise<IResponse<IPublicacao | null>> => {
   const response = await fetch(BASE_URL, {
     method: "POST",
     headers: {
       Accept: "application/json",
       "Content-Type": "application/json",
+      Authorization: `Bearer ${token}`,
     },
     body: JSON.stringify(body),
   });
@@ -25,4 +27,3 @@ export const postPublicacao = async (
 
   return json;
 };
-

@@ -75,7 +75,6 @@ const styles = StyleSheet.create({
     textAlign: "center",
     fontWeight: "bold",
     color: "gray",
-   
   },
   word: {
     color: "#B4026D",
