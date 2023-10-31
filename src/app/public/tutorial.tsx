@@ -75,18 +75,13 @@ const styles = StyleSheet.create({
     textAlign: "center",
     fontWeight: "bold",
     color: "gray",
-    marginBottom: 0,
-    paddingBottom: 0,
+   
   },
   word: {
     color: "#B4026D",
   },
-  linkButton: {
-    alignItems: "center",
-    marginTop: 27,
-  },
   carousel: {
-    height: "90%",
+    height: "95%",
   },
   skip: {
     textAlign: "right",

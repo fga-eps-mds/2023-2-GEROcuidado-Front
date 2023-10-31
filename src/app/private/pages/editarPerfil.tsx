@@ -1,16 +1,22 @@
 import React, { useEffect, useState } from "react";
-import { Pressable, StyleSheet, Text, View, TextInput } from "react-native";
+import {
+  Pressable,
+  StyleSheet,
+  Text,
+  View,
+  TextInput,
+  ActivityIndicator,
+} from "react-native";
 import Toast from "react-native-toast-message";
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { deleteUserById, updateUser } from "../../services/user.service";
-import { router, useLocalSearchParams } from "expo-router";
+import { Link, router, useLocalSearchParams } from "expo-router";
 import ErrorMessage from "../../components/ErrorMessage";
 import CustomButton from "../../components/CustomButton";
 import { IUser } from "../../interfaces/user.interface";
 import UploadImage from "../../components/UploadImage";
 import ModalConfirmation from "../../components/ModalConfirmation";
-import BackButton from "../../components/BackButton";
 
 interface IErrors {
   nome?: string;
@@ -23,6 +29,8 @@ export default function EditarPerfil() {
   const [erros, setErros] = useState<IErrors>({});
   const [showErrors, setShowErrors] = useState(false);
   const [modalVisible, setModalVisible] = useState(false);
+  const [showLoading, setShowLoading] = useState(false);
+  const [showLoadingApagar, setShowLoadingApagar] = useState(false);
 
   const salvar = async () => {
     if (Object.keys(erros).length > 0) {
@@ -33,8 +41,15 @@ export default function EditarPerfil() {
     const body = { nome, foto };
     const token = await AsyncStorage.getItem("token");
 
+    if (body.foto && isBase64Image(body.foto)) {
+      delete body.foto;
+    }
+
     try {
+      setShowLoading(true);
       const response = await updateUser(user.id, body, token as string);
+
+      AsyncStorage.setItem("usuario", JSON.stringify(response.data)).then();
 
       Toast.show({
         type: "success",
@@ -49,15 +64,24 @@ export default function EditarPerfil() {
         text1: "Erro!",
         text2: error.message,
       });
+    } finally {
+      setShowLoading(false);
     }
+  };
+
+  const isBase64Image = (str: string): boolean => {
+    const expression = `data:image\/([a-zA-Z]*);base64,([^\"]*)`;
+    const regex = new RegExp(expression);
+
+    return regex.test(str);
   };
 
   const apagarConta = async () => {
     const token = await AsyncStorage.getItem("token");
 
     try {
+      setShowLoadingApagar(true);
       const response = await deleteUserById(user.id, token as string);
-
       Toast.show({
         type: "success",
         text1: "Sucesso!",
@@ -71,6 +95,8 @@ export default function EditarPerfil() {
         text1: "Erro!",
         text2: error.message,
       });
+    } finally {
+      setShowLoadingApagar(false);
     }
   };
 
@@ -100,7 +126,9 @@ export default function EditarPerfil() {
 
   return (
     <View>
-      <BackButton route="/private/tabs/perfil" />
+      <Link href="/private/tabs/perfil">
+        <Icon name="chevron-left" size={40} />
+      </Link>
 
       {foto && <UploadImage setFoto={setFoto} uri={foto} />}
       {!foto && <UploadImage setFoto={setFoto} />}
@@ -126,11 +154,19 @@ export default function EditarPerfil() {
       </View>
 
       <View style={styles.linkButton}>
-        <CustomButton title="Salvar" callbackFn={salvar} />
+        <CustomButton
+          title="Salvar"
+          callbackFn={salvar}
+          showLoading={showLoading}
+        />
       </View>
 
       <Pressable onPress={confirmation}>
-        <Text style={styles.apagar}>Apagar Conta</Text>
+        {showLoadingApagar ? (
+          <ActivityIndicator size="small" color="#FF7F7F" />
+        ) : (
+          <Text style={styles.apagar}>Apagar Conta</Text>
+        )}
       </Pressable>
 
       <ModalConfirmation

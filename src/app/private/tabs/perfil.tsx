@@ -4,45 +4,23 @@ import { AntDesign } from "@expo/vector-icons";
 import { Text, View, StyleSheet, Image, Pressable } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { IUser } from "../../interfaces/user.interface";
-import { getUserById } from "../../services/user.service";
-import Toast from "react-native-toast-message";
-import JWT from "expo-jwt";
 import { router } from "expo-router";
 
 export default function Perfil() {
   const [user, setUser] = useState<IUser | undefined>(undefined);
 
   const logout = () => {
-    AsyncStorage.removeItem("token").then(() => router.replace("/"));
+    AsyncStorage.clear().then(() => router.replace("/"));
   };
 
   const navigate = () => {
     router.push({ pathname: "/private/pages/editarPerfil", params: user });
   };
 
-  const getUser = (id: number, token: string) => {
-    getUserById(id, token)
-      .then((response) => {
-        const responseUser = response.data as IUser & {
-          foto: { data: Uint8Array };
-        };
-        setUser(responseUser);
-      })
-      .catch((err) => {
-        const error = err as { message: string };
-        Toast.show({
-          type: "error",
-          text1: "Erro!",
-          text2: error.message,
-        });
-      });
-  };
-
   const handleUser = () => {
-    AsyncStorage.getItem("token").then((token) => {
-      const key = process.env.EXPO_PUBLIC_JWT_TOKEN_SECRET as string;
-      const userInfo = JWT.decode(token as string, key) as unknown as IUser;
-      getUser(userInfo.id, token as string);
+    AsyncStorage.getItem("usuario").then((response) => {
+      const usuario = JSON.parse(response as string);
+      setUser(usuario);
     });
   };
 

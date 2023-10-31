@@ -22,24 +22,8 @@ const styles = StyleSheet.create({
   image: {
     alignSelf: "center",
     aspectRatio: 3 / 4,
-    marginBottom: 28,
-    marginTop: 32,
-  },
-  row: {
-    marginTop: 40,
-    flexDirection: "row",
-    alignSelf: "center",
-  },
-  circle: {
-    color: "#9E9696",
-    paddingLeft: 10,
-    paddingRight: 10,
-  },
-  notSelectedCircle: {
-    opacity: 0.4,
-  },
-  linkButton: {
-    alignItems: "center",
-    marginTop: 27,
+    marginBottom: 0,
+    marginTop: 0,
+    height: "83%",
   },
 });
