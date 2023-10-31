@@ -187,7 +187,7 @@ const styles = StyleSheet.create({
     padding: 20,
   },
   publicacao: {
-    borderRadius: 24,
+    borderRadius: 15,
     backgroundColor: "white",
     margin: 15,
     padding: 15,
@@ -207,7 +207,7 @@ const styles = StyleSheet.create({
     borderWidth: 0,
     padding: 12,
     backgroundColor: "#F1F1F1",
-    borderRadius: 15,
+    borderRadius: 10,
     marginBottom: 5,
   },
   selectInput: {
