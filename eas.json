@@ -13,18 +13,9 @@
       "distribution": "internal"
     },
     "preview2": {
-      "distribution": "internal",
-      "channel": "preview"
+      "distribution": "internal"
     },
-    "production": {
-      "env": {
-        "EXPO_PUBLIC_API_URL": "",
-        "EXPO_PUBLIC_API_USUARIO_PORT": "",
-        "EXPO_PUBLIC_API_FORUM_PORT": "",
-        "EXPO_PUBLIC_API_SAUDE_PORT": "",
-        "EXPO_PUBLIC_JWT_TOKEN_SECRET": ""
-      }
-    }
+    "production": {}
   },
   "submit": {
     "production": {}
