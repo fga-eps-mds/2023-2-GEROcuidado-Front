@@ -13,8 +13,8 @@ export default function BackButton({ canGoBack = true }: Readonly<Props>) {
   };
 
   return (
-    <Pressable onPress={goBack}>
-      <Icon name="chevron-left" size={40} />
+    <Pressable onPress={goBack} testID="back-button-pressable">
+      <Icon name="chevron-left" size={40} testID="back-button-icon"/>
     </Pressable>
   );
 }
