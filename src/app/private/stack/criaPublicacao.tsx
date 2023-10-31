@@ -1,14 +1,41 @@
-import { Link } from "expo-router";
-import React from "react";
+import { Link, router } from "expo-router";
+import React, { useEffect, useState } from "react";
 import { Pressable, Image, StyleSheet, Text, TextInput, View } from "react-native";
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
 import { SelectList } from "react-native-dropdown-select-list";
 import { ScrollView } from "react-native-gesture-handler";
 import { ECategoriaPublicacao } from "../../interfaces/forum.interface";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import { IUser } from "../../interfaces/user.interface";
+import { postPublicacao } from "../../services/forum.service";
+import Toast from "react-native-toast-message";
+
+interface IErrors {
+    titulo?: string;
+    descricao?: string;
+    categoria?: string;
+  }
 
 export default function CriaPublicacao() {
-    const [selected, setSelected] = React.useState("");
+    const [selected, setSelected] = useState("");
+    const [idUsuario, setIdUsuario] = useState<number>(-1);
+    const [titulo, setTitulo] = useState("");
+    const [descricao, setDescricao] = useState("");
+    const [dataHora, setDataHora] = useState(new Date());
+    const [categoria, setCategoria] = useState<ECategoriaPublicacao>(ECategoriaPublicacao.GERAL);
+    const [contagemReportes, setContagemReportes] = useState(0);
+    const [erros, setErros] = useState<IErrors>({});
+    const [showErrors, setShowErrors] = useState(false);
 
+
+    const getIdUsuario = () => {
+        AsyncStorage.getItem('usuario').then((response) => {
+            const usuario = JSON.parse(response as string) as IUser;
+            setIdUsuario(usuario.id);
+        })
+    }
+
+    getIdUsuario();
     
     const data = [
         { key: 'GERAL', value: ECategoriaPublicacao.GERAL },
@@ -16,6 +43,57 @@ export default function CriaPublicacao() {
         { key: 'ALIMENTACAO', value: ECategoriaPublicacao.ALIMENTACAO },
         { key: 'EXERCICIOS', value: ECategoriaPublicacao.EXERCICIOS },
     ]
+
+    const publicar = async () => {
+        if(Object.keys(erros).length > 0){
+            setShowErrors(true);
+            return;
+        }
+        
+        const body = {idUsuario, titulo, descricao, dataHora, categoria, contagemReportes};
+
+        try{
+            const response = await postPublicacao(body);
+            Toast.show({
+                type: "success",
+                text1: "Sucesso!",
+                text2: response.message as string,
+              });
+              router.push("/public/forum");
+        }
+        catch(err){
+            const error = err as {message : string};
+            Toast.show({
+                type: "error",
+                text1: "Erro!",
+                text2: error.message,
+              });
+        }
+    }
+
+    useEffect(
+        () => handleErrors(),
+        [titulo, descricao, categoria],
+      );
+    
+      const handleErrors = () => {
+        const erros: IErrors = {};
+    
+        if (!titulo) {
+          erros.titulo = "Campo obrigatório!";
+        } 
+    
+        if (!descricao) {
+          erros.descricao = "Campo Obrigatório!";
+        } 
+    
+        if (!categoria) {
+          erros.categoria = "Campo Obrigatório!";
+        } 
+        
+        setErros(erros);
+      };
+
     return (
         <ScrollView>
             <View>
@@ -54,7 +132,7 @@ export default function CriaPublicacao() {
                     placeholder="Categoria"
                     search={false}
                 />
-                <Pressable style={styles.publicar}>
+                <Pressable style={styles.publicar} >
                     <Text style={styles.textoBotaoPublicar}>Publicar</Text>
                     <Icon name="pencil-outline" color={"white"} size={18} />
                 </Pressable>
