@@ -5,9 +5,12 @@ import { Text, View, StyleSheet, Image, Pressable } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { IUser } from "../../interfaces/user.interface";
 import { router } from "expo-router";
+import Hide from "../../components/Hide";
 
 export default function Perfil() {
   const [user, setUser] = useState<IUser | undefined>(undefined);
+  const [idUsuario, setIdUsuario] = useState<number | null>(null);
+
 
   const logout = () => {
     AsyncStorage.clear().then(() => router.replace("/"));
@@ -47,34 +50,47 @@ export default function Perfil() {
     );
   };
 
+  const getIdUsuario = () => {
+    AsyncStorage.getItem("usuario").then((response) => {
+      const usuario = JSON.parse(response as string) as IUser;
+      setIdUsuario(usuario?.id);
+    });
+  };
+
   return (
-    <View>
-      <View style={styles.header}>
-        {getFoto(user?.foto)}
-        <Text style={styles.nomeUsuario}>Olá, {user?.nome}!</Text>
-      </View>
 
-      <View style={styles.options}>
-        <Pressable style={styles.option} onPress={navigate}>
-          <AntDesign name="setting" size={45} color="#2f2f2f" />
-
-          <View style={styles.optionText}>
-            <Text style={styles.optionTextTitle}>Perfil</Text>
-            <Text style={styles.optionTextSubTitle}>Edite seu perfil</Text>
+   /*  <View>
+      {idUsuario ?  */
+        <View>
+          <View style={styles.header}>
+            {getFoto(user?.foto)}
+            <Text style={styles.nomeUsuario}>Olá, {user?.nome}!</Text>
           </View>
-        </Pressable>
 
-        <Pressable style={styles.option} onPress={logout}>
-          <Icon name="logout-variant" size={45} color="#2f2f2f" />
+          <View style={styles.options}>
+            <Pressable style={styles.option} onPress={navigate}>
+              <AntDesign name="setting" size={45} color="#2f2f2f" />
 
-          <View style={styles.optionText}>
-            <Text style={styles.optionTextTitle}>Logout</Text>
-            <Text style={styles.optionTextSubTitle}>Sair da sua conta</Text>
+              <View style={styles.optionText}>
+                <Text style={styles.optionTextTitle}>Perfil</Text>
+                <Text style={styles.optionTextSubTitle}>Edite seu perfil</Text>
+              </View>
+            </Pressable>
+
+            <Pressable style={styles.option} onPress={logout}>
+              <Icon name="logout-variant" size={45} color="#2f2f2f" />
+
+              <View style={styles.optionText}>
+                <Text style={styles.optionTextTitle}>Logout</Text>
+                <Text style={styles.optionTextSubTitle}>Sair da sua conta</Text>
+              </View>
+            </Pressable>
           </View>
-        </Pressable>
-      </View>
-    </View>
-  );
+        </View>
+      /*   :
+        <Hide />
+      }
+    </View>) */);
 }
 
 const styles = StyleSheet.create({
