@@ -40,7 +40,7 @@ export default function Publicacao({ item }: Readonly<IProps>) {
   };
 
   const navigate = () => {
-    const params = { ...item, ...item.usuario };
+    const params = { ...item, ...item.usuario, id: item.id };
 
     router.push({
       pathname: "/private/pages/visualizarPublicacao",
