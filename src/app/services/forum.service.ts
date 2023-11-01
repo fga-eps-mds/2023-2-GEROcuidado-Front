@@ -47,3 +47,49 @@ export const getAllPublicacao = async (): Promise<
 
   return json;
 };
+
+export const updatePublicacao = async (
+  id: number,
+  body: Partial<IPublicacao>,
+  token: string,
+): Promise<IResponse<IPublicacao | null>> => {
+  const response = await fetch(`${BASE_URL}/${id}`, {
+    method: "PATCH",
+    headers: {
+      Accept: "application/json",
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${token}`,
+    },
+    body: JSON.stringify(body),
+  });
+
+  const json = await response.json();
+
+  if (response.status !== 200) {
+    throw new Error(json.message as string);
+  }
+
+  return json;
+};
+
+export const deletePublicacaoById = async (
+  id: number,
+  token: string,
+): Promise<IResponse<IPublicacao | null>> => {
+  const response = await fetch(`${BASE_URL}/${id}`, {
+    method: "DELETE",
+    headers: {
+      Accept: "application/json",
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${token}`,
+    },
+  });
+
+  const json = await response.json();
+
+  if (response.status !== 200) {
+    throw new Error(json.message as string);
+  }
+
+  return json;
+};
