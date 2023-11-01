@@ -7,9 +7,9 @@ export default function PrivatePagesLayout() {
   return (
     <>
       <View style={{ zIndex: 9999 }}>
-        <Toast />
+        <Toast data-testid="ToastComponent" />
       </View>
-      <Stack screenOptions={{ headerShown: false }} />
+      <Stack data-testid="StackComponent" screenOptions={{ headerShown: false }} />
     </>
   );
 }
