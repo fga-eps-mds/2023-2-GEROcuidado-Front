@@ -1,63 +1,37 @@
 import { Link, useLocalSearchParams } from "expo-router";
-import React, { useState } from "react";
-import { Pressable, Image, StyleSheet, Text, View } from "react-native";
+import React from "react";
+import { Pressable, StyleSheet, Text, View } from "react-native";
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
 import { IPublicacao } from "../../interfaces/forum.interface";
+import Publicacao from "../../components/Publicacao";
+import { IUser } from "../../interfaces/user.interface";
 
-export default function VerificarPostagem() {
-  const item = useLocalSearchParams() as unknown as IPublicacao;
-  const [titulo] = useState(item.titulo);
-  const [foto] = useState<string | undefined | null>(item.usuario?.foto);
-  const [nome] = useState(item.usuario?.nome);
-
-  const hasFoto = (foto: string | null | undefined) => {
-    if (!foto) return false;
-
-    const raw = foto.split("data:image/png;base64,")[1];
-    return raw.length > 0;
-  };
-
-  const getFoto = (foto: string | null | undefined) => {
-    if (hasFoto(foto)) {
-      return (
-        <Image source={{ uri: foto as string }} style={styles.fotoPerfil} />
-      );
-    }
-
-    return (
-      <View style={[styles.semFoto, styles.fotoPerfil]}>
-        <Icon style={styles.semFotoIcon} name="image-outline" size={15} />
-      </View>
-    );
+export default function VisualizarPublicacao() {
+  const item = useLocalSearchParams() as unknown as IPublicacao & IUser;
+  const publicacao = {
+    ...item,
+    usuario: {
+      id: item.idUsuario,
+      foto: item.foto,
+      admin: item.admin,
+      nome: item.nome,
+      email: item.email,
+    },
   };
 
   return (
     <View>
-      <View style={{ backgroundColor: "#2CCDB5", padding: 10 }}>
-        <View style={{ flexDirection: "row", alignItems: "center" }}>
-          <View>
-            <Link href="private/tabs/forum">
-              <Icon name="chevron-left" size={60} style={styles.botaoVoltar} />
-            </Link>
-          </View>
+      <View style={styles.header}>
+        <Link href="private/tabs/forum">
+          <Icon name="chevron-left" size={40} color="#fff" />
+        </Link>
 
-          <View>
-            <Text style={styles.pagina}>Portal GERO cuidado</Text>
-          </View>
-
-          <View>
-            <View style={styles.postHeader}>
-              {getFoto(foto)}
-              <View style={styles.userInfo}>
-                <Text style={styles.title}>{titulo}</Text>
-                <Text style={styles.username}>{nome}</Text>
-                <Text style={styles.date}>{item.dataHora.toString()}</Text>
-              </View>
-            </View>
-            <Text style={styles.postContent}>{item.descricao}</Text>
-          </View>
+        <View>
+          <Text style={styles.tituloheader}>Visualizar Publicação</Text>
         </View>
       </View>
+
+      <Publicacao item={publicacao as unknown as IPublicacao} />
 
       <View style={styles.editar}>
         <Pressable style={styles.editar}>
@@ -74,6 +48,18 @@ export default function VerificarPostagem() {
 }
 
 const styles = StyleSheet.create({
+  header: {
+    backgroundColor: "#2CCDB5",
+    height: 60,
+    flexDirection: "row",
+    alignItems: "center",
+  },
+  tituloheader: {
+    fontWeight: "bold",
+    color: "white",
+    fontSize: 20,
+    padding: 20,
+  },
   pagina: {
     fontWeight: "bold",
     color: "white",

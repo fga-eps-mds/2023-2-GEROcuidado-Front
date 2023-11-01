@@ -1,8 +1,8 @@
 import React from "react";
-import { View, Image, Text, StyleSheet } from "react-native";
+import { View, Image, Text, StyleSheet, Pressable } from "react-native";
 import { IPublicacao } from "../interfaces/forum.interface";
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
-import { Link } from "expo-router";
+import { router } from "expo-router";
 
 interface IProps {
   item: IPublicacao;
@@ -39,8 +39,17 @@ export default function Publicacao({ item }: Readonly<IProps>) {
     return descricao.length < 300 ? descricao : descricao.slice(0, 150) + "...";
   };
 
+  const navigate = () => {
+    const params = { ...item, ...item.usuario };
+
+    router.push({
+      pathname: "/private/pages/visualizarPublicacao",
+      params: params,
+    });
+  };
+
   return (
-    <Link href="/private/pages/verificarPostagem" style={styles.postContainer}>
+    <Pressable onPress={navigate} style={styles.postContainer}>
       <View style={styles.postHeader}>
         {getFoto(item.usuario?.foto)}
         <View style={styles.userInfo}>
@@ -54,7 +63,7 @@ export default function Publicacao({ item }: Readonly<IProps>) {
       <Text style={styles.postContent}>
         {getCroppedDescricao(item.descricao)}
       </Text>
-    </Link>
+    </Pressable>
   );
 }
 
