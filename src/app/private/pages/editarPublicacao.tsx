@@ -164,12 +164,21 @@ export default function EditarPublicacao() {
     },
   ];
 
+  const navigate = () => {
+    const params = { ...item, ...item.usuario, id: item.id };
+
+    router.push({
+      pathname: "/private/pages/visualizarPublicacao",
+      params: params,
+    });
+  };
+
   return (
     <ScrollView>
       <View style={styles.header}>
-        <Link href="private/tabs/forum">
+        <Pressable onPress={navigate}>
           <Icon name="chevron-left" size={40} color="#fff" />
-        </Link>
+        </Pressable>
 
         <View>
           <Text style={styles.tituloheader}>Nova publicação</Text>
@@ -226,7 +235,7 @@ export default function EditarPublicacao() {
           {showLoadingApagar ? (
             <ActivityIndicator size="small" color="#FF7F7F" />
           ) : (
-            <Text style={styles.apagar}>Apagar Conta</Text>
+            <Text style={styles.apagar}>Apagar Publicação</Text>
           )}
         </Pressable>
 
@@ -234,7 +243,7 @@ export default function EditarPublicacao() {
           visible={modalVisible}
           callbackFn={apagarPublicacao}
           closeModal={closeModal}
-          message="Prosseguir com a exclusão da publicação?"
+          message="Apagar publicação?"
         />
       </View>
     </ScrollView>
