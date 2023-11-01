@@ -25,7 +25,7 @@ export default function VisualizarPublicacao() {
   const getIdUsuario = () => {
     AsyncStorage.getItem("usuario").then((response) => {
       const usuario = JSON.parse(response as string) as IUser;
-      setIdUsuario(usuario.id);
+      setIdUsuario(usuario?.id);
     });
   };
 
@@ -54,7 +54,7 @@ export default function VisualizarPublicacao() {
 
       <Publicacao item={publicacao as unknown as IPublicacao} />
 
-      {publicacao.idUsuario == idUsuario ? (
+      {idUsuario && publicacao.idUsuario == idUsuario && (
         <Pressable onPress={navigate}>
           <View style={styles.editar}>
             <Pressable style={styles.editar}>
@@ -63,7 +63,7 @@ export default function VisualizarPublicacao() {
             </Pressable>
           </View>
         </Pressable>
-      ) : null}
+      )}
 
       {/* <View>
         <Text style={styles.resposta}>Respostas</Text>
