@@ -28,8 +28,9 @@ export const postPublicacao = async (
   return json;
 };
 
-export const getAllPublicacao = async (
-): Promise<IResponse<IPublicacao[] | null>> => {
+export const getAllPublicacao = async (): Promise<
+  IResponse<IPublicacao[] | null>
+> => {
   const response = await fetch(`${BASE_URL}`, {
     method: "GET",
     headers: {
@@ -40,7 +41,7 @@ export const getAllPublicacao = async (
 
   const json = await response.json();
 
-  if(response.status !== 200){
+  if (response.status !== 200) {
     throw new Error(json.message as string);
   }
 

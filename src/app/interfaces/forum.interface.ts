@@ -11,12 +11,12 @@ export interface IPublicacaoBody {
   idUsuario: number;
   titulo: string;
   descricao: string;
-  dataHora: Date;
+  dataHora: Date | string;
   categoria: ECategoriaPublicacao;
   contagemReportes: number;
-  usuario : IUser;
 }
 
 export interface IPublicacao extends IPublicacaoBody {
   id: number;
+  usuario?: IUser;
 }

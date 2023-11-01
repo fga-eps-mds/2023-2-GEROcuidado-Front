@@ -1,6 +1,6 @@
 import {
+  ActivityIndicator,
   FlatList,
-  Image,
   Pressable,
   StyleSheet,
   Text,
@@ -17,75 +17,78 @@ import Toast from "react-native-toast-message";
 import { IPublicacao } from "../../interfaces/forum.interface";
 import { ScrollView } from "react-native-gesture-handler";
 
-// CRIANDO OBJETOS DE COMENTÁRIOS
-export default function HomeScreen() {
+export default function Forum() {
   const [publicacoes, setPublicacoes] = useState<IPublicacao[]>([]);
+  const [loading, setLoading] = useState(true);
 
   const novaPublicacao = () => {
     router.push("private/pages/criaPublicacao");
   };
 
   const getPublicacoes = () => {
-    getAllPublicacao().then((response) => {
-      setPublicacoes(response.data as IPublicacao[]);
-    }).catch((err) => {
-      const error = err as { message: string };
-      Toast.show({
-        type: "error",
-        text1: "Erro!",
-        text2: error.message,
-      });
-    });
+    getAllPublicacao()
+      .then((response) => {
+        setPublicacoes(response.data as IPublicacao[]);
+      })
+      .catch((err) => {
+        const error = err as { message: string };
+        Toast.show({
+          type: "error",
+          text1: "Erro!",
+          text2: error.message,
+        });
+      })
+      .finally(() => setLoading(false));
   };
 
   useEffect(() => getPublicacoes(), []);
 
   return (
-    <ScrollView>
-      <View style={{ flex: 1, backgroundColor: "white" }}>
-        <View>
-          {/* BARRA DE PESQUISA */}
-          <View style={styles.cabecalho}>
-            <View style={styles.barraDePesquisa}>
-              <TextInput
-                style={styles.inputBarraDePesquisa}
-                placeholder="Pesquise uma notícia"
-              // onChangeText={(text) => setSearchText(text)}
-              />
-              <Pressable style={styles.botaoPesquisar} onPress={() => { }}>
-                <Icon
-                  style={styles.iconePesquisar}
-                  name="magnify"
-                  size={30}
-                ></Icon>
-              </Pressable>
-            </View>
-          </View>
-          <View style={styles.publicacao}>
-            <Text style={styles.textoPublicacoes}>Publicações</Text>
-            <Pressable
-              style={styles.botaoCriarPublicacao}
-              onPress={novaPublicacao}
-            >
-              <Text style={styles.textoBotaoPesquisar}>Nova publicação</Text>
-              <Icon name="pencil" color={"white"} size={25}></Icon>
-            </Pressable>
-          </View>
-          <FlatList
-            data={publicacoes}
-            renderItem={({ item }) => (
-              <Publicacao item={item} />
-            )}
+    <ScrollView style={styles.scrollView}>
+      <View style={styles.cabecalho}>
+        <Text style={styles.textoPublicacoes}>Publicações</Text>
+        <View style={styles.barraDePesquisa}>
+          <Icon style={styles.iconePesquisar} name="magnify" size={25}></Icon>
+          <TextInput
+            style={styles.inputBarraDePesquisa}
+            placeholder="Pesquise uma publicação"
           />
         </View>
       </View>
+      <View style={styles.publicacao}>
+        <Pressable style={styles.botaoCriarPublicacao} onPress={novaPublicacao}>
+          <Icon name="plus" color={"white"} size={20}></Icon>
+          <Text style={styles.textoBotaoPesquisar}>Nova publicação</Text>
+        </Pressable>
+      </View>
+      {loading ? (
+        <View style={styles.loading}>
+          <ActivityIndicator size="large" color="#2CCDB5" />
+        </View>
+      ) : (
+        <FlatList
+          data={publicacoes}
+          renderItem={({ item }) => <Publicacao item={item} />}
+        />
+      )}
     </ScrollView>
   );
 }
 
 const styles = StyleSheet.create({
-
+  loading: {
+    height: "100%",
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "center",
+    backgroundColor: "white",
+  },
+  scrollView: {
+    backgroundColor: "#fff",
+    height: "100%",
+  },
   cabecalho: {
+    flexDirection: "column",
     backgroundColor: "#2CCDB5",
     padding: 10,
   },
@@ -97,32 +100,22 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
   },
-  textoTitulo: {
-    fontWeight: "bold",
-    color: "white",
-    fontSize: 24,
-    padding: 20,
-  },
   barraDePesquisa: {
     flexDirection: "row",
     alignItems: "center",
+    color: "#ADADAD",
+    backgroundColor: "white",
+    margin: 10,
+    paddingHorizontal: 15,
+    paddingVertical: 5,
+    borderRadius: 20,
   },
   inputBarraDePesquisa: {
     flex: 1,
-    height: 40,
-    borderColor: "white",
-    textAlign: "center",
-    color: "#ADADAD",
-    backgroundColor: "white",
-    borderWidth: 1,
-    margin: 10,
-    padding: 5,
-    borderRadius: 14,
   },
   iconePesquisar: {
-    position: "absolute",
-    right: 15,
     color: "#ADADAD",
+    marginRight: 5,
   },
   botaoPesquisar: {
     flexDirection: "row",
@@ -133,18 +126,24 @@ const styles = StyleSheet.create({
   textoBotaoPesquisar: {
     color: "white",
     fontWeight: "600",
-    fontSize: 16,
+    fontSize: 14,
+    marginLeft: 5,
   },
   textoPublicacoes: {
-    fontSize: 24,
+    fontSize: 22,
     fontWeight: "600",
+    color: "#fff",
+    margin: "auto",
+    marginVertical: 10,
   },
   botaoCriarPublicacao: {
     flexDirection: "row",
     alignItems: "center",
     backgroundColor: "#B4026D",
-    padding: 5,
-    borderRadius: 14,
+    paddingHorizontal: 10,
+    paddingVertical: 5,
+    borderRadius: 10,
+    marginLeft: "auto",
   },
   publicacao: {
     backgroundColor: "white",
