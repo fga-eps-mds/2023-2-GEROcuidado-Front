@@ -20,7 +20,7 @@ export default function Rotinas() {
        <Hide/> 
        : 
        <Text>Registros Works!</Text>} */}
-      <Text>Registros Works!</Text>
+      <Text>Rotinas Works!</Text>
     </View>
   );
 }
