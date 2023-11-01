@@ -52,7 +52,11 @@ export default function Forum() {
   };
 
   useEffect(() => getPublicacoes(), []);
-  useEffect(() => getIdUsuario());
+  useEffect(() => getIdUsuario());    
+
+  const handleEndReached = () => {
+    //TODO implementar a função para atualizar as pages
+  }
 
   return (
     <ScrollView style={styles.scrollView}>
@@ -79,8 +83,11 @@ export default function Forum() {
         </View>
       ) : (
         <FlatList
+          onEndReached={handleEndReached}
+          onEndReachedThreshold={0.5} 
+          removeClippedSubviews ={true} 
           data={publicacoes}
-          renderItem={({ item }) => <Publicacao item={item} />}
+          renderItem={({ item }) => <Publicacao cropped={true} item={item} />}
         />
       )}
     </ScrollView>

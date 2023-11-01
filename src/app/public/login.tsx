@@ -103,7 +103,9 @@ export default function Login() {
 
   return (
     <View>
-      <BackButton />
+      <View>
+      <BackButton route="/"/>
+      </View>
 
       <View style={styles.imagem}>
         <Image
