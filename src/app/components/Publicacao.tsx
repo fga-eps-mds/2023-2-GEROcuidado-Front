@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { FlatList, View, Image, Text, StyleSheet, Pressable } from "react-native";
 import { IPublicacao } from "../interfaces/forum.interface";
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
-import { Link } from "expo-router";
+import { Link, router } from "expo-router";
 
 interface IProps {
     item: IPublicacao,
@@ -11,6 +11,10 @@ interface IProps {
 export default function Publicacao({ item }: Readonly<IProps>) {
     const [posts, setPosts] = useState();
 
+
+    const navigate = () => {
+        router.push({ pathname: "/private/pages/verificarPostagem", params: item});
+      };
 
     const hasFoto = (foto: string | null | undefined) => {
         if (!foto) return false;
