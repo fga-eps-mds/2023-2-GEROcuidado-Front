@@ -5,6 +5,7 @@ import Home from "..";
 describe('Home', () => {
     it('renderiza corretamente', () => {
         const { toJSON } = render(<Home />);
-        expect(toJSON())
+        expect(toJSON()).toMatchSnapshot();
     })
+    
 })
