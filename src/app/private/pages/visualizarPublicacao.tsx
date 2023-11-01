@@ -1,12 +1,15 @@
-import { Link, useLocalSearchParams } from "expo-router";
-import React from "react";
+import { Link, router, useLocalSearchParams } from "expo-router";
+import React, { useEffect, useState } from "react";
 import { Pressable, StyleSheet, Text, View } from "react-native";
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
 import { IPublicacao } from "../../interfaces/forum.interface";
 import Publicacao from "../../components/Publicacao";
 import { IUser } from "../../interfaces/user.interface";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 export default function VisualizarPublicacao() {
+  const [idUsuario, setIdUsuario] = useState<number | null>(null);
+
   const item = useLocalSearchParams() as unknown as IPublicacao & IUser;
   const publicacao = {
     ...item,
@@ -18,6 +21,24 @@ export default function VisualizarPublicacao() {
       email: item.email,
     },
   };
+
+  const getIdUsuario = () => {
+    AsyncStorage.getItem("usuario").then((response) => {
+      const usuario = JSON.parse(response as string) as IUser;
+      setIdUsuario(usuario.id);
+    });
+  };
+
+  const navigate = () => {
+    const params = { ...item, ...item.usuario };
+
+    router.push({
+      pathname: "/private/pages/editarPublicacao",
+      params: params,
+    });
+  };
+
+  useEffect(() => getIdUsuario());
 
   return (
     <View>
@@ -33,16 +54,20 @@ export default function VisualizarPublicacao() {
 
       <Publicacao item={publicacao as unknown as IPublicacao} />
 
-      <View style={styles.editar}>
-        <Pressable style={styles.editar}>
-          <Text style={styles.textoEditar}>Editar</Text>
-          <Icon name="pencil" size={20} color={"white"} />
+      {publicacao.idUsuario == idUsuario ? (
+        <Pressable onPress={navigate}>
+          <View style={styles.editar}>
+            <Pressable style={styles.editar}>
+              <Text style={styles.textoEditar}>Editar</Text>
+              <Icon name="pencil" size={20} color={"white"} />
+            </Pressable>
+          </View>
         </Pressable>
-      </View>
+      ) : null}
 
-      <View>
+      {/* <View>
         <Text style={styles.resposta}>Respostas</Text>
-      </View>
+      </View> */}
     </View>
   );
 }
