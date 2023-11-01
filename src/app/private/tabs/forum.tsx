@@ -16,13 +16,23 @@ import { getAllPublicacao } from "../../services/forum.service";
 import Toast from "react-native-toast-message";
 import { IPublicacao } from "../../interfaces/forum.interface";
 import { ScrollView } from "react-native-gesture-handler";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import { IUser } from "../../interfaces/user.interface";
 
 export default function Forum() {
   const [publicacoes, setPublicacoes] = useState<IPublicacao[]>([]);
   const [loading, setLoading] = useState(true);
+  const [idUsuario, setIdUsuario] = useState<number | null>(null);
 
   const novaPublicacao = () => {
     router.push("private/pages/criaPublicacao");
+  };
+
+  const getIdUsuario = () => {
+    AsyncStorage.getItem("usuario").then((response) => {
+      const usuario = JSON.parse(response as string) as IUser;
+      setIdUsuario(usuario?.id);
+    });
   };
 
   const getPublicacoes = () => {
@@ -42,6 +52,7 @@ export default function Forum() {
   };
 
   useEffect(() => getPublicacoes(), []);
+  useEffect(() => getIdUsuario());
 
   return (
     <ScrollView style={styles.scrollView}>
@@ -55,12 +66,13 @@ export default function Forum() {
           />
         </View>
       </View>
-      <View style={styles.publicacao}>
+      {idUsuario && (
         <Pressable style={styles.botaoCriarPublicacao} onPress={novaPublicacao}>
           <Icon name="plus" color={"white"} size={20}></Icon>
           <Text style={styles.textoBotaoPesquisar}>Nova publicação</Text>
         </Pressable>
-      </View>
+      )}
+
       {loading ? (
         <View style={styles.loading}>
           <ActivityIndicator size="large" color="#2CCDB5" />
@@ -144,13 +156,8 @@ const styles = StyleSheet.create({
     paddingVertical: 5,
     borderRadius: 10,
     marginLeft: "auto",
-  },
-  publicacao: {
-    backgroundColor: "white",
-    padding: 10,
-    flexDirection: "row",
-    justifyContent: "space-between",
-    alignItems: "center",
+    marginRight: 10,
+    marginVertical: 10,
   },
   actions: {
     flexDirection: "row",
