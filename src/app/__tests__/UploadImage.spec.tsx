@@ -9,4 +9,9 @@ describe("UploadImage", () => {
     const imagemElement = queryByTestId("upload-image-imagem");
     expect(imagemElement).toBeNull();
   });
+  it("deve renderizar corretamente", () => {
+    const setFoto = jest.fn();
+    const { toJSON } = render(<UploadImage setFoto={setFoto} />);
+    expect(toJSON()).toMatchSnapshot();
+  });
 });
