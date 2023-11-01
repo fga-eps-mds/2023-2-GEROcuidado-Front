@@ -1,3 +1,5 @@
+import { IUser } from "./user.interface";
+
 export enum ECategoriaPublicacao {
   SAUDE = "Saúde",
   ALIMENTACAO = "Alimentação",
@@ -12,6 +14,7 @@ export interface IPublicacaoBody {
   dataHora: Date;
   categoria: ECategoriaPublicacao;
   contagemReportes: number;
+  usuario : IUser;
 }
 
 export interface IPublicacao extends IPublicacaoBody {
