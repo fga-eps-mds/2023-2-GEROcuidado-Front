@@ -22,7 +22,11 @@ export default function BackButton({
 
   return (
     <Pressable onPress={goBack}>
-      <Icon name="chevron-left" size={40} />
+      <Icon
+        name="chevron-left"
+        size={60}
+        style={{ color: "white", alignSelf: "flex-start" }}
+      />
     </Pressable>
   );
 }
