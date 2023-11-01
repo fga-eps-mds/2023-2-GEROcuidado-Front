@@ -52,22 +52,26 @@ export default function VisualizarPublicacao() {
         </View>
       </View>
 
-      <Publicacao item={publicacao as unknown as IPublicacao} />
-
-      {idUsuario && publicacao.idUsuario == idUsuario && (
-        <Pressable onPress={navigate}>
-          <View style={styles.editar}>
-            <Pressable style={styles.editar}>
+      <View style={styles.publicacao}>
+        <Publicacao item={publicacao as unknown as IPublicacao} />
+      </View>
+      <View style={styles.botoes}>
+        {idUsuario && publicacao.idUsuario == idUsuario && (
+          <Pressable onPress={navigate}>
+            <View style={styles.editar}>
               <Text style={styles.textoEditar}>Editar</Text>
               <Icon name="pencil" size={20} color={"white"} />
-            </Pressable>
-          </View>
-        </Pressable>
-      )}
+            </View>
+          </Pressable>
+        )}
+        {<View style={styles.botaoResponder}>
+          <Text style={styles.textoEditar}>Responder</Text>
+        </View>}
+      </View>
 
-      {/* <View>
+      <View>
         <Text style={styles.resposta}>Respostas</Text>
-      </View> */}
+      </View>
     </View>
   );
 }
@@ -85,32 +89,45 @@ const styles = StyleSheet.create({
     fontSize: 20,
     padding: 20,
   },
-  pagina: {
-    fontWeight: "bold",
-    color: "white",
-    fontSize: 24,
-    padding: 20,
-  },
-  botaoVoltar: {
-    color: "white",
-    alignSelf: "flex-start",
-  },
-  botaoShare: {
-    color: "white",
-    alignSelf: "flex-start",
+  botoes: {
+    flexDirection: "row",
+    justifyContent: "space-between",
   },
   editar: {
     backgroundColor: "#2CCDB5",
     flexDirection: "row",
     alignItems: "center",
     padding: 5,
-    margin: 15,
-    borderRadius: 14,
+    marginLeft: 15,
+    marginTop: 5,
+    borderRadius: 12,
+    width: "auto",
+    justifyContent: "space-between",
+    shadowColor: "#333",
+    shadowOffset: { width: 0, height: 1 },
+    shadowOpacity: 0.5,
+    shadowRadius: 2,
   },
   textoEditar: {
     color: "white",
     fontSize: 18,
     margin: 5,
+  },
+  botaoResponder: {
+    backgroundColor: "#B4026D",
+    flexDirection: "row",
+    alignItems: "center",
+    padding: 5,
+    marginRight: 15,
+    marginLeft: 15,
+    marginTop: 5,
+    borderRadius: 12,
+    width: "auto",
+    right: 0,
+    shadowColor: "#333",
+    shadowOffset: { width: 0, height: 1 },
+    shadowOpacity: 0.5,
+    shadowRadius: 2,
   },
   resposta: {
     fontWeight: "bold",
@@ -118,7 +135,10 @@ const styles = StyleSheet.create({
     fontSize: 24,
     padding: 20,
   },
-  postContainer: {
+  publicacao: {
+    height: "auto",
+  },
+  /* postContainer: {
     margin: 10,
     borderRadius: 10,
     elevation: 5,
@@ -127,18 +147,18 @@ const styles = StyleSheet.create({
     shadowOffset: { width: 0, height: 1 },
     shadowOpacity: 0.5,
     shadowRadius: 2,
-  },
-  postHeader: {
+  }, */
+  /* postHeader: {
     flexDirection: "row",
     alignItems: "center",
     padding: 15,
-  },
-  avatar: {
+  }, */
+ /*  avatar: {
     height: 50,
     width: 50,
     borderRadius: 50,
-  },
-  userInfo: {
+  }, */
+  /* userInfo: {
     marginLeft: 10,
   },
   title: {
@@ -146,8 +166,8 @@ const styles = StyleSheet.create({
   },
   date: {
     fontSize: 12,
-  },
-  postContent: {
+  }, */
+ /*  postContent: {
     fontSize: 15,
     maxHeight: 100,
     padding: 6,
@@ -173,5 +193,5 @@ const styles = StyleSheet.create({
   username: {
     color: "#000000",
     opacity: 0.5,
-  },
+  }, */
 });

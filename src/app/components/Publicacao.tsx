@@ -80,6 +80,7 @@ const styles = StyleSheet.create({
     padding: 15,
     display: "flex",
     flexDirection: "column",
+    height: "auto",
   },
   postHeader: {
     flexDirection: "row",
@@ -111,7 +112,7 @@ const styles = StyleSheet.create({
     marginLeft: 10,
   },
   postContent: {
-    fontSize: 14,
+    fontSize: 16,
     marginTop: 15,
   },
   fotoPerfil: {
