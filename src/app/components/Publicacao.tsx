@@ -6,9 +6,10 @@ import { router } from "expo-router";
 
 interface IProps {
   item: IPublicacao;
+  cropped?: boolean;
 }
 
-export default function Publicacao({ item }: Readonly<IProps>) {
+export default function Publicacao({ item, cropped }: Readonly<IProps>) {
   const hasFoto = (foto: string | null | undefined) => {
     if (!foto) return false;
 
@@ -35,10 +36,6 @@ export default function Publicacao({ item }: Readonly<IProps>) {
     return date.toLocaleDateString("pt-BR");
   };
 
-  const getCroppedDescricao = (descricao: string): string => {
-    return descricao.length < 300 ? descricao : descricao.slice(0, 150) + "...";
-  };
-
   const navigate = () => {
     const params = { ...item, ...item.usuario, id: item.id };
 
@@ -46,6 +43,10 @@ export default function Publicacao({ item }: Readonly<IProps>) {
       pathname: "/private/pages/visualizarPublicacao",
       params: params,
     });
+  };
+
+  const getCroppedDescricao = (descricao: string): string => {
+    return descricao.length < 300 ? descricao : descricao.slice(0, 150) + "...";
   };
 
   return (
@@ -60,9 +61,12 @@ export default function Publicacao({ item }: Readonly<IProps>) {
           </View>
         </View>
       </View>
-      <Text style={styles.postContent}>
-        {getCroppedDescricao(item.descricao)}
-      </Text>
+
+      {cropped ?
+        <Text style={styles.postContent}>{getCroppedDescricao(item.descricao)}</Text>
+        :
+        <Text style={styles.postContent}>{item.descricao}</Text>
+      }
     </Pressable>
   );
 }

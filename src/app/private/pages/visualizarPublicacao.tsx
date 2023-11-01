@@ -53,8 +53,9 @@ export default function VisualizarPublicacao() {
       </View>
 
       <View style={styles.publicacao}>
-        <Publicacao item={publicacao as unknown as IPublicacao} />
+        <Publicacao cropped={false} item={publicacao as unknown as IPublicacao} />
       </View>
+
       <View style={styles.botoes}>
         {idUsuario && publicacao.idUsuario == idUsuario && (
           <Pressable onPress={navigate}>
