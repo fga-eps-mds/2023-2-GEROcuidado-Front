@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { Text, View } from "react-native";
 import { IUser } from "../../interfaces/user.interface";
@@ -6,7 +6,7 @@ import Hide from "../../components/Hide";
 
 export default function Rotinas() {
   const [idUsuario, setIdUsuario] = useState<number | null>(null);
-   
+
   const getIdUsuario = () => {
     AsyncStorage.getItem("usuario").then((response) => {
       const usuario = JSON.parse(response as string) as IUser;
@@ -14,13 +14,7 @@ export default function Rotinas() {
     });
   };
 
-  return (
-    <View>
-      {/* {!idUsuario ?
-       <Hide/> 
-       : 
-       <Text>Registros Works!</Text>} */}
-      <Text>Rotinas Works!</Text>
-    </View>
-  );
+  useEffect(() => getIdUsuario());
+
+  return <View>{idUsuario ? <Text>Registros Works!</Text> : <Hide />}</View>;
 }
