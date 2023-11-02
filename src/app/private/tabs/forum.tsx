@@ -12,12 +12,19 @@ import React, { useEffect, useState } from "react";
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
 import { router } from "expo-router";
 import Publicacao from "../../components/Publicacao";
-import { getAllPublicacao } from "../../services/forum.service";
+import {
+  getAllPublicacao,
+  getAllPublicacaoFilter,
+} from "../../services/forum.service";
 import Toast from "react-native-toast-message";
-import { IPublicacao } from "../../interfaces/forum.interface";
+import {
+  IPublicacao,
+  IPublicacaoFilter,
+} from "../../interfaces/forum.interface";
 import { ScrollView } from "react-native-gesture-handler";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { IUser } from "../../interfaces/user.interface";
+import BarraPesquisa from "../../components/BarraPesquisa";
 
 export default function Forum() {
   const [publicacoes, setPublicacoes] = useState<IPublicacao[]>([]);
@@ -52,23 +59,17 @@ export default function Forum() {
   };
 
   useEffect(() => getPublicacoes(), []);
-  useEffect(() => getIdUsuario());    
+  useEffect(() => getIdUsuario());
 
   const handleEndReached = () => {
     //TODO implementar a função para atualizar as pages
-  }
+  };
 
   return (
     <ScrollView style={styles.scrollView}>
       <View style={styles.cabecalho}>
         <Text style={styles.textoPublicacoes}>Publicações</Text>
-        <View style={styles.barraDePesquisa}>
-          <Icon style={styles.iconePesquisar} name="magnify" size={25}></Icon>
-          <TextInput
-            style={styles.inputBarraDePesquisa}
-            placeholder="Pesquise uma publicação"
-          />
-        </View>
+        <BarraPesquisa />
       </View>
       {idUsuario && (
         <Pressable style={styles.botaoCriarPublicacao} onPress={novaPublicacao}>
@@ -84,8 +85,8 @@ export default function Forum() {
       ) : (
         <FlatList
           onEndReached={handleEndReached}
-          onEndReachedThreshold={0.5} 
-          removeClippedSubviews ={true} 
+          onEndReachedThreshold={0.5}
+          removeClippedSubviews={true}
           data={publicacoes}
           renderItem={({ item }) => <Publicacao cropped={true} item={item} />}
         />
@@ -118,23 +119,6 @@ const styles = StyleSheet.create({
   titulo: {
     flexDirection: "row",
     alignItems: "center",
-  },
-  barraDePesquisa: {
-    flexDirection: "row",
-    alignItems: "center",
-    color: "#ADADAD",
-    backgroundColor: "white",
-    margin: 10,
-    paddingHorizontal: 15,
-    paddingVertical: 5,
-    borderRadius: 20,
-  },
-  inputBarraDePesquisa: {
-    flex: 1,
-  },
-  iconePesquisar: {
-    color: "#ADADAD",
-    marginRight: 5,
   },
   botaoPesquisar: {
     flexDirection: "row",

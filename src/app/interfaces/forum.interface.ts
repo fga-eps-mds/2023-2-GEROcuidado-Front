@@ -20,3 +20,10 @@ export interface IPublicacao extends IPublicacaoBody {
   id: number;
   usuario?: IUser;
 }
+
+export interface IPublicacaoFilter {
+  //id?: number;
+  titulo?: string;
+  // descricao?: string;
+  // categoria?: ECategoriaPublicacao;
+}

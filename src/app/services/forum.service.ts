@@ -1,4 +1,8 @@
-import { IPublicacao, IPublicacaoBody } from "../interfaces/forum.interface";
+import {
+  IPublicacao,
+  IPublicacaoBody,
+  IPublicacaoFilter,
+} from "../interfaces/forum.interface";
 import { IResponse } from "../interfaces/response.interface";
 
 const API_URL = process.env.EXPO_PUBLIC_API_URL;
@@ -39,6 +43,28 @@ export const getAllPublicacao = async (): Promise<
     },
   });
 
+  const json = await response.json();
+
+  if (response.status !== 200) {
+    throw new Error(json.message as string);
+  }
+
+  return json;
+};
+
+export const getAllPublicacaoFilter = async (
+  query: IPublicacaoFilter,
+): Promise<IResponse<IPublicacao[] | null>> => {
+  const response = await fetch(
+    `${BASE_URL}?filter={"titulo":"${query.titulo}"}`,
+    {
+      method: "GET",
+      headers: {
+        Accept: "application/json",
+        "Content-Type": "application/json",
+      },
+    },
+  );
   const json = await response.json();
 
   if (response.status !== 200) {
