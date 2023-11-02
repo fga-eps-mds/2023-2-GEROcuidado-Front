@@ -20,6 +20,8 @@ export default function Perfil() {
     router.push({ pathname: "/private/pages/editarPerfil", params: user });
   };
 
+  useEffect(() => getIdUsuario());
+  
   const handleUser = () => {
     AsyncStorage.getItem("usuario").then((response) => {
       const usuario = JSON.parse(response as string);
@@ -59,8 +61,8 @@ export default function Perfil() {
 
   return (
 
-   /*  <View>
-      {idUsuario ?  */
+   <View>
+      {idUsuario ?
         <View>
           <View style={styles.header}>
             {getFoto(user?.foto)}
@@ -87,10 +89,10 @@ export default function Perfil() {
             </Pressable>
           </View>
         </View>
-      /*   :
+         :
         <Hide />
       }
-    </View>) */);
+    </View>) ;
 }
 
 const styles = StyleSheet.create({
