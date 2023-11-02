@@ -11,7 +11,6 @@ export default function Perfil() {
   const [user, setUser] = useState<IUser | undefined>(undefined);
   const [idUsuario, setIdUsuario] = useState<number | null>(null);
 
-
   const logout = () => {
     AsyncStorage.clear().then(() => router.replace("/"));
   };
@@ -21,7 +20,7 @@ export default function Perfil() {
   };
 
   useEffect(() => getIdUsuario());
-  
+
   const handleUser = () => {
     AsyncStorage.getItem("usuario").then((response) => {
       const usuario = JSON.parse(response as string);
@@ -60,9 +59,8 @@ export default function Perfil() {
   };
 
   return (
-
-   <View>
-      {idUsuario ?
+    <View>
+      {idUsuario ? (
         <View>
           <View style={styles.header}>
             {getFoto(user?.foto)}
@@ -89,10 +87,11 @@ export default function Perfil() {
             </Pressable>
           </View>
         </View>
-         :
+      ) : (
         <Hide />
-      }
-    </View>) ;
+      )}
+    </View>
+  );
 }
 
 const styles = StyleSheet.create({

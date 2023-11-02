@@ -45,6 +45,10 @@ export default function Publicacao({ item, cropped }: Readonly<IProps>) {
     });
   };
 
+  const getCroppedTitulo = (titulo: string): string => {
+    return titulo.length < 20 ? titulo : titulo.slice(0, 20) + "...";
+  };
+
   const getCroppedDescricao = (descricao: string): string => {
     return descricao.length < 300 ? descricao : descricao.slice(0, 150) + "...";
   };
@@ -54,7 +58,14 @@ export default function Publicacao({ item, cropped }: Readonly<IProps>) {
       <View style={styles.postHeader}>
         {getFoto(item.usuario?.foto)}
         <View style={styles.userInfo}>
-          <Text style={styles.title}>{item.titulo}</Text>
+          {cropped ? (
+            <Text style={styles.postContent}>
+              {getCroppedTitulo(item.titulo)}
+            </Text>
+          ) : (
+            <Text style={styles.postContent}>{item.titulo}</Text>
+          )}
+          <Text style={styles.categoria}>{item.categoria}</Text>
           <View style={styles.subInfo}>
             <Text style={styles.username}>{item.usuario?.nome}</Text>
             <Text style={styles.date}>{getFormattedDate(item.dataHora)}</Text>
@@ -62,11 +73,13 @@ export default function Publicacao({ item, cropped }: Readonly<IProps>) {
         </View>
       </View>
 
-      {cropped ?
-        <Text style={styles.postContent}>{getCroppedDescricao(item.descricao)}</Text>
-        :
+      {cropped ? (
+        <Text style={styles.postContent}>
+          {getCroppedDescricao(item.descricao)}
+        </Text>
+      ) : (
         <Text style={styles.postContent}>{item.descricao}</Text>
-      }
+      )}
     </Pressable>
   );
 }
@@ -108,6 +121,10 @@ const styles = StyleSheet.create({
     whiteSpace: "nowrap",
     overflow: "hidden",
     maxWidth: "80%",
+  },
+  categoria: {
+    opacity: 0.5,
+    marginTop: 5,
   },
   date: {
     color: "#000000",
