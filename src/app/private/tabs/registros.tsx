@@ -15,15 +15,8 @@ export default function Registros() {
   };
 
   useEffect(() => getIdUsuario());
-// 
+  //
   return (
-    <View>
-      {!idUsuario ? (
-        <Hide></Hide>
-      ) : (
-        <Text>Registros Works!</Text>
-      )}
-      {/* <Text>Registros Works!</Text> */}
-    </View>
+    <View>{!idUsuario ? <Hide></Hide> : <Text>Registros Works!</Text>}</View>
   );
 }
