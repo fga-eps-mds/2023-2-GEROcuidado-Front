@@ -40,6 +40,8 @@ export default function Forum() {
 
   const getPublicacoes = (reset = false) => {
     setLoadingCarregarMais(true);
+    setLoading(reset);
+
     getAllPublicacao(offset, { titulo })
       .then((response) => {
         const newPublicacoes = response.data as IPublicacao[];
@@ -93,16 +95,12 @@ export default function Forum() {
       )}
 
       {!loading && (
-        <View>
-          <ScrollView style={{ height: "60%" }}>
-            {publicacoes.map((publicacao) => {
-              return (
-                <View key={publicacao.id}>
-                  <Publicacao crop={true} item={publicacao} />
-                </View>
-              );
-            })}
-          </ScrollView>
+        <ScrollView>
+          {publicacoes.map((publicacao) => (
+            <View key={publicacao.id}>
+              <Publicacao crop={true} item={publicacao} />
+            </View>
+          ))}
 
           {publicacoes.length > 0 && publicacoes.length % 10 === 0 && (
             <Pressable
@@ -118,7 +116,7 @@ export default function Forum() {
               )}
             </Pressable>
           )}
-        </View>
+        </ScrollView>
       )}
     </View>
   );
