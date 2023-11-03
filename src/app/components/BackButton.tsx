@@ -23,6 +23,10 @@ export default function BackButton({
   };
 
   return (
+
+    <Pressable onPress={goBack} testID="back-button-pressable">
+      <Icon name="chevron-left" size={40} testID="back-button-icon"/>
+
     <Pressable style={styles.backButton} onPress={goBack}>
       <Icon
         name="chevron-left"

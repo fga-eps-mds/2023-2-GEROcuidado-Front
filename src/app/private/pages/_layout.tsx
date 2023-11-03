@@ -3,7 +3,7 @@ import Toast from "react-native-toast-message";
 import { Stack } from "expo-router";
 import { View } from "react-native";
 
-export default function PrivatePagesLayout() {
+export default function PrivateLayout() {
   return (
     <>
       <View style={{ zIndex: 9999 }}>
