@@ -1,7 +1,7 @@
 import { Platform, StyleSheet, View } from "react-native";
 
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
-import React from 'react';
+import React from "react";
 import { Tabs } from "expo-router";
 import Toast from "react-native-toast-message";
 
@@ -55,36 +55,6 @@ export default function TabsLayout() {
           }}
         />
         <Tabs.Screen
-          name="central"
-          options={{
-            title: "",
-            tabBarIcon: ({ focused }: { focused : boolean}) => {
-              return(
-                <View style={{
-                  elevation: focused ? 5 : 0,
-                  ...Platform.select({
-                    ios: {
-                      shadowColor: focused ? 'rgba(0, 0, 0, 0.5)' : 'transparent',
-                      shadowOffset: focused ? { width: 0, height: 2 } : { width: 0, height: 0 },
-                      shadowOpacity: focused ? 0.8 : 0,
-                      shadowRadius: focused ? 4 : 0,
-                    },
-                  }),                  
-                  justifyContent: 'center',
-                  alignItems: 'center',
-                  backgroundColor: "#B4026D",
-                  width: 70,
-                  height: 70,
-                  top: -7,
-                  borderRadius: 35,
-                }}>
-                  <Icon name="plus" size={50} color="white" />
-                </View>
-              )
-            }
-          }}
-        />
-        <Tabs.Screen
           name="forum"
           options={{
             title: "Forum",
@@ -125,5 +95,5 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.25,
     shadowRadius: 3.5,
     elevation: 5,
-  }
+  },
 });

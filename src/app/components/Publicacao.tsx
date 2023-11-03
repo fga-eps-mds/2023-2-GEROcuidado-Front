@@ -139,8 +139,8 @@ const styles = StyleSheet.create({
   semFoto: { position: "relative", backgroundColor: "#EFEFF0" },
   semFotoIcon: {
     position: "absolute",
-    right: "38%",
-    bottom: "38%",
+    right: "34%",
+    bottom: "34%",
     opacity: 0.4,
     margin: "auto",
     alignSelf: "center",
