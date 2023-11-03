@@ -31,4 +31,10 @@ describe('ModalConfirmation', () => {
     // Verifica se a função de fechamento do modal foi chamada
     expect(closeModal).toHaveBeenCalled();
   });
+  it('não deve renderizar quando não visível', () => {
+    const { queryByText } = render(<ModalConfirmation visible={false} callbackFn={() => {}} closeModal={() => {}} />);
+  
+    // Verifica se o texto do modal não está presente quando o modal não está visível
+    expect(queryByText('Prosseguir com a exclusão da conta?')).toBeNull();
+  });
 });
