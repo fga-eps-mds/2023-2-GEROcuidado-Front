@@ -1,16 +1,17 @@
 import React, { useEffect, useState } from "react";
-import { Pressable, StyleSheet, Text, View } from "react-native";
-import BackButton from "../../components/BackButton";
+import {
+  Pressable,
+  StyleSheet,
+  Text,
+  View,
+  TextInput,
+  ActivityIndicator,
+} from "react-native";
 import Toast from "react-native-toast-message";
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
-import { TextInput } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import {
-  deleteUserById,
-  getUserById,
-  updateUser,
-} from "../../services/user.service";
-import { router } from "expo-router";
+import { deleteUserById, updateUser } from "../../services/user.service";
+import { Link, router, useLocalSearchParams } from "expo-router";
 import ErrorMessage from "../../components/ErrorMessage";
 import CustomButton from "../../components/CustomButton";
 import { IUser } from "../../interfaces/user.interface";
@@ -22,40 +23,14 @@ interface IErrors {
 }
 
 export default function EditarPerfil() {
-  const [foto, setFoto] = useState<string | undefined | null>(null);
-  const [nome, setNome] = useState("");
-  const [token, setToken] = useState("");
+  const user = useLocalSearchParams() as unknown as IUser;
+  const [foto, setFoto] = useState<string | undefined | null>(user.foto);
+  const [nome, setNome] = useState(user.nome);
   const [erros, setErros] = useState<IErrors>({});
-  const [user, setUser] = useState<IUser | null>(null);
   const [showErrors, setShowErrors] = useState(false);
   const [modalVisible, setModalVisible] = useState(false);
-
-
-  const getUser = async () => {
-    if (token) return;
-
-    const payloadToken = (await AsyncStorage.getItem("token")) as string;
-    const userInfo = JSON.parse(atob(payloadToken.split(".")[1])) as IUser;
-    setToken(payloadToken as string);
-
-    try {
-      const response = await getUserById(userInfo.id, payloadToken);
-      const responseUser = response.data as IUser & {
-        foto: { data: Uint8Array };
-      };
-
-      setUser(responseUser);
-      setNome(responseUser.nome);
-      setFoto(responseUser.foto);
-    } catch (err) {
-      const error = err as { message: string };
-      Toast.show({
-        type: "error",
-        text1: "Erro!",
-        text2: error.message,
-      });
-    }
-  };
+  const [showLoading, setShowLoading] = useState(false);
+  const [showLoadingApagar, setShowLoadingApagar] = useState(false);
 
   const salvar = async () => {
     if (Object.keys(erros).length > 0) {
@@ -66,13 +41,15 @@ export default function EditarPerfil() {
     const body = { nome, foto };
     const token = await AsyncStorage.getItem("token");
 
+    if (body.foto && isBase64Image(body.foto)) {
+      delete body.foto;
+    }
+
     try {
-      const id = user?.id as number;
-      const response = await updateUser(id, body, token as string);
-      const responseUser = response.data as IUser;
-      setUser(responseUser);
-      setNome(responseUser.nome);
-      setFoto(responseUser.foto ?? "");
+      setShowLoading(true);
+      const response = await updateUser(user.id, body, token as string);
+
+      AsyncStorage.setItem("usuario", JSON.stringify(response.data)).then();
 
       Toast.show({
         type: "success",
@@ -87,17 +64,24 @@ export default function EditarPerfil() {
         text1: "Erro!",
         text2: error.message,
       });
+    } finally {
+      setShowLoading(false);
     }
   };
 
+  const isBase64Image = (str: string): boolean => {
+    const expression = `data:image\/([a-zA-Z]*);base64,([^\"]*)`;
+    const regex = new RegExp(expression);
+
+    return regex.test(str);
+  };
+
   const apagarConta = async () => {
-    // TODO fazer modal de confirmação
     const token = await AsyncStorage.getItem("token");
 
     try {
-      const id = user?.id as number;
-      const response = await deleteUserById(id, token as string);
-
+      setShowLoadingApagar(true);
+      const response = await deleteUserById(user.id, token as string);
       Toast.show({
         type: "success",
         text1: "Sucesso!",
@@ -111,16 +95,18 @@ export default function EditarPerfil() {
         text1: "Erro!",
         text2: error.message,
       });
+    } finally {
+      setShowLoadingApagar(false);
     }
   };
 
   const confirmation = () => {
-    setModalVisible(!modalVisible)
-  }
-  
+    setModalVisible(!modalVisible);
+  };
+
   const closeModal = () => {
-    setModalVisible(false)
-  }
+    setModalVisible(false);
+  };
 
   useEffect(() => handleErrors(), [nome]);
 
@@ -138,11 +124,11 @@ export default function EditarPerfil() {
     setErros(erros);
   };
 
-  getUser();
-
   return (
     <View>
-      <BackButton />
+      <Link href="/private/tabs/perfil">
+        <Icon name="chevron-left" size={40} />
+      </Link>
 
       {foto && <UploadImage setFoto={setFoto} uri={foto} />}
       {!foto && <UploadImage setFoto={setFoto} />}
@@ -163,18 +149,32 @@ export default function EditarPerfil() {
       <View style={(styles.formControl, styles.disabled)}>
         <View style={styles.field}>
           <Icon style={styles.iconInput} name="email-outline" size={20} />
-          <Text style={styles.textInput}>{user?.email}</Text>
+          <Text style={styles.textInput}>{user.email}</Text>
         </View>
       </View>
 
       <View style={styles.linkButton}>
-        <CustomButton title="Salvar" callbackFn={salvar} />
+        <CustomButton
+          title="Salvar"
+          callbackFn={salvar}
+          showLoading={showLoading}
+        />
       </View>
 
       <Pressable onPress={confirmation}>
-        <Text style={styles.apagar}>Apagar Conta</Text>
+        {showLoadingApagar ? (
+          <ActivityIndicator size="small" color="#FF7F7F" />
+        ) : (
+          <Text style={styles.apagar}>Apagar Conta</Text>
+        )}
       </Pressable>
-      <ModalConfirmation visible={modalVisible} callbackFn={apagarConta} closeModal={closeModal}/>
+
+      <ModalConfirmation
+        visible={modalVisible}
+        callbackFn={apagarConta}
+        closeModal={closeModal}
+        message="Prosseguir com a exclusão da conta?"
+      />
     </View>
   );
 }
@@ -189,60 +189,35 @@ const styles = StyleSheet.create({
   disabled: {
     opacity: 0.5,
   },
-  voltar: {
-    marginTop: 5,
-  },
   formControl: {
-    flexDirection: "column",
     width: 320,
-    alignItems: "flex-start",
-    alignSelf: "center",
+    flexDirection: "column",
     marginTop: 10,
-  },
-  button: {
-    width: "80%",
-    maxWidth: 350,
-    paddingVertical: 16,
-    paddingHorizontal: 26,
-    alignItems: "center",
-    borderRadius: 20,
-    backgroundColor: "#2CCDB5",
-    textAlign: "center",
+    alignSelf: "center",
+    alignItems: "flex-start",
   },
   field: {
-    flexDirection: "row",
     width: 320,
+    height: 30,
     borderBottomWidth: 1,
     borderBottomColor: "#AFB1B6",
+    flexDirection: "row",
     paddingBottom: 5,
-    height: 30,
-    alignSelf: "center",
     marginBottom: 5,
+    alignSelf: "center",
   },
   iconInput: {
     width: "10%",
   },
-  passwordInput: {
-    paddingLeft: 10,
-    color: "#05375a",
-    width: "80%",
-    fontSize: 17,
-  },
-  passwordIcon: {
-    width: "10%",
-  },
   textInput: {
+    color: "#05375a",
     width: "90%",
     paddingLeft: 10,
-    color: "#05375a",
     fontSize: 17,
   },
-  arrow: {
-    alignSelf: "flex-start",
-  },
   linkButton: {
+    alignItems: "center",
     marginTop: 60,
     marginBottom: 60,
-    alignItems: "center",
   },
 });

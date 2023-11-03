@@ -20,8 +20,13 @@ npm install expo-cli --global
 #### instale as dependências
 ```
 npx expo start
-```
 
+```
+## QR Code para testes
+### IOS
+![IOS](assets/testes/ios_27-10.png.jpeg)
+### Android
+![Android](assets/testes/Android_27-10.png)
 ### 📝 Notes
 
 - [Expo Router: Docs](https://expo.github.io/router)

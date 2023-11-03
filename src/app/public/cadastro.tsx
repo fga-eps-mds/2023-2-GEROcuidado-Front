@@ -29,6 +29,7 @@ export default function Cadastro() {
   const [escondeConfirmaSenha, setEscondeConfirmaSenha] = useState(true);
   const [erros, setErros] = useState<IErrors>({});
   const [showErrors, setShowErrors] = useState(false);
+  const [showLoading, setShowLoading] = useState(false);
 
   const cadastrar = async () => {
     if (Object.keys(erros).length > 0) {
@@ -36,9 +37,10 @@ export default function Cadastro() {
       return;
     }
 
-    const body = { nome, email, senha, foto };
+    const body = { nome, email: email.toLowerCase().trim(), senha, foto };
 
     try {
+      setShowLoading(true);
       const response = await postUser(body);
       Toast.show({
         type: "success",
@@ -53,6 +55,8 @@ export default function Cadastro() {
         text1: "Erro!",
         text2: error.message,
       });
+    } finally {
+      setShowLoading(false);
     }
   };
 
@@ -101,7 +105,7 @@ export default function Cadastro() {
 
   return (
     <View>
-      <BackButton />
+      <BackButton color="#000" route="/" />
 
       <ScrollView>
         <UploadImage setFoto={setFoto} />
@@ -187,7 +191,11 @@ export default function Cadastro() {
         </View>
 
         <View style={styles.linkButton}>
-          <CustomButton title="Cadastrar" callbackFn={cadastrar} />
+          <CustomButton
+            title="Cadastrar"
+            callbackFn={cadastrar}
+            showLoading={showLoading}
+          />
         </View>
       </ScrollView>
     </View>

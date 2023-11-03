@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Text, TouchableOpacity, View, StyleSheet } from "react-native";
+import { Text, Pressable, View, StyleSheet } from "react-native";
 import Swiper from "react-native-swiper";
 import ItemTutorial from "../components/ItemTutorial";
 import CustomButton from "../components/CustomButton";
@@ -32,9 +32,9 @@ export default function Tutorial() {
 
   return (
     <View style={styles.carousel}>
-      <TouchableOpacity onPress={skip}>
+      <Pressable onPress={skip}>
         <Text style={styles.skip}>Pular</Text>
-      </TouchableOpacity>
+      </Pressable>
 
       <Swiper
         index={index}
@@ -75,18 +75,12 @@ const styles = StyleSheet.create({
     textAlign: "center",
     fontWeight: "bold",
     color: "gray",
-    marginBottom: 0,
-    paddingBottom: 0,
   },
   word: {
     color: "#B4026D",
   },
-  linkButton: {
-    alignItems: "center",
-    marginTop: 27,
-  },
   carousel: {
-    height: "90%",
+    height: "95%",
   },
   skip: {
     textAlign: "right",
