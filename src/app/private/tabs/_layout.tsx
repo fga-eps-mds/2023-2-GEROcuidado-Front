@@ -1,8 +1,9 @@
-import React from "react";
-import Toast from "react-native-toast-message";
-import Icon from "react-native-vector-icons/MaterialCommunityIcons";
 import { Platform, StyleSheet, View } from "react-native";
+
+import Icon from "react-native-vector-icons/MaterialCommunityIcons";
+import React from 'react';
 import { Tabs } from "expo-router";
+import Toast from "react-native-toast-message";
 
 export default function TabsLayout() {
   const iconComponent = (focused: boolean, size: number, iconName: string) => (
@@ -23,7 +24,7 @@ export default function TabsLayout() {
           tabBarActiveTintColor: "lightgrey",
           tabBarStyle: {
             backgroundColor: "#2CCDB5",
-            height: 70,
+            height: 65,
           },
           tabBarLabelStyle: {
             marginBottom: Platform.OS === "ios" ? -15 : 10,
@@ -51,6 +52,36 @@ export default function TabsLayout() {
             tabBarIcon: ({ size, focused }) => {
               return iconComponent(focused, size, "heart");
             },
+          }}
+        />
+        <Tabs.Screen
+          name="central"
+          options={{
+            title: "",
+            tabBarIcon: ({ focused }: { focused : boolean}) => {
+              return(
+                <View style={{
+                  elevation: focused ? 5 : 0,
+                  ...Platform.select({
+                    ios: {
+                      shadowColor: focused ? 'rgba(0, 0, 0, 0.5)' : 'transparent',
+                      shadowOffset: focused ? { width: 0, height: 2 } : { width: 0, height: 0 },
+                      shadowOpacity: focused ? 0.8 : 0,
+                      shadowRadius: focused ? 4 : 0,
+                    },
+                  }),                  
+                  justifyContent: 'center',
+                  alignItems: 'center',
+                  backgroundColor: "#B4026D",
+                  width: 70,
+                  height: 70,
+                  top: -7,
+                  borderRadius: 35,
+                }}>
+                  <Icon name="plus" size={50} color="white" />
+                </View>
+              )
+            }
           }}
         />
         <Tabs.Screen
@@ -84,4 +115,15 @@ const styles = StyleSheet.create({
     marginTop: Platform.OS === "ios" ? 10 : 0,
     marginBottom: Platform.OS === "ios" ? 0 : -10,
   },
+
+  shadow: {
+    shadowColor: "#7F5DF0",
+    shadowOffset: {
+      width: 0,
+      height: 10,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 3.5,
+    elevation: 5,
+  }
 });
