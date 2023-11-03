@@ -88,7 +88,6 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
     color: "white",
     fontSize: 20,
-    padding: 20,
   },
   botoes: {
     flexDirection: "row",
