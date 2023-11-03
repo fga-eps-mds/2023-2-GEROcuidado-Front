@@ -1,157 +1,151 @@
 import {
-  FlatList,
-  Image,
+  ActivityIndicator,
   Pressable,
   StyleSheet,
   Text,
-  TextInput,
   View,
 } from "react-native";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
 import { router } from "expo-router";
+import Publicacao from "../../components/Publicacao";
+import { getAllPublicacao } from "../../services/forum.service";
+import Toast from "react-native-toast-message";
+import { IOrder, IPublicacao } from "../../interfaces/forum.interface";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import { IUser } from "../../interfaces/user.interface";
+import BarraPesquisa from "../../components/BarraPesquisa";
+import { ScrollView } from "react-native-gesture-handler";
 
-// CRIANDO OBJETOS DE COMENTÁRIOS
-export default function HomeScreen() {
-  const [posts, setPosts] = useState([
-    {
-      id: "1",
-      username: "Amélia",
-      date: new Date().toString().substring(0, 16),
-      content:
-        "Eu sou uma cuidadora, Eu sou uma cuidadora, Eu sou uma cuidadora, Eu sou uma cuidadora, Eu sou uma cuidadora, Eu sou uma cuidadora, Eu sou uma cuidadora, Eu sou uma cuidadora",
-      likes: 25,
-      comments: 0,
-    },
-    {
-      id: "2",
-      username: "Joana",
-      date: new Date().toString().substring(0, 16),
-      content:
-        "Eu cuido de idosos, e também cuido de outros idosos, e também cuido.",
-      likes: 12,
-      comments: 0,
-    },
-    {
-      id: "3",
-      username: "Ana",
-      date: new Date().toString().substring(0, 16),
-      content:
-        "Eu cuido de idosos, e também cuido de outros idosos, e também cuido.",
-      likes: 32,
-      comments: 0,
-    },
-  ]);
+export default function Forum() {
+  const [publicacoes, setPublicacoes] = useState<IPublicacao[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [loadingCarregarMais, setLoadingCarregarMais] = useState(true);
+  const [idUsuario, setIdUsuario] = useState<number | null>(null);
+  const [offset, setOffset] = useState(0);
+  const [titulo, setTitulo] = useState("");
+  const [timer, setTimer] = useState<NodeJS.Timeout | null>(null);
+  const order: IOrder = {
+    column: "dataHora",
+    dir: "DESC",
+  };
 
   const novaPublicacao = () => {
     router.push("private/pages/criaPublicacao");
   };
 
-  return (
-    <View style={{ flex: 1, backgroundColor: "white" }}>
-      <View>
-        {/* BARRA DE PESQUISA */}
-        <View style={styles.cabecalho}>
-          <View style={styles.barraDePesquisa}>
-            <TextInput
-              style={styles.inputBarraDePesquisa}
-              placeholder="Pesquise uma notícia"
-              // onChangeText={(text) => setSearchText(text)}
-            />
-            <Pressable style={styles.botaoPesquisar} onPress={() => {}}>
-              <Icon
-                style={styles.iconePesquisar}
-                name="magnify"
-                size={30}
-              ></Icon>
-            </Pressable>
-          </View>
-        </View>
-        <View style={styles.publicacao}>
-          <Text style={styles.textoPublicacoes}>Publicações</Text>
-          <Pressable
-            style={styles.botaoCriarPublicacao}
-            onPress={novaPublicacao}
-          >
-            <Text style={styles.textoBotaoPesquisar}>Crie uma publicação </Text>
-            <Icon name="pencil" color={"white"} size={25}></Icon>
-          </Pressable>
-        </View>
-      </View>
-      <FlatList
-        data={posts}
-        renderItem={({ item }) => (
-          <View style={styles.postContainer}>
-            <View style={styles.postHeader}>
-              <Image
-                style={styles.avatar}
-                source={require("../../../../assets/amelia.png")}
-              />
-              <View style={styles.userInfo}>
-                <Text style={styles.username}>{item.username}</Text>
-                <Text style={styles.date}>{item.date}</Text>
-              </View>
-            </View>
+  const getIdUsuario = () => {
+    AsyncStorage.getItem("usuario").then((response) => {
+      const usuario = JSON.parse(response as string) as IUser;
+      setIdUsuario(usuario?.id);
+    });
+  };
 
-            <Text style={styles.postContent}>{item.content}</Text>
-          </View>
-        )}
-        keyExtractor={(item) => item.id}
-      />
+  const getPublicacoes = (reset = false) => {
+    setLoadingCarregarMais(true);
+    setLoading(reset);
+
+    getAllPublicacao(offset, { titulo }, order)
+      .then((response) => {
+        const newPublicacoes = response.data as IPublicacao[];
+
+        reset
+          ? setPublicacoes(newPublicacoes)
+          : setPublicacoes([...publicacoes, ...newPublicacoes]);
+      })
+      .catch((err) => {
+        const error = err as { message: string };
+        Toast.show({
+          type: "error",
+          text1: "Erro!",
+          text2: error.message,
+        });
+      })
+      .finally(() => {
+        setLoading(false);
+        setLoadingCarregarMais(false);
+      });
+  };
+
+  const handlePesquisar = (newTitulo: string) => {
+    if (timer) clearTimeout(timer);
+    const temp = setTimeout(() => setTitulo(newTitulo), 500);
+    setTimer(temp);
+  };
+
+  useEffect(() => getPublicacoes(), [offset]);
+  useEffect(() => getPublicacoes(true), [titulo]);
+  useEffect(() => getIdUsuario(), []);
+
+  return (
+    <View style={styles.scrollView}>
+      <View style={styles.cabecalho}>
+        <Text style={styles.textoPublicacoes}>Publicações</Text>
+        <BarraPesquisa callbackFn={handlePesquisar} />
+      </View>
+
+      {idUsuario && (
+        <Pressable style={styles.botaoCriarPublicacao} onPress={novaPublicacao}>
+          <Icon name="plus" color={"white"} size={20}></Icon>
+          <Text style={styles.textoBotaoPesquisar}>Nova publicação</Text>
+        </Pressable>
+      )}
+
+      {loading && (
+        <View style={styles.loading}>
+          <ActivityIndicator size="large" color="#2CCDB5" />
+        </View>
+      )}
+
+      {!loading && (
+        <ScrollView>
+          {publicacoes.map((publicacao) => (
+            <View key={publicacao.id}>
+              <Publicacao crop={true} item={publicacao} />
+            </View>
+          ))}
+
+          {publicacoes.length > 0 && publicacoes.length % 10 === 0 && (
+            <Pressable
+              style={styles.botaoCarregarMais}
+              onPress={() => setOffset(offset + 1)}
+            >
+              {loadingCarregarMais && (
+                <ActivityIndicator size="small" color="#2CCDB5" />
+              )}
+
+              {!loadingCarregarMais && (
+                <Text style={styles.botaoCarregarMaisText}>Carregar mais</Text>
+              )}
+            </Pressable>
+          )}
+        </ScrollView>
+      )}
     </View>
   );
 }
 
 const styles = StyleSheet.create({
-  postContainer: {
-    margin: 10,
-    borderRadius: 10,
-    elevation: 5,
+  loading: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "center",
     backgroundColor: "white",
-    shadowColor: "#333",
-    shadowOffset: { width: 0, height: 1 },
-    shadowOpacity: 0.5,
-    shadowRadius: 2,
+    marginTop: 50,
+  },
+  scrollView: {
+    backgroundColor: "#fff",
+    height: "100%",
   },
   cabecalho: {
+    flexDirection: "column",
     backgroundColor: "#2CCDB5",
     padding: 10,
   },
   iconeVoltar: {
     color: "white",
     alignSelf: "flex-start",
-  },
-  titulo: {
-    flexDirection: "row",
-    alignItems: "center",
-  },
-  textoTitulo: {
-    fontWeight: "bold",
-    color: "white",
-    fontSize: 24,
-    padding: 20,
-  },
-  barraDePesquisa: {
-    flexDirection: "row",
-    alignItems: "center",
-  },
-  inputBarraDePesquisa: {
-    flex: 1,
-    height: 40,
-    borderColor: "white",
-    textAlign: "center",
-    color: "#ADADAD",
-    backgroundColor: "white",
-    borderWidth: 1,
-    margin: 10,
-    padding: 5,
-    borderRadius: 14,
-  },
-  iconePesquisar: {
-    position: "absolute",
-    right: 15,
-    color: "#ADADAD",
   },
   botaoPesquisar: {
     flexDirection: "row",
@@ -162,50 +156,41 @@ const styles = StyleSheet.create({
   textoBotaoPesquisar: {
     color: "white",
     fontWeight: "600",
-    fontSize: 16,
+    fontSize: 14,
+    marginLeft: 5,
   },
   textoPublicacoes: {
-    fontSize: 24,
+    fontSize: 22,
     fontWeight: "600",
+    color: "#fff",
+    marginVertical: 10,
+    marginLeft: "auto",
+    marginRight: "auto",
   },
   botaoCriarPublicacao: {
     flexDirection: "row",
     alignItems: "center",
     backgroundColor: "#B4026D",
-    padding: 5,
-    borderRadius: 14,
+    paddingHorizontal: 10,
+    paddingVertical: 5,
+    borderRadius: 10,
+    marginLeft: "auto",
+    marginRight: 10,
+    marginVertical: 10,
   },
-  publicacao: {
-    backgroundColor: "white",
-    padding: 10,
+  botaoCarregarMais: {
     flexDirection: "row",
-    justifyContent: "space-between",
+    justifyContent: "center",
     alignItems: "center",
+    backgroundColor: "transparent",
+    marginHorizontal: "auto",
+    marginVertical: 25,
+    height: 40,
   },
-  avatar: {
-    height: 50,
-    width: 50,
-    borderRadius: 50,
-  },
-  postHeader: {
-    flexDirection: "row",
-    alignItems: "center",
-    padding: 15,
-  },
-  userInfo: {
-    marginLeft: 10,
-  },
-  username: {
-    fontSize: 20,
-  },
-  date: {
-    fontSize: 12,
-  },
-  postContent: {
-    fontSize: 15,
-    maxHeight: 100,
-    padding: 6,
-    textAlign: "justify",
+  botaoCarregarMaisText: {
+    color: "#2CCDB5",
+    fontWeight: "600",
+    fontSize: 14,
   },
   actions: {
     flexDirection: "row",

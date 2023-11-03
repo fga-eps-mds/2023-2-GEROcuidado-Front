@@ -5,9 +5,11 @@ import { Text, View, StyleSheet, Image, Pressable } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { IUser } from "../../interfaces/user.interface";
 import { router } from "expo-router";
+import NaoAutenticado from "../../components/NaoAutenticado";
 
 export default function Perfil() {
   const [user, setUser] = useState<IUser | undefined>(undefined);
+  const [idUsuario, setIdUsuario] = useState<number | null>(null);
 
   const logout = () => {
     AsyncStorage.clear().then(() => router.replace("/"));
@@ -16,6 +18,8 @@ export default function Perfil() {
   const navigate = () => {
     router.push({ pathname: "/private/pages/editarPerfil", params: user });
   };
+
+  useEffect(() => getIdUsuario());
 
   const handleUser = () => {
     AsyncStorage.getItem("usuario").then((response) => {
@@ -47,7 +51,16 @@ export default function Perfil() {
     );
   };
 
-  return (
+  const getIdUsuario = () => {
+    AsyncStorage.getItem("usuario").then((response) => {
+      const usuario = JSON.parse(response as string) as IUser;
+      setIdUsuario(usuario?.id);
+    });
+  };
+
+  return !idUsuario ? (
+    <NaoAutenticado />
+  ) : (
     <View>
       <View style={styles.header}>
         {getFoto(user?.foto)}
@@ -105,6 +118,7 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
     fontSize: 16,
     marginLeft: 20,
+    maxWidth: "75%",
   },
   options: {
     flexDirection: "column",

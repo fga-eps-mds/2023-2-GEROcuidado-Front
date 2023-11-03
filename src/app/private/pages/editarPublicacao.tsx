@@ -1,16 +1,31 @@
-import { Link, router } from "expo-router";
+import { router, useLocalSearchParams } from "expo-router";
 import React, { useEffect, useState } from "react";
-import { Platform, StyleSheet, Text, TextInput, View } from "react-native";
-import Icon from "react-native-vector-icons/MaterialCommunityIcons";
+import {
+  View,
+  StyleSheet,
+  ScrollView,
+  Text,
+  TextInput,
+  Pressable,
+  ActivityIndicator,
+  Platform,
+} from "react-native";
 import { SelectList } from "react-native-dropdown-select-list";
-import { ScrollView } from "react-native-gesture-handler";
-import { ECategoriaPublicacao } from "../../interfaces/forum.interface";
-import AsyncStorage from "@react-native-async-storage/async-storage";
-import { IUser } from "../../interfaces/user.interface";
-import { postPublicacao } from "../../services/forum.service";
-import Toast from "react-native-toast-message";
 import CustomButton from "../../components/CustomButton";
 import ErrorMessage from "../../components/ErrorMessage";
+import Icon from "react-native-vector-icons/MaterialCommunityIcons";
+import {
+  ECategoriaPublicacao,
+  IPublicacao,
+} from "../../interfaces/forum.interface";
+import { IUser } from "../../interfaces/user.interface";
+import Toast from "react-native-toast-message";
+import {
+  deletePublicacaoById,
+  updatePublicacao,
+} from "../../services/forum.service";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import ModalConfirmation from "../../components/ModalConfirmation";
 
 interface IErrors {
   titulo?: string;
@@ -18,57 +33,43 @@ interface IErrors {
   categoria?: string;
 }
 
-export default function CriaPublicacao() {
-  const [idUsuario, setIdUsuario] = useState<number | null>(null);
-  const [token, setToken] = useState<string>("");
-  const [titulo, setTitulo] = useState("");
-  const [descricao, setDescricao] = useState("");
-  const [categoria, setCategoria] = useState<ECategoriaPublicacao | null>(null);
+export default function EditarPublicacao() {
+  const item = useLocalSearchParams() as unknown as IPublicacao & IUser;
+
+  const [titulo, setTitulo] = useState(item.titulo);
+  const [descricao, setDescricao] = useState(item.descricao);
+  const [categoria, setCategoria] = useState<ECategoriaPublicacao | null>(
+    item.categoria ?? ECategoriaPublicacao.GERAL,
+  );
   const [erros, setErros] = useState<IErrors>({});
   const [showErrors, setShowErrors] = useState(false);
-  const [loading, setLoading] = useState(false);
+  const [modalVisible, setModalVisible] = useState(false);
+  const [showLoading, setShowLoading] = useState(false);
+  const [showLoadingApagar, setShowLoadingApagar] = useState(false);
+  const [token, setToken] = useState<string>("");
 
-  const getIdUsuario = () => {
-    AsyncStorage.getItem("usuario").then((response) => {
-      const usuario = JSON.parse(response as string) as IUser;
-      setIdUsuario(usuario.id);
-    });
+  const getToken = () => {
     AsyncStorage.getItem("token").then((response) => {
       setToken(response as string);
     });
   };
 
-  const data = [
-    { key: ECategoriaPublicacao.GERAL, value: ECategoriaPublicacao.GERAL },
-    { key: ECategoriaPublicacao.SAUDE, value: ECategoriaPublicacao.SAUDE },
-    {
-      key: ECategoriaPublicacao.ALIMENTACAO,
-      value: ECategoriaPublicacao.ALIMENTACAO,
-    },
-    {
-      key: ECategoriaPublicacao.EXERCICIOS,
-      value: ECategoriaPublicacao.EXERCICIOS,
-    },
-  ];
-
-  const publicar = async () => {
+  const salvar = async () => {
     if (Object.keys(erros).length > 0) {
       setShowErrors(true);
       return;
     }
 
-    const body = {
-      idUsuario: idUsuario as number,
+    const body: Partial<IPublicacao> = {
       titulo,
       descricao,
-      dataHora: new Date(),
       categoria: categoria as ECategoriaPublicacao,
-      contagemReportes: 0,
     };
 
     try {
-      setLoading(true);
-      const response = await postPublicacao(body, token);
+      setShowLoading(true);
+      const response = await updatePublicacao(item.id, body, token);
+
       Toast.show({
         type: "success",
         text1: "Sucesso!",
@@ -83,12 +84,42 @@ export default function CriaPublicacao() {
         text2: error.message,
       });
     } finally {
-      setLoading(false);
+      setShowLoading(false);
     }
   };
 
-  useEffect(() => handleErrors(), [titulo, descricao, categoria]);
-  useEffect(() => getIdUsuario());
+  const apagarPublicacao = async () => {
+    try {
+      setShowLoadingApagar(true);
+      const response = await deletePublicacaoById(item.id, token);
+      Toast.show({
+        type: "success",
+        text1: "Sucesso!",
+        text2: response.message as string,
+      });
+      router.replace("/private/tabs/forum");
+    } catch (err) {
+      const error = err as { message: string };
+      Toast.show({
+        type: "error",
+        text1: "Erro!",
+        text2: error.message,
+      });
+    } finally {
+      setShowLoadingApagar(false);
+    }
+  };
+
+  const confirmation = () => {
+    setModalVisible(!modalVisible);
+  };
+
+  const closeModal = () => {
+    setModalVisible(false);
+  };
+
+  useEffect(() => handleErrors, [titulo, descricao, categoria]);
+  useEffect(() => getToken());
 
   const handleErrors = () => {
     const erros: IErrors = {};
@@ -112,14 +143,36 @@ export default function CriaPublicacao() {
     setErros(erros);
   };
 
+  const data = [
+    { key: ECategoriaPublicacao.GERAL, value: ECategoriaPublicacao.GERAL },
+    { key: ECategoriaPublicacao.SAUDE, value: ECategoriaPublicacao.SAUDE },
+    {
+      key: ECategoriaPublicacao.ALIMENTACAO,
+      value: ECategoriaPublicacao.ALIMENTACAO,
+    },
+    {
+      key: ECategoriaPublicacao.EXERCICIOS,
+      value: ECategoriaPublicacao.EXERCICIOS,
+    },
+  ];
+
+  const navigate = () => {
+    const params = { ...item, ...item.usuario, id: item.id };
+
+    router.push({
+      pathname: "/private/pages/visualizarPublicacao",
+      params: params,
+    });
+  };
+
   return (
     <ScrollView>
       <View style={styles.header}>
-        <Link href="private/tabs/forum">
+        <Pressable onPress={navigate}>
           <Icon name="chevron-left" size={40} color="#fff" />
-        </Link>
+        </Pressable>
 
-        <Text style={styles.tituloheader}>Nova publicação</Text>
+        <Text style={styles.tituloheader}>Editar publicação</Text>
       </View>
 
       <View style={styles.publicacao}>
@@ -157,18 +210,34 @@ export default function CriaPublicacao() {
               setSelected={setCategoria}
               placeholder="Categoria"
               search={false}
+              defaultOption={{ key: item.categoria, value: item.categoria }}
             />
           </View>
           <ErrorMessage show={showErrors} text={erros.categoria} />
         </View>
 
-        <View style={styles.botaoPublicar}>
+        <View style={styles.linkButton}>
           <CustomButton
-            title="Publicar"
-            callbackFn={publicar}
-            showLoading={loading}
+            title="Salvar"
+            callbackFn={salvar}
+            showLoading={showLoading}
           />
         </View>
+
+        <Pressable onPress={confirmation}>
+          {showLoadingApagar ? (
+            <ActivityIndicator size="small" color="#FF7F7F" />
+          ) : (
+            <Text style={styles.apagar}>Apagar Publicação</Text>
+          )}
+        </Pressable>
+
+        <ModalConfirmation
+          visible={modalVisible}
+          callbackFn={apagarPublicacao}
+          closeModal={closeModal}
+          message="Apagar publicação?"
+        />
       </View>
     </ScrollView>
   );
@@ -214,10 +283,20 @@ const styles = StyleSheet.create({
   selectInput: {
     marginBottom: 5,
   },
-  botaoPublicar: {
+  botaoSalvar: {
     marginTop: 30,
     flexDirection: "row",
     width: "100%",
     justifyContent: "center",
+  },
+  apagar: {
+    color: "#FF7F7F",
+    alignSelf: "center",
+    fontSize: 18,
+    fontWeight: "600",
+    margin: 20,
+  },
+  linkButton: {
+    alignItems: "center",
   },
 });

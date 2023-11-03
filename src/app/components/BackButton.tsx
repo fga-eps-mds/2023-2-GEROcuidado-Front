@@ -1,14 +1,16 @@
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
-import { Pressable } from "react-native";
+import { Pressable, StyleSheet } from "react-native";
 import React from "react";
 import { router } from "expo-router";
 
 interface Props {
+  color?: string;
   canGoBack?: boolean;
   route?: string;
 }
 
 export default function BackButton({
+  color = "#fff",
   canGoBack = true,
   route,
 }: Readonly<Props>) {
@@ -21,12 +23,19 @@ export default function BackButton({
   };
 
   return (
-    <Pressable onPress={goBack}>
+    <Pressable style={styles.backButton} onPress={goBack}>
       <Icon
         name="chevron-left"
         size={60}
-        style={{ color: "white", alignSelf: "flex-start" }}
+        style={{ color, alignSelf: "flex-start" }}
       />
     </Pressable>
   );
 }
+
+const styles = StyleSheet.create({
+  backButton: {
+    width: "10%",
+    justifyContent: "flex-start",
+  },
+});
