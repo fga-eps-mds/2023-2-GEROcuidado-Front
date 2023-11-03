@@ -1,33 +1,35 @@
 import React from "react";
 import { Text, View, StyleSheet } from "react-native";
-import CustomButton from "./CustomButton";
-import { router } from "expo-router";
+import LinkButton from "./LinkButton";
 
-export default function Hide(){
-
-    const navigate = () => {
-        router.push("/public/login");
-    }
-
-    return (
-        <View style={styles.textContainer}>
-            <Text style={styles.text}>Você precisar efetuar login para acessar essa página!</Text>
-            <CustomButton title="Efetuar Login" callbackFn={navigate}></CustomButton>
-        </View>
-    );
+export default function Hide() {
+  return (
+    <View style={styles.textContainer}>
+      <Text style={styles.text}>
+        Você precisar efetuar login para acessar essa página!
+      </Text>
+      <LinkButton title="Efetuar Login" href="/public/login" />
+    </View>
+  );
 }
 
 const styles = StyleSheet.create({
-    textContainer:{
-        alignItems: "center",
-        flex: 1,
-        justifyContent: "center",
-        marginTop: "90%",
-    },
-    text: {
-        textAlign: "center",
-        fontSize: 20,
-        fontWeight: "bold",
-        margin: 8,
-    }
-})
+  textContainer: {
+    flex: 1,
+    flexDirection: "column",
+    alignItems: "center",
+    justifyContent: "center",
+    position: "absolute",
+    width: "100%",
+    marginTop: "80%",
+    marginLeft: "auto",
+    marginRight: "auto",
+  },
+  text: {
+    textAlign: "center",
+    fontSize: 18,
+    fontWeight: "600",
+    marginVertical: 20,
+    marginHorizontal: 10,
+  },
+});

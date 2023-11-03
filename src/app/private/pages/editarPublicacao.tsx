@@ -1,4 +1,4 @@
-import { Link, router, useLocalSearchParams } from "expo-router";
+import { router, useLocalSearchParams } from "expo-router";
 import React, { useEffect, useState } from "react";
 import {
   View,
@@ -34,16 +34,7 @@ interface IErrors {
 
 export default function EditarPublicacao() {
   const item = useLocalSearchParams() as unknown as IPublicacao & IUser;
-  const publicacao = {
-    ...item,
-    usuario: {
-      id: item.idUsuario,
-      foto: item.foto,
-      admin: item.admin,
-      nome: item.nome,
-      email: item.email,
-    },
-  };
+
   const [titulo, setTitulo] = useState(item.titulo);
   const [descricao, setDescricao] = useState(item.descricao);
   const [categoria, setCategoria] = useState<ECategoriaPublicacao | null>(
@@ -181,7 +172,7 @@ export default function EditarPublicacao() {
         </Pressable>
 
         <View>
-          <Text style={styles.tituloheader}>Nova publicação</Text>
+          <Text style={styles.tituloheader}>Editar publicação</Text>
         </View>
       </View>
 
@@ -301,10 +292,9 @@ const styles = StyleSheet.create({
     alignSelf: "center",
     fontSize: 18,
     fontWeight: "600",
+    margin: 20,
   },
   linkButton: {
     alignItems: "center",
-    marginTop: 60,
-    marginBottom: 60,
   },
 });

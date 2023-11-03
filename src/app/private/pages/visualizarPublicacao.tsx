@@ -3,9 +3,9 @@ import React, { useEffect, useState } from "react";
 import { Pressable, StyleSheet, Text, View } from "react-native";
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
 import { IPublicacao } from "../../interfaces/forum.interface";
-import Publicacao from "../../components/Publicacao";
 import { IUser } from "../../interfaces/user.interface";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import PublicacaoVisualizar from "../../components/PublicacaoVisualizar";
 
 export default function VisualizarPublicacao() {
   const [idUsuario, setIdUsuario] = useState<number | null>(null);
@@ -52,29 +52,23 @@ export default function VisualizarPublicacao() {
         </View>
       </View>
 
-      <View style={styles.publicacao}>
-        <Publicacao
-          cropped={false}
-          item={publicacao as unknown as IPublicacao}
-        />
-      </View>
+      <PublicacaoVisualizar item={publicacao as unknown as IPublicacao} />
 
-      <View style={styles.botoes}>
-        {idUsuario && publicacao.idUsuario == idUsuario && (
-          <Pressable onPress={navigate}>
-            <View style={styles.editar}>
-              <Text style={styles.textoEditar}>Editar</Text>
-              <Icon name="pencil" size={20} color={"white"} />
-            </View>
-          </Pressable>
-        )}
-        {/* Parte relacionado ao incremento */}
-        {/* {idUsuario && publicacao.idUsuario == idUsuario && (
+      {idUsuario && publicacao.idUsuario == idUsuario && (
+        <Pressable onPress={navigate} style={styles.editar}>
+          <Text style={styles.textoEditar}>Editar</Text>
+          <Icon name="pencil" size={20} color={"white"} />
+        </Pressable>
+      )}
+
+      {/* <View style={styles.botoes}> */}
+      {/* Parte relacionado ao incremento */}
+      {/* {idUsuario && publicacao.idUsuario == idUsuario && (
           <View style={styles.botaoResponder}>
             <Text style={styles.textoEditar}>Responder</Text>
           </View>
         )} */}
-      </View>
+      {/* </View> */}
       {/* Parte relacionado ao incremento */}
       {/* <View>
         <Text style={styles.resposta}>Respostas</Text>
@@ -104,12 +98,14 @@ const styles = StyleSheet.create({
     backgroundColor: "#2CCDB5",
     flexDirection: "row",
     alignItems: "center",
+    justifyContent: "center",
     padding: 5,
-    marginLeft: 15,
-    marginTop: 5,
+    marginLeft: "auto",
+    marginRight: "auto",
+    marginTop: 20,
+    marginBottom: 20,
     borderRadius: 12,
-    width: "auto",
-    justifyContent: "space-between",
+    width: 200,
     shadowColor: "#333",
     shadowOffset: { width: 0, height: 1 },
     shadowOpacity: 0.5,
@@ -141,8 +137,5 @@ const styles = StyleSheet.create({
     color: "black",
     fontSize: 24,
     padding: 20,
-  },
-  publicacao: {
-    height: "auto",
   },
 });

@@ -32,31 +32,12 @@ export const postPublicacao = async (
   return json;
 };
 
-export const getAllPublicacao = async (): Promise<
-  IResponse<IPublicacao[] | null>
-> => {
-  const response = await fetch(`${BASE_URL}`, {
-    method: "GET",
-    headers: {
-      Accept: "application/json",
-      "Content-Type": "application/json",
-    },
-  });
-
-  const json = await response.json();
-
-  if (response.status !== 200) {
-    throw new Error(json.message as string);
-  }
-
-  return json;
-};
-
-export const getAllPublicacaoFilter = async (
-  query: IPublicacaoFilter,
+export const getAllPublicacao = async (
+  offset: number,
+  filter: IPublicacaoFilter,
 ): Promise<IResponse<IPublicacao[] | null>> => {
   const response = await fetch(
-    `${BASE_URL}?filter={"titulo":"${query.titulo}"}`,
+    `${BASE_URL}?limit=10&offset=${offset}&filter=${JSON.stringify(filter)}`,
     {
       method: "GET",
       headers: {
@@ -65,6 +46,7 @@ export const getAllPublicacaoFilter = async (
       },
     },
   );
+
   const json = await response.json();
 
   if (response.status !== 200) {

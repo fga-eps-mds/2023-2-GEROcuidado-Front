@@ -1,10 +1,8 @@
 import {
   ActivityIndicator,
-  FlatList,
   Pressable,
   StyleSheet,
   Text,
-  TextInput,
   View,
 } from "react-native";
 import React, { useEffect, useState } from "react";
@@ -12,24 +10,22 @@ import React, { useEffect, useState } from "react";
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
 import { router } from "expo-router";
 import Publicacao from "../../components/Publicacao";
-import {
-  getAllPublicacao,
-  getAllPublicacaoFilter,
-} from "../../services/forum.service";
+import { getAllPublicacao } from "../../services/forum.service";
 import Toast from "react-native-toast-message";
-import {
-  IPublicacao,
-  IPublicacaoFilter,
-} from "../../interfaces/forum.interface";
-import { ScrollView } from "react-native-gesture-handler";
+import { IPublicacao } from "../../interfaces/forum.interface";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { IUser } from "../../interfaces/user.interface";
 import BarraPesquisa from "../../components/BarraPesquisa";
+import { ScrollView } from "react-native-gesture-handler";
 
 export default function Forum() {
   const [publicacoes, setPublicacoes] = useState<IPublicacao[]>([]);
   const [loading, setLoading] = useState(true);
+  const [loadingCarregarMais, setLoadingCarregarMais] = useState(true);
   const [idUsuario, setIdUsuario] = useState<number | null>(null);
+  const [offset, setOffset] = useState(0);
+  const [titulo, setTitulo] = useState("");
+  const [timer, setTimer] = useState<NodeJS.Timeout | null>(null);
 
   const novaPublicacao = () => {
     router.push("private/pages/criaPublicacao");
@@ -42,10 +38,15 @@ export default function Forum() {
     });
   };
 
-  const getPublicacoes = () => {
-    getAllPublicacao()
+  const getPublicacoes = (reset = false) => {
+    setLoadingCarregarMais(true);
+    getAllPublicacao(offset, { titulo })
       .then((response) => {
-        setPublicacoes(response.data as IPublicacao[]);
+        const newPublicacoes = response.data as IPublicacao[];
+
+        reset
+          ? setPublicacoes(newPublicacoes)
+          : setPublicacoes([...publicacoes, ...newPublicacoes]);
       })
       .catch((err) => {
         const error = err as { message: string };
@@ -55,22 +56,29 @@ export default function Forum() {
           text2: error.message,
         });
       })
-      .finally(() => setLoading(false));
+      .finally(() => {
+        setLoading(false);
+        setLoadingCarregarMais(false);
+      });
   };
 
-  useEffect(() => getPublicacoes(), []);
-  useEffect(() => getIdUsuario());
-
-  const handleEndReached = () => {
-    //TODO implementar a função para atualizar as pages
+  const handlePesquisar = (newTitulo: string) => {
+    if (timer) clearTimeout(timer);
+    const temp = setTimeout(() => setTitulo(newTitulo), 500);
+    setTimer(temp);
   };
+
+  useEffect(() => getPublicacoes(), [offset]);
+  useEffect(() => getPublicacoes(true), [titulo]);
+  useEffect(() => getIdUsuario(), []);
 
   return (
-    <ScrollView style={styles.scrollView}>
+    <View style={styles.scrollView}>
       <View style={styles.cabecalho}>
         <Text style={styles.textoPublicacoes}>Publicações</Text>
-        <BarraPesquisa />
+        <BarraPesquisa callbackFn={handlePesquisar} />
       </View>
+
       {idUsuario && (
         <Pressable style={styles.botaoCriarPublicacao} onPress={novaPublicacao}>
           <Icon name="plus" color={"white"} size={20}></Icon>
@@ -78,30 +86,51 @@ export default function Forum() {
         </Pressable>
       )}
 
-      {loading ? (
+      {loading && (
         <View style={styles.loading}>
           <ActivityIndicator size="large" color="#2CCDB5" />
         </View>
-      ) : (
-        <FlatList
-          onEndReached={handleEndReached}
-          onEndReachedThreshold={0.5}
-          removeClippedSubviews={true}
-          data={publicacoes}
-          renderItem={({ item }) => <Publicacao cropped={true} item={item} />}
-        />
       )}
-    </ScrollView>
+
+      {!loading && (
+        <View>
+          <ScrollView style={{ height: "60%" }}>
+            {publicacoes.map((publicacao) => {
+              return (
+                <View key={publicacao.id}>
+                  <Publicacao crop={true} item={publicacao} />
+                </View>
+              );
+            })}
+          </ScrollView>
+
+          {publicacoes.length > 0 && publicacoes.length % 10 === 0 && (
+            <Pressable
+              style={styles.botaoCarregarMais}
+              onPress={() => setOffset(offset + 1)}
+            >
+              {loadingCarregarMais && (
+                <ActivityIndicator size="small" color="#2CCDB5" />
+              )}
+
+              {!loadingCarregarMais && (
+                <Text style={styles.botaoCarregarMaisText}>Carregar mais</Text>
+              )}
+            </Pressable>
+          )}
+        </View>
+      )}
+    </View>
   );
 }
 
 const styles = StyleSheet.create({
   loading: {
-    height: "100%",
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "center",
     backgroundColor: "white",
+    marginTop: 50,
   },
   scrollView: {
     backgroundColor: "#fff",
@@ -115,10 +144,6 @@ const styles = StyleSheet.create({
   iconeVoltar: {
     color: "white",
     alignSelf: "flex-start",
-  },
-  titulo: {
-    flexDirection: "row",
-    alignItems: "center",
   },
   botaoPesquisar: {
     flexDirection: "row",
@@ -136,8 +161,9 @@ const styles = StyleSheet.create({
     fontSize: 22,
     fontWeight: "600",
     color: "#fff",
-    margin: "auto",
     marginVertical: 10,
+    marginLeft: "auto",
+    marginRight: "auto",
   },
   botaoCriarPublicacao: {
     flexDirection: "row",
@@ -149,6 +175,20 @@ const styles = StyleSheet.create({
     marginLeft: "auto",
     marginRight: 10,
     marginVertical: 10,
+  },
+  botaoCarregarMais: {
+    flexDirection: "row",
+    justifyContent: "center",
+    alignItems: "center",
+    backgroundColor: "transparent",
+    marginHorizontal: "auto",
+    marginVertical: 25,
+    height: 40,
+  },
+  botaoCarregarMaisText: {
+    color: "#2CCDB5",
+    fontWeight: "600",
+    fontSize: 14,
   },
   actions: {
     flexDirection: "row",

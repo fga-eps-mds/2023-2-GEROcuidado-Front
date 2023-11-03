@@ -6,10 +6,10 @@ import { router } from "expo-router";
 
 interface IProps {
   item: IPublicacao;
-  cropped?: boolean;
+  crop?: boolean;
 }
 
-export default function Publicacao({ item, cropped }: Readonly<IProps>) {
+export default function Publicacao({ item, crop }: Readonly<IProps>) {
   const hasFoto = (foto: string | null | undefined) => {
     if (!foto) return false;
 
@@ -45,12 +45,22 @@ export default function Publicacao({ item, cropped }: Readonly<IProps>) {
     });
   };
 
-  const getCroppedTitulo = (titulo: string): string => {
-    return titulo.length < 20 ? titulo : titulo.slice(0, 20) + "...";
+  const getNome = (nome: string): string => {
+    if (!crop) return nome;
+
+    return nome.length < 25 ? nome : nome.slice(0, 25) + "...";
   };
 
-  const getCroppedDescricao = (descricao: string): string => {
-    return descricao.length < 300 ? descricao : descricao.slice(0, 150) + "...";
+  const getTitulo = (titulo: string): string => {
+    if (!crop) return titulo;
+
+    return titulo.length < 30 ? titulo : titulo.slice(0, 30) + "...";
+  };
+
+  const getDescricao = (descricao: string): string => {
+    if (!crop) return descricao;
+
+    return descricao.length < 150 ? descricao : descricao.slice(0, 150) + "...";
   };
 
   return (
@@ -58,28 +68,17 @@ export default function Publicacao({ item, cropped }: Readonly<IProps>) {
       <View style={styles.postHeader}>
         {getFoto(item.usuario?.foto)}
         <View style={styles.userInfo}>
-          {cropped ? (
-            <Text style={styles.postContent}>
-              {getCroppedTitulo(item.titulo)}
-            </Text>
-          ) : (
-            <Text style={styles.postContent}>{item.titulo}</Text>
-          )}
+          <Text style={styles.title}>{getTitulo(item.titulo)}</Text>
           <Text style={styles.categoria}>{item.categoria}</Text>
           <View style={styles.subInfo}>
-            <Text style={styles.username}>{item.usuario?.nome}</Text>
+            <Text style={styles.username}>
+              {getNome(item.usuario?.nome as string)}
+            </Text>
             <Text style={styles.date}>{getFormattedDate(item.dataHora)}</Text>
           </View>
         </View>
       </View>
-
-      {cropped ? (
-        <Text style={styles.postContent}>
-          {getCroppedDescricao(item.descricao)}
-        </Text>
-      ) : (
-        <Text style={styles.postContent}>{item.descricao}</Text>
-      )}
+      <Text style={styles.postContent}>{getDescricao(item.descricao)}</Text>
     </Pressable>
   );
 }
@@ -117,10 +116,6 @@ const styles = StyleSheet.create({
   title: {
     fontSize: 16,
     fontWeight: "600",
-    textOverflow: "ellipsis",
-    whiteSpace: "nowrap",
-    overflow: "hidden",
-    maxWidth: "80%",
   },
   categoria: {
     opacity: 0.5,
@@ -155,9 +150,5 @@ const styles = StyleSheet.create({
     color: "#000000",
     opacity: 0.5,
     fontSize: 13,
-    textOverflow: "ellipsis",
-    whiteSpace: "nowrap",
-    overflow: "hidden",
-    maxWidth: 150,
   },
 });

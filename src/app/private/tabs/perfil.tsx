@@ -122,6 +122,7 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
     fontSize: 16,
     marginLeft: 20,
+    maxWidth: "75%",
   },
   options: {
     flexDirection: "column",

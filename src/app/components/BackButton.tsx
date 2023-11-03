@@ -4,11 +4,13 @@ import React from "react";
 import { router } from "expo-router";
 
 interface Props {
+  color?: string;
   canGoBack?: boolean;
   route?: string;
 }
 
 export default function BackButton({
+  color = "#fff",
   canGoBack = true,
   route,
 }: Readonly<Props>) {
@@ -25,16 +27,15 @@ export default function BackButton({
       <Icon
         name="chevron-left"
         size={60}
-        style={{ color: "white", alignSelf: "flex-start" }}
+        style={{ color, alignSelf: "flex-start" }}
       />
     </Pressable>
   );
 }
 
 const styles = StyleSheet.create({
-  backButton :{
+  backButton: {
     width: "10%",
     justifyContent: "flex-start",
-  }
-})
-
+  },
+});

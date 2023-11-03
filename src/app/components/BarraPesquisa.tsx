@@ -1,45 +1,24 @@
 import React, { useState } from "react";
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
-import { Pressable, StyleSheet, TextInput, View } from "react-native";
-import { getAllPublicacaoFilter } from "../services/forum.service";
-import {
-  ECategoriaPublicacao,
-  IPublicacaoFilter,
-} from "../interfaces/forum.interface";
-import Toast from "react-native-toast-message";
+import { StyleSheet, TextInput, View } from "react-native";
 
-export default function BarraPesquisa() {
+interface IProps {
+  callbackFn: (titulo: string) => unknown;
+}
+
+export default function BarraPesquisa({ callbackFn }: IProps) {
   const [titulo, setTitulo] = useState("");
-
-  const pesquisar = async () => {
-    const body: Partial<IPublicacaoFilter> = {
-      titulo,
-      // descricao,
-      // categoria: categoria as ECategoriaPublicacao,
-    };
-    try {
-      const response = await getAllPublicacaoFilter(body);
-      console.log(response.data);
-    } catch (err) {
-      const error = err as { message: string };
-      Toast.show({
-        type: "error",
-        text1: "Erro!",
-        text2: error.message,
-      });
-    } finally {
-    }
-  };
 
   return (
     <View style={styles.barraDePesquisa}>
-      <Pressable onPress={pesquisar}>
-        <Icon style={styles.iconePesquisar} name="magnify" size={25}></Icon>
-      </Pressable>
+      <Icon style={styles.iconePesquisar} name="magnify" size={25}></Icon>
       <TextInput
         style={styles.inputBarraDePesquisa}
         placeholder="Pesquise uma publicação"
-        onChangeText={setTitulo}
+        onChangeText={(newValue) => {
+          setTitulo(newValue);
+          callbackFn(newValue);
+        }}
         value={titulo}
       />
     </View>

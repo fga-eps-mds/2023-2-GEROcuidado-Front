@@ -7,7 +7,7 @@
     "android": "NODE_ENV=development expo start --android",
     "ios": "NODE_ENV=development expo start --ios",
     "web": "NODE_ENV=development expo start --web",
-    "start:prod": "NODE_ENV=production expo start",
+    "start:prod": "NODE_ENV=production expo start --tunnel",
     "android:prod": "NODE_ENV=production expo start --android",
     "ios:prod": "NODE_ENV=production expo start --ios",
     "web:prod": "NODE_ENV=production expo start --web",
