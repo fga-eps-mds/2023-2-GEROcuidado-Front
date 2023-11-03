@@ -1,4 +1,5 @@
 import {
+  IOrder,
   IPublicacao,
   IPublicacaoBody,
   IPublicacaoFilter,
@@ -35,17 +36,19 @@ export const postPublicacao = async (
 export const getAllPublicacao = async (
   offset: number,
   filter: IPublicacaoFilter,
+  order: IOrder,
 ): Promise<IResponse<IPublicacao[] | null>> => {
-  const response = await fetch(
-    `${BASE_URL}?limit=10&offset=${offset}&filter=${JSON.stringify(filter)}`,
-    {
-      method: "GET",
-      headers: {
-        Accept: "application/json",
-        "Content-Type": "application/json",
-      },
+  const params = `limit=10&offset=${offset}&filter=${JSON.stringify(
+    filter,
+  )}&order=${JSON.stringify(order)}`;
+
+  const response = await fetch(`${BASE_URL}?${params}`, {
+    method: "GET",
+    headers: {
+      Accept: "application/json",
+      "Content-Type": "application/json",
     },
-  );
+  });
 
   const json = await response.json();
 

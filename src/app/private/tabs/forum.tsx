@@ -12,7 +12,7 @@ import { router } from "expo-router";
 import Publicacao from "../../components/Publicacao";
 import { getAllPublicacao } from "../../services/forum.service";
 import Toast from "react-native-toast-message";
-import { IPublicacao } from "../../interfaces/forum.interface";
+import { IOrder, IPublicacao } from "../../interfaces/forum.interface";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { IUser } from "../../interfaces/user.interface";
 import BarraPesquisa from "../../components/BarraPesquisa";
@@ -26,6 +26,10 @@ export default function Forum() {
   const [offset, setOffset] = useState(0);
   const [titulo, setTitulo] = useState("");
   const [timer, setTimer] = useState<NodeJS.Timeout | null>(null);
+  const order: IOrder = {
+    column: "dataHora",
+    dir: "DESC",
+  };
 
   const novaPublicacao = () => {
     router.push("private/pages/criaPublicacao");
@@ -42,7 +46,7 @@ export default function Forum() {
     setLoadingCarregarMais(true);
     setLoading(reset);
 
-    getAllPublicacao(offset, { titulo })
+    getAllPublicacao(offset, { titulo }, order)
       .then((response) => {
         const newPublicacoes = response.data as IPublicacao[];
 

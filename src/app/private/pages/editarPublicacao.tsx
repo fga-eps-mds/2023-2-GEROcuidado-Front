@@ -8,6 +8,7 @@ import {
   TextInput,
   Pressable,
   ActivityIndicator,
+  Platform,
 } from "react-native";
 import { SelectList } from "react-native-dropdown-select-list";
 import CustomButton from "../../components/CustomButton";
@@ -171,9 +172,7 @@ export default function EditarPublicacao() {
           <Icon name="chevron-left" size={40} color="#fff" />
         </Pressable>
 
-        <View>
-          <Text style={styles.tituloheader}>Editar publicação</Text>
-        </View>
+        <Text style={styles.tituloheader}>Editar publicação</Text>
       </View>
 
       <View style={styles.publicacao}>
@@ -195,8 +194,11 @@ export default function EditarPublicacao() {
             value={descricao}
             multiline={true}
             placeholder="Descrição"
-            numberOfLines={12}
-            style={styles.input}
+            numberOfLines={Platform.OS === "ios" ? undefined : 12}
+            style={[
+              styles.input,
+              { minHeight: Platform.OS === "ios" && 12 ? 20 * 12 : null },
+            ]}
           />
           <ErrorMessage show={showErrors} text={erros.descricao} />
         </View>
@@ -252,7 +254,6 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
     color: "white",
     fontSize: 20,
-    padding: 20,
   },
   publicacao: {
     borderRadius: 15,
@@ -272,6 +273,7 @@ const styles = StyleSheet.create({
     fontWeight: "700",
   },
   input: {
+    textAlignVertical: "top",
     borderWidth: 0,
     padding: 12,
     backgroundColor: "#F1F1F1",

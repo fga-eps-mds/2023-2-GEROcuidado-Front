@@ -22,8 +22,10 @@ export interface IPublicacao extends IPublicacaoBody {
 }
 
 export interface IPublicacaoFilter {
-  //id?: number;
   titulo?: string;
-  // descricao?: string;
-  // categoria?: ECategoriaPublicacao;
+}
+
+export interface IOrder {
+  column: string;
+  dir: "DESC" | "ASC";
 }
