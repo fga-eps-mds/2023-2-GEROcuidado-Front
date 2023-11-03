@@ -11,12 +11,13 @@ jest.mock("@react-native-async-storage/async-storage", () => ({
 }));
 
 jest.mock("expo-router", () => ({
-    router: {
-      push: jest.fn(),
-    },
+  router: {
+    push: jest.fn(),
+  },
 }));
 
 // Mock da função de login
+// eslint-disable-next-line @typescript-eslint/no-var-requires
 const userService = require("../services/user.service");
 jest.mock("../services/user.service");
 
@@ -59,7 +60,7 @@ describe("Login Component - Falha", () => {
   });
 
   it("deve lidar com campos vazios e inválidos", () => {
-    const { getByPlaceholderText, getByText, queryByTestId } = render(<Login />);
+    const { getByText, queryByTestId } = render(<Login />);
     const loginButton = getByText("Entrar");
 
     act(() => {
@@ -70,7 +71,7 @@ describe("Login Component - Falha", () => {
     expect(queryByTestId("error-email")).toBeNull();
     expect(queryByTestId("error-senha")).toBeNull();
   });
-/*
+  /*
   it("deve lidar com email inválido", () => {
     const { getByPlaceholderText, getByText, queryByTestId } = render(<Login />);
     const emailInput = getByPlaceholderText("Email");
@@ -86,7 +87,9 @@ describe("Login Component - Falha", () => {
   });
 */
   it("deve lidar com senha inválida", () => {
-    const { getByPlaceholderText, getByText, queryByTestId } = render(<Login />);
+    const { getByPlaceholderText, getByText, queryByTestId } = render(
+      <Login />,
+    );
     const emailInput = getByPlaceholderText("Email");
     const passwordInput = getByPlaceholderText("Senha");
     const loginButton = getByText("Entrar");

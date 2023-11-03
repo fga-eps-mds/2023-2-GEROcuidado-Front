@@ -11,12 +11,13 @@ import Toast from "react-native-toast-message";
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { deleteUserById, updateUser } from "../../services/user.service";
-import { Link, router, useLocalSearchParams } from "expo-router";
+import { router, useLocalSearchParams } from "expo-router";
 import ErrorMessage from "../../components/ErrorMessage";
 import CustomButton from "../../components/CustomButton";
 import { IUser } from "../../interfaces/user.interface";
 import UploadImage from "../../components/UploadImage";
 import ModalConfirmation from "../../components/ModalConfirmation";
+import BackButton from "../../components/BackButton";
 
 interface IErrors {
   nome?: string;
@@ -126,9 +127,7 @@ export default function EditarPerfil() {
 
   return (
     <View>
-      <Link href="/private/tabs/perfil">
-        <Icon name="chevron-left" size={40} />
-      </Link>
+      <BackButton route="/private/tabs/perfil" color="#000" />
 
       {foto && <UploadImage setFoto={setFoto} uri={foto} />}
       {!foto && <UploadImage setFoto={setFoto} />}

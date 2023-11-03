@@ -17,21 +17,23 @@ export default function BackButton({
   const goBack = () => {
     if (route) {
       router.push(route);
+      return;
     }
 
     canGoBack && router.canGoBack() ? router.back() : false;
   };
 
   return (
-
-    <Pressable onPress={goBack} testID="back-button-pressable">
-      <Icon name="chevron-left" size={40} testID="back-button-icon"/>
-
-    <Pressable style={styles.backButton} onPress={goBack}>
+    <Pressable
+      onPress={goBack}
+      style={styles.backButton}
+      testID="back-button-pressable"
+    >
       <Icon
         name="chevron-left"
-        size={60}
-        style={{ color, alignSelf: "flex-start" }}
+        color={color}
+        size={40}
+        testID="back-button-icon"
       />
     </Pressable>
   );
@@ -39,7 +41,7 @@ export default function BackButton({
 
 const styles = StyleSheet.create({
   backButton: {
-    width: "10%",
     justifyContent: "flex-start",
+    marginRight: 10,
   },
 });

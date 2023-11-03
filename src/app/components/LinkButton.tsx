@@ -14,7 +14,11 @@ export default function LinkButton({ title, href, backgroundColor }: Props) {
   const handleNavigate = () => router.push(href);
 
   return (
-    <Pressable testID="link-button" style={styles(background).button} onPress={handleNavigate}>
+    <Pressable
+      testID="link-button"
+      style={styles(background).button}
+      onPress={handleNavigate}
+    >
       <Text style={styles(background).buttonText}>{title}</Text>
     </Pressable>
   );

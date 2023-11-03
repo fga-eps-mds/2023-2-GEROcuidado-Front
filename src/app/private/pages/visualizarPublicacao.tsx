@@ -1,4 +1,4 @@
-import { Link, router, useLocalSearchParams } from "expo-router";
+import { router, useLocalSearchParams } from "expo-router";
 import React, { useEffect, useState } from "react";
 import { Pressable, StyleSheet, Text, View } from "react-native";
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
@@ -6,6 +6,7 @@ import { IPublicacao } from "../../interfaces/forum.interface";
 import { IUser } from "../../interfaces/user.interface";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import PublicacaoVisualizar from "../../components/PublicacaoVisualizar";
+import BackButton from "../../components/BackButton";
 
 export default function VisualizarPublicacao() {
   const [idUsuario, setIdUsuario] = useState<number | null>(null);
@@ -43,13 +44,9 @@ export default function VisualizarPublicacao() {
   return (
     <View>
       <View style={styles.header}>
-        <Link href="private/tabs/forum">
-          <Icon name="chevron-left" size={40} color="#fff" />
-        </Link>
+        <BackButton route="private/tabs/forum" />
 
-        <View>
-          <Text style={styles.tituloheader}>Visualizar Publicação</Text>
-        </View>
+        <Text style={styles.tituloheader}>Visualizar Publicação</Text>
       </View>
 
       <PublicacaoVisualizar item={publicacao as unknown as IPublicacao} />

@@ -169,7 +169,12 @@ export default function EditarPublicacao() {
     <ScrollView>
       <View style={styles.header}>
         <Pressable onPress={navigate}>
-          <Icon name="chevron-left" size={40} color="#fff" />
+          <Icon
+            name="chevron-left"
+            size={40}
+            color="#fff"
+            style={{ marginRight: 10 }}
+          />
         </Pressable>
 
         <Text style={styles.tituloheader}>Editar publicação</Text>

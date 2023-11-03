@@ -15,6 +15,7 @@ jest.mock("expo-router", () => ({
   },
 }));
 // Mock da função de login
+// eslint-disable-next-line @typescript-eslint/no-var-requires
 const userService = require("../services/user.service");
 jest.mock("../services/user.service");
 
@@ -60,7 +61,7 @@ describe("Login Component - Sucesso", () => {
   });
 
   it("deve lidar com campos vazios e inválidos", () => {
-    const { getByPlaceholderText, getByText, queryByTestId } = render(<Login />);
+    const { getByText, queryByTestId } = render(<Login />);
     const loginButton = getByText("Entrar");
 
     act(() => {
@@ -87,7 +88,9 @@ describe("Login Component - Sucesso", () => {
   });
 */
   it("deve lidar com senha inválida", () => {
-    const { getByPlaceholderText, getByText, queryByTestId } = render(<Login />);
+    const { getByPlaceholderText, getByText, queryByTestId } = render(
+      <Login />,
+    );
     const emailInput = getByPlaceholderText("Email");
     const passwordInput = getByPlaceholderText("Senha");
     const loginButton = getByText("Entrar");
@@ -102,4 +105,3 @@ describe("Login Component - Sucesso", () => {
     expect(queryByTestId("error-senha")).toBeNull();
   });
 });
-

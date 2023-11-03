@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-var-requires */
 import React from "react";
 import { render, fireEvent } from "@testing-library/react-native";
 import Cadastro from "../public/cadastro";
@@ -75,7 +76,7 @@ describe("Cadastro Component", () => {
       message: "Sucesso!",
     });
 
-    const { getByPlaceholderText, getByText } = render(<Cadastro/>);
+    const { getByPlaceholderText, getByText } = render(<Cadastro />);
     const nomeInput = getByPlaceholderText("Nome completo");
     const emailInput = getByPlaceholderText("Email");
     const confirmEmailInput = getByPlaceholderText("Confirme seu Email");
@@ -100,7 +101,7 @@ describe("Cadastro Component", () => {
       message: "Erro!",
     });
 
-    const { getByPlaceholderText, getByText } = render(<Cadastro/>);
+    const { getByPlaceholderText, getByText } = render(<Cadastro />);
     const nomeInput = getByPlaceholderText("Nome completo");
     const emailInput = getByPlaceholderText("Email");
     const confirmEmailInput = getByPlaceholderText("Confirme seu Email");
