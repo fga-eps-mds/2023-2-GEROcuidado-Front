@@ -1,17 +1,47 @@
 import React from 'react';
-import { render } from '@testing-library/react-native';
-import PrivatePagesLayout from '../private/pages/_layout'; 
+import renderer from 'react-test-renderer';
+import PublicLayout from '../public/_layout'; // Substitua o caminho pelo local correto do seu componente
+import PrivateLayout from '../private/pages/_layout';
+import TabsLayout from '../private/tabs/_layout';
 
-describe('PrivatePagesLayout', () => {
-  it('deve renderizar corretamente', () => {
-    const { getByTestId } = render(<PrivatePagesLayout />);
+describe('PublicLayout', () => {
+  it('renders correctly', () => {
+    const tree = renderer.create(<PublicLayout />).toJSON();
+    expect(tree).toMatchSnapshot();
+  });
+});
+describe('PrivateLayout', () => {
+  it('renders correctly', () => {
+    const tree = renderer.create(<PrivateLayout />).toJSON();
+    expect(tree).toMatchSnapshot();
+  });
+});
+describe('TabsLayout', () => {
+  it('renders correctly', () => {
+    const tree = renderer.create(<TabsLayout />).toJSON();
+    expect(tree).toMatchSnapshot();
+  });
 
-    // Verifica se o componente Toast foi renderizado
-    const toastComponent = getByTestId('ToastComponent'); 
-    expect(toastComponent).toBeTruthy();
+  it('changes tab on press', () => {
+    const component = renderer.create(<TabsLayout />);
+    const instance = component.root;
+    const tabs = instance.findAllByProps({ testID: 'tab' });
 
-    // Verifica se o componente Stack foi renderizado
-    const stackComponent = getByTestId('StackComponent'); 
-    expect(stackComponent).toBeTruthy();
+    // Simule o pressionamento da segunda aba
+    tabs[1].props.onPress();
+
+    // Verifique se a segunda aba está ativa (o ícone deve ser "heart" em vez de "heart-outline")
+    const activeTabIconName = tabs[1].props.children.props.name;
+    expect(activeTabIconName).toBe('heart');
+  });
+
+  it('applies styles correctly', () => {
+    const tree = renderer.create(<TabsLayout />).toJSON();
+
+    // Verifique as propriedades de estilo do componente ou elementos internos conforme necessário
+    expect(tree).toHaveProperty('props.style.zIndex', 9999);
+    expect(tree).toHaveProperty('props.style.backgroundColor', '#2CCDB5');
+    expect(tree).toHaveProperty('props.style.height', 70);
+    // Verifique outras propriedades de estilo conforme necessário
   });
 });
