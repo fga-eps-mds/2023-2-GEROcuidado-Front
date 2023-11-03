@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from "react";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { Text, View } from "react-native";
 import { IUser } from "../../interfaces/user.interface";
-import Hide from "../../components/Hide";
+import NaoAutenticado from "../../components/NaoAutenticado";
+import EmConstrucao from "../../components/EmConstrucao";
 
 export default function Registros() {
   const [idUsuario, setIdUsuario] = useState<number | null>(null);
@@ -15,8 +15,6 @@ export default function Registros() {
   };
 
   useEffect(() => getIdUsuario());
-  //
-  return (
-    <View>{!idUsuario ? <Hide></Hide> : <Text>Registros Works!</Text>}</View>
-  );
+
+  return !idUsuario ? <NaoAutenticado></NaoAutenticado> : <EmConstrucao />;
 }

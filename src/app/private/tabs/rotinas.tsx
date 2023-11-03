@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from "react";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { Text, View } from "react-native";
 import { IUser } from "../../interfaces/user.interface";
-import Hide from "../../components/Hide";
+import NaoAutenticado from "../../components/NaoAutenticado";
+import EmConstrucao from "../../components/EmConstrucao";
 
 export default function Rotinas() {
   const [idUsuario, setIdUsuario] = useState<number | null>(null);
@@ -16,5 +16,5 @@ export default function Rotinas() {
 
   useEffect(() => getIdUsuario());
 
-  return <View>{idUsuario ? <Text>Registros Works!</Text> : <Hide />}</View>;
+  return !idUsuario ? <NaoAutenticado></NaoAutenticado> : <EmConstrucao />;
 }

@@ -5,7 +5,7 @@ import { Text, View, StyleSheet, Image, Pressable } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { IUser } from "../../interfaces/user.interface";
 import { router } from "expo-router";
-import Hide from "../../components/Hide";
+import NaoAutenticado from "../../components/NaoAutenticado";
 
 export default function Perfil() {
   const [user, setUser] = useState<IUser | undefined>(undefined);
@@ -58,38 +58,34 @@ export default function Perfil() {
     });
   };
 
-  return (
+  return !idUsuario ? (
+    <NaoAutenticado />
+  ) : (
     <View>
-      {idUsuario ? (
-        <View>
-          <View style={styles.header}>
-            {getFoto(user?.foto)}
-            <Text style={styles.nomeUsuario}>Olá, {user?.nome}!</Text>
+      <View style={styles.header}>
+        {getFoto(user?.foto)}
+        <Text style={styles.nomeUsuario}>Olá, {user?.nome}!</Text>
+      </View>
+
+      <View style={styles.options}>
+        <Pressable style={styles.option} onPress={navigate}>
+          <AntDesign name="setting" size={45} color="#2f2f2f" />
+
+          <View style={styles.optionText}>
+            <Text style={styles.optionTextTitle}>Perfil</Text>
+            <Text style={styles.optionTextSubTitle}>Edite seu perfil</Text>
           </View>
+        </Pressable>
 
-          <View style={styles.options}>
-            <Pressable style={styles.option} onPress={navigate}>
-              <AntDesign name="setting" size={45} color="#2f2f2f" />
+        <Pressable style={styles.option} onPress={logout}>
+          <Icon name="logout-variant" size={45} color="#2f2f2f" />
 
-              <View style={styles.optionText}>
-                <Text style={styles.optionTextTitle}>Perfil</Text>
-                <Text style={styles.optionTextSubTitle}>Edite seu perfil</Text>
-              </View>
-            </Pressable>
-
-            <Pressable style={styles.option} onPress={logout}>
-              <Icon name="logout-variant" size={45} color="#2f2f2f" />
-
-              <View style={styles.optionText}>
-                <Text style={styles.optionTextTitle}>Logout</Text>
-                <Text style={styles.optionTextSubTitle}>Sair da sua conta</Text>
-              </View>
-            </Pressable>
+          <View style={styles.optionText}>
+            <Text style={styles.optionTextTitle}>Logout</Text>
+            <Text style={styles.optionTextSubTitle}>Sair da sua conta</Text>
           </View>
-        </View>
-      ) : (
-        <Hide />
-      )}
+        </Pressable>
+      </View>
     </View>
   );
 }
