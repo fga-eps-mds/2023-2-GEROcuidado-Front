@@ -73,24 +73,7 @@ export default function HomeScreen() {
           </View>
         </View>
         <View style={styles.publicacao}>
-          <Text style={styles.textoPublicacoes}>Publicações</Text>
-          <Pressable
-            style={styles.botaoCriarPublicacao}
-            onPress={novaPublicacao}
-          >
-            <Text style={styles.textoBotaoPesquisar}>Crie uma publicação </Text>
-            <Icon name="pencil" color={"white"} size={25}></Icon>
-          </Pressable>
-
-        </View>
-        <View style={styles.reportada}>
-          <Pressable
-            style={styles.botaoPublicacaoReportada}
-            onPress={reports}
-          >
-            <Text style={styles.textoBotaoPesquisar}></Text>
-            <Icon name="alert" color={"#2CCDB5"} size={25}></Icon>
-          </Pressable>
+          <Text style={styles.textoPublicacoes}>Publicações Reportadas</Text>
         </View>
  
       </View>
@@ -99,10 +82,10 @@ export default function HomeScreen() {
         renderItem={({ item }) => (
           <View style={styles.postContainer}>
             <View style={styles.postHeader}>
-              <Image
+              {/*<Image
                 style={styles.avatar}
                 source={require("../../../../assets/amelia.png")}
-              />
+              />*/}
               <View style={styles.userInfo}>
                 <Text style={styles.username}>{item.username}</Text>
                 <Text style={styles.date}>{item.date}</Text>
@@ -110,6 +93,7 @@ export default function HomeScreen() {
             </View>
 
             <Text style={styles.postContent}>{item.content}</Text>
+            <Icon name="alert" color={"#B4026D"} size={25} style={styles.iconReports}></Icon>
           </View>
         )}
         keyExtractor={(item) => item.id}
@@ -241,4 +225,7 @@ const styles = StyleSheet.create({
     justifyContent: "space-between",
     padding: 10,
   },
+  iconReports: {
+    paddingLeft: 15,
+  }
 });
