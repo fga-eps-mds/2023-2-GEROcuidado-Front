@@ -29,7 +29,11 @@ export default function UploadImage({ setFoto, uri = null }: Readonly<Props>) {
   return (
     <View style={styles.foto}>
       <Icon style={styles.icone} name="image-outline" size={20} />
-      <Pressable style={styles.botao} onPress={pickImage} />
+      <Pressable
+        style={styles.botao}
+        onPress={pickImage}
+        testID="upload-image-botao"
+      />
       {image && <Image source={{ uri: image }} style={styles.imagem} />}
     </View>
   );
