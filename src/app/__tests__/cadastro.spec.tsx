@@ -119,4 +119,61 @@ describe("Cadastro Component", () => {
 
     // Adicione asserções para verificar se o Toast de erro é exibido
   });
+  it("deve exibir erros quando o nome está em branco ou muito curto", () => {
+    const { getByPlaceholderText, getByText } = render(<Cadastro />);
+    const cadastrarButton = getByText("Cadastrar");
+
+    fireEvent.press(cadastrarButton);
+
+    expect(getByText("Campo obrigatório!")).toBeDefined(); // Para o campo nome
+
+    fireEvent.changeText(getByPlaceholderText("Nome completo"), "Jo");
+    fireEvent.press(cadastrarButton);
+
+    expect(
+      getByText("O nome completo deve ter pelo menos 5 caractéres."),
+    ).toBeDefined();
+  });
+
+  it("deve exibir erro quando o nome é muito longo", () => {
+    const { getByPlaceholderText, getByText } = render(<Cadastro />);
+    const nomeInput = getByPlaceholderText("Nome completo");
+    const cadastrarButton = getByText("Cadastrar");
+
+    fireEvent.changeText(
+      nomeInput,
+      "Um nome muito, muito longo que excede o limite de 60 caractéres",
+    );
+    fireEvent.press(cadastrarButton);
+
+    expect(
+      getByText("O nome completo deve ter no máximo 60 caractéres."),
+    ).toBeDefined();
+  });
+
+  it("deve exibir erro quando os emails não coincidem", () => {
+    const { getByPlaceholderText, getByText } = render(<Cadastro />);
+    const emailInput = getByPlaceholderText("Email");
+    const confirmEmailInput = getByPlaceholderText("Confirme seu Email");
+    const cadastrarButton = getByText("Cadastrar");
+
+    fireEvent.changeText(emailInput, "email@test.com");
+    fireEvent.changeText(confirmEmailInput, "emaildiferente@test.com");
+    fireEvent.press(cadastrarButton);
+
+    expect(getByText("Os emails precisam ser iguais!")).toBeDefined();
+  });
+
+  it("deve exibir erro quando as senhas não coincidem", () => {
+    const { getByPlaceholderText, getByText } = render(<Cadastro />);
+    const passwordInput = getByPlaceholderText("Senha");
+    const confirmPasswordInput = getByPlaceholderText("Confirme sua senha");
+    const cadastrarButton = getByText("Cadastrar");
+
+    fireEvent.changeText(passwordInput, "senhadiferente");
+    fireEvent.changeText(confirmPasswordInput, "senhaincorreta");
+    fireEvent.press(cadastrarButton);
+
+    expect(getByText("As senhas precisam ser iguais")).toBeDefined();
+  });
 });
