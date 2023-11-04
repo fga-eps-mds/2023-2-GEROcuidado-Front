@@ -88,12 +88,22 @@ export default function Forum() {
         <BarraPesquisa callbackFn={handlePesquisar} />
       </View>
 
-      {idUsuario && (
-        <Pressable style={styles.botaoCriarPublicacao} onPress={novaPublicacao}>
-          <Icon name="plus" color={"white"} size={20}></Icon>
-          <Text style={styles.textoBotaoPesquisar}>Nova publicação</Text>
-        </Pressable>
-      )}
+      <View style={styles.botoes}>
+        <View style={styles.reportada}>
+          <Pressable style={styles.botaoPublicacaoReportada} onPress={reports}>
+            <Text style={styles.textoBotaoPesquisar}>Reportes </Text>
+          </Pressable>
+        </View>
+        {idUsuario && (
+          <Pressable
+            style={styles.botaoCriarPublicacao}
+            onPress={novaPublicacao}
+          >
+            <Icon name="plus" color={"white"} size={20}></Icon>
+            <Text style={styles.textoBotaoPesquisar}>Nova publicação</Text>
+          </Pressable>
+        )}
+      </View>
 
       {loading && (
         <View style={styles.loading}>
@@ -190,6 +200,45 @@ const styles = StyleSheet.create({
     marginVertical: 25,
     height: 40,
   },
+  botaoPublicacaoReportada: {
+    flexDirection: "row",
+    alignItems: "center",
+    backgroundColor: "#2CCDB5",
+    padding: 5,
+    borderRadius: 14,
+  },
+  reportada: {
+    backgroundColor: "white",
+    padding: 10,
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+  },
+  avatar: {
+    height: 50,
+    width: 50,
+    borderRadius: 50,
+  },
+  postHeader: {
+    flexDirection: "row",
+    alignItems: "center",
+    padding: 15,
+  },
+  userInfo: {
+    marginLeft: 10,
+  },
+  username: {
+    fontSize: 20,
+  },
+  date: {
+    fontSize: 12,
+  },
+  postContent: {
+    fontSize: 15,
+    maxHeight: 100,
+    padding: 6,
+    textAlign: "justify",
+  },
   botaoCarregarMaisText: {
     color: "#2CCDB5",
     fontWeight: "600",
@@ -199,5 +248,8 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     justifyContent: "space-between",
     padding: 10,
+  },
+  botoes: {
+    flexDirection: "row",
   },
 });

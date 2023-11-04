@@ -1,48 +1,36 @@
 import {
-  FlatList,
+  ActivityIndicator,
   Image,
   Pressable,
+  ScrollView,
   StyleSheet,
   Text,
-  TextInput,
   View,
 } from "react-native";
-import React, { useState } from "react";
-
-import Icon from "react-native-vector-icons/MaterialCommunityIcons";
+import React, { useEffect, useState } from "react";
 import { router } from "expo-router";
+import BarraPesquisa from "../../../components/BarraPesquisa";
+import BackButton from "../../../components/BackButton";
+import { IOrder, IPublicacao } from "../../../interfaces/forum.interface";
+import Publicacao from "../../../components/Publicacao";
+import { getAllPublicacaoReportadas } from "../../../services/forum.service";
+import Toast from "react-native-toast-message";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import { IUser } from "../../../interfaces/user.interface";
 
 // CRIANDO OBJETOS DE COMENTÁRIOS
 export default function HomeScreen() {
-  const [posts, setPosts] = useState([
-    {
-      id: "1",
-      username: "Amélia",
-      date: new Date().toString().substring(0, 16),
-      content:
-        "Eu sou uma cuidadora, Eu sou uma cuidadora, Eu sou uma cuidadora, Eu sou uma cuidadora, Eu sou uma cuidadora, Eu sou uma cuidadora, Eu sou uma cuidadora, Eu sou uma cuidadora",
-      likes: 25,
-      comments: 0,
-    },
-    {
-      id: "2",
-      username: "Joana",
-      date: new Date().toString().substring(0, 16),
-      content:
-        "Eu cuido de idosos, e também cuido de outros idosos, e também cuido.",
-      likes: 12,
-      comments: 0,
-    },
-    {
-      id: "3",
-      username: "Ana",
-      date: new Date().toString().substring(0, 16),
-      content:
-        "Eu cuido de idosos, e também cuido de outros idosos, e também cuido.",
-      likes: 32,
-      comments: 0,
-    },
-  ]);
+  const [publicacoes, setPublicacoes] = useState<IPublicacao[]>([]);
+  const [timer, setTimer] = useState<NodeJS.Timeout | null>(null);
+  const [titulo, setTitulo] = useState("");
+  const [loading, setLoading] = useState(true);
+  const [idUsuario, setIdUsuario] = useState<number | null>(null);
+  const [loadingCarregarMais, setLoadingCarregarMais] = useState(true);
+  const [offset, setOffset] = useState(0);
+  const order: IOrder = {
+    column: "dataHora",
+    dir: "DESC",
+  };
 
   const novaPublicacao = () => {
     router.push("private/pages/criaPublicacao");
@@ -51,53 +39,82 @@ export default function HomeScreen() {
     router.push("private/pages/reports/adm_reports");
   };
 
+  const getIdUsuario = () => {
+    AsyncStorage.getItem("usuario").then((response) => {
+      const usuario = JSON.parse(response as string) as IUser;
+      setIdUsuario(usuario?.id);
+    });
+  };
+
+  const getPublicacoes = (reset = false) => {
+    setLoadingCarregarMais(true);
+    setLoading(reset);
+
+    getAllPublicacaoReportadas(offset, { titulo }, order)
+      .then((response) => {
+        const newPublicacoes = response.data as IPublicacao[];
+
+        reset
+          ? setPublicacoes(newPublicacoes)
+          : setPublicacoes([...publicacoes, ...newPublicacoes]);
+      })
+      .catch((err) => {
+        const error = err as { message: string };
+        Toast.show({
+          type: "error",
+          text1: "Erro!",
+          text2: error.message,
+        });
+      })
+      .finally(() => {
+        setLoading(false);
+        setLoadingCarregarMais(false);
+      });
+  };
+
+  const handlePesquisar = (newTitulo: string) => {
+    if (timer) clearTimeout(timer);
+    const temp = setTimeout(() => setTitulo(newTitulo), 500);
+    setTimer(temp);
+  };
+
+  useEffect(() => getPublicacoes(), [offset]);
+  useEffect(() => getPublicacoes(true), [titulo]);
+  useEffect(() => getIdUsuario(), []);
 
   return (
     <View style={{ flex: 1, backgroundColor: "white" }}>
-      <View>
-        {/* BARRA DE PESQUISA */}
-        <View style={styles.cabecalho}>
-          <View style={styles.barraDePesquisa}>
-            <TextInput
-              style={styles.inputBarraDePesquisa}
-              placeholder="Pesquise uma notícia"
-              // onChangeText={(text) => setSearchText(text)}
-            />
-            <Pressable style={styles.botaoPesquisar} onPress={() => {}}>
-              <Icon
-                style={styles.iconePesquisar}
-                name="magnify"
-                size={30}
-              ></Icon>
-            </Pressable>
-          </View>
-        </View>
-        <View style={styles.publicacao}>
+      <View style={styles.cabecalho}>
+        <View style={styles.header}>
+          <BackButton route="private/tabs/forum" />
           <Text style={styles.textoPublicacoes}>Publicações Reportadas</Text>
         </View>
- 
+        <BarraPesquisa callbackFn={handlePesquisar} />
       </View>
-      <FlatList
-        data={posts}
-        renderItem={({ item }) => (
-          <View style={styles.postContainer}>
-            <View style={styles.postHeader}>
-              {/*<Image
-                style={styles.avatar}
-                source={require("../../../../assets/amelia.png")}
-              />*/}
-              <View style={styles.userInfo}>
-                <Text style={styles.username}>{item.username}</Text>
-                <Text style={styles.date}>{item.date}</Text>
-              </View>
+      {!loading && (
+        <ScrollView>
+          {publicacoes.map((publicacao) => (
+            <View key={publicacao.id}>
+              <Publicacao crop={true} item={publicacao} />
             </View>
+          ))}
 
-            <Text style={styles.postContent}>{item.content}</Text>
-            <Icon name="alert" color={"#B4026D"} size={25} style={styles.iconReports}></Icon>
-          </View>
-        )}
-        keyExtractor={(item) => item.id}
-      />
+          {publicacoes.length > 0 && publicacoes.length % 10 === 0 && (
+            <Pressable
+              style={styles.botaoCarregarMais}
+              onPress={() => setOffset(offset + 1)}
+            >
+              {loadingCarregarMais && (
+                <ActivityIndicator size="small" color="#2CCDB5" />
+              )}
+
+              {!loadingCarregarMais && (
+                <Text style={styles.botaoCarregarMaisText}>Carregar mais</Text>
+              )}
+            </Pressable>
+          )}
+        </ScrollView>
+      )}
     </View>
   );
 }
@@ -164,8 +181,12 @@ const styles = StyleSheet.create({
     fontSize: 16,
   },
   textoPublicacoes: {
-    fontSize: 24,
+    fontSize: 22,
     fontWeight: "600",
+    color: "#fff",
+    marginVertical: 10,
+    marginLeft: "auto",
+    marginRight: "auto",
   },
   botaoCriarPublicacao: {
     flexDirection: "row",
@@ -227,5 +248,24 @@ const styles = StyleSheet.create({
   },
   iconReports: {
     paddingLeft: 15,
-  }
+  },
+  header: {
+    height: 60,
+    flexDirection: "row",
+    alignItems: "center",
+  },
+  botaoCarregarMaisText: {
+    color: "#2CCDB5",
+    fontWeight: "600",
+    fontSize: 14,
+  },
+  botaoCarregarMais: {
+    flexDirection: "row",
+    justifyContent: "center",
+    alignItems: "center",
+    backgroundColor: "transparent",
+    marginHorizontal: "auto",
+    marginVertical: 25,
+    height: 40,
+  },
 });

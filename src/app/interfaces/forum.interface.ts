@@ -23,6 +23,7 @@ export interface IPublicacao extends IPublicacaoBody {
 
 export interface IPublicacaoFilter {
   titulo?: string;
+  // contagemReports?: number;
 }
 
 export interface IOrder {
