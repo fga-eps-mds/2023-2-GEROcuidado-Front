@@ -19,6 +19,10 @@ export default function Perfil() {
     router.push({ pathname: "/private/pages/editarPerfil", params: user });
   };
 
+  const idosos = () => {
+    router.push({ pathname: "/private/pages/cadastrarIdoso", params: user });
+  };
+
   useEffect(() => getIdUsuario());
 
   const handleUser = () => {
@@ -77,6 +81,15 @@ export default function Perfil() {
           </View>
         </Pressable>
 
+        <Pressable style={styles.option} onPress={idosos}>
+          <Icon name="human-cane" size={45} color="#2f2f2f" />
+
+          <View style={styles.optionText}>
+            <Text style={styles.optionTextTitle}>Idosos</Text>
+            <Text style={styles.optionTextSubTitle}>Gerencie seus idosos</Text>
+          </View>
+        </Pressable>
+
         <Pressable style={styles.option} onPress={logout}>
           <Icon name="logout-variant" size={45} color="#2f2f2f" />
 
@@ -85,11 +98,6 @@ export default function Perfil() {
             <Text style={styles.optionTextSubTitle}>Sair da sua conta</Text>
           </View>
         </Pressable>
-        <Pressable>
-            <Link href="/private/pages/cadastrarIdoso">
-              <Text>Cadastrar Idoso</Text>
-            </Link>
-          </Pressable>
       </View>
     </View>
   );
