@@ -4,7 +4,7 @@ import { AntDesign } from "@expo/vector-icons";
 import { Text, View, StyleSheet, Image, Pressable } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { IUser } from "../../interfaces/user.interface";
-import { router } from "expo-router";
+import { Link, router } from "expo-router";
 import NaoAutenticado from "../../components/NaoAutenticado";
 
 export default function Perfil() {
@@ -85,6 +85,11 @@ export default function Perfil() {
             <Text style={styles.optionTextSubTitle}>Sair da sua conta</Text>
           </View>
         </Pressable>
+        <Pressable>
+            <Link href="/private/pages/cadastrarIdoso">
+              <Text>Cadastrar Idoso</Text>
+            </Link>
+          </Pressable>
       </View>
     </View>
   );
