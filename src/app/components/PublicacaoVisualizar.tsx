@@ -1,13 +1,37 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { View, Image, Text, StyleSheet } from "react-native";
 import { IPublicacao } from "../interfaces/forum.interface";
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import { IUser } from "../interfaces/user.interface";
 
 interface IProps {
   item: IPublicacao;
 }
 
 export default function PublicacaoVisualizar({ item }: Readonly<IProps>) {
+  
+  const [idUsuario, setIdUsuario] = useState<number | null>(null);
+  const [adminUsuario, setAdminUsuario] = useState<boolean>();
+
+  const getIdUsuario = () => {
+    AsyncStorage.getItem("usuario").then((response) => {
+      const usuario = JSON.parse(response as string) as IUser;
+      setIdUsuario(usuario?.id);
+    });
+  };
+
+  const getAdminUsuario = () => {
+    AsyncStorage.getItem("usuario").then((response) => {
+      const usuario = JSON.parse(response as string) as IUser;
+      setAdminUsuario(usuario?.admin);
+    });
+  };
+
+  useEffect(() => getIdUsuario(), []);
+  useEffect(() => getAdminUsuario(), []);
+
+
   const hasFoto = (foto: string | null | undefined) => {
     if (!foto) return false;
 
@@ -43,6 +67,9 @@ export default function PublicacaoVisualizar({ item }: Readonly<IProps>) {
       <Text style={styles.titulo}>{item.titulo}</Text>
       <Text style={styles.descricao}>{item.descricao}</Text>
       <View style={styles.underInfo}>
+      {idUsuario && adminUsuario && (
+            <Text>Reportes: {item.contagemReportes}</Text>
+          )}
         <Text style={styles.categoria}>{item.categoria}</Text>
         <Text style={styles.date}>{getFormattedDate(item.dataHora)}</Text>
       </View>

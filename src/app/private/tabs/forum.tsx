@@ -23,6 +23,7 @@ export default function Forum() {
   const [loading, setLoading] = useState(true);
   const [loadingCarregarMais, setLoadingCarregarMais] = useState(true);
   const [idUsuario, setIdUsuario] = useState<number | null>(null);
+  const [adminUsuario, setAdminUsuario] = useState<boolean>();
   const [offset, setOffset] = useState(0);
   const [titulo, setTitulo] = useState("");
   const [timer, setTimer] = useState<NodeJS.Timeout | null>(null);
@@ -42,6 +43,13 @@ export default function Forum() {
     AsyncStorage.getItem("usuario").then((response) => {
       const usuario = JSON.parse(response as string) as IUser;
       setIdUsuario(usuario?.id);
+    });
+  };
+
+  const getAdminUsuario = () => {
+    AsyncStorage.getItem("usuario").then((response) => {
+      const usuario = JSON.parse(response as string) as IUser;
+      setAdminUsuario(usuario?.admin);
     });
   };
 
@@ -80,6 +88,7 @@ export default function Forum() {
   useEffect(() => getPublicacoes(), [offset]);
   useEffect(() => getPublicacoes(true), [titulo]);
   useEffect(() => getIdUsuario(), []);
+  useEffect(() => getAdminUsuario(), []);
 
   return (
     <View style={styles.scrollView}>
@@ -89,11 +98,11 @@ export default function Forum() {
       </View>
 
       <View style={styles.botoes}>
-        <View style={styles.reportada}>
+        {idUsuario && adminUsuario && (<View style={styles.reportada}>
           <Pressable style={styles.botaoPublicacaoReportada} onPress={reports}>
             <Text style={styles.textoBotaoPesquisar}>Reportes </Text>
           </Pressable>
-        </View>
+        </View>)}
         {idUsuario && (
           <Pressable
             style={styles.botaoCriarPublicacao}

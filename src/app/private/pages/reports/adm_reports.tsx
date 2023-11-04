@@ -18,7 +18,6 @@ import Toast from "react-native-toast-message";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { IUser } from "../../../interfaces/user.interface";
 
-// CRIANDO OBJETOS DE COMENTÁRIOS
 export default function HomeScreen() {
   const [publicacoes, setPublicacoes] = useState<IPublicacao[]>([]);
   const [timer, setTimer] = useState<NodeJS.Timeout | null>(null);
