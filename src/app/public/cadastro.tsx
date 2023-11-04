@@ -105,7 +105,7 @@ export default function Cadastro() {
 
   return (
     <View>
-      <BackButton />
+      <BackButton color="#000" route="/" />
 
       <ScrollView>
         <UploadImage setFoto={setFoto} />

@@ -11,6 +11,7 @@ import ErrorMessage from "../components/ErrorMessage";
 import { getUserById, loginUser } from "../services/user.service";
 import JWT from "expo-jwt";
 import { IUser } from "../interfaces/user.interface";
+import { ScrollView } from "react-native-gesture-handler";
 
 interface IErrors {
   email?: string;
@@ -103,58 +104,60 @@ export default function Login() {
 
   return (
     <View>
-      <BackButton />
+      <BackButton color="#000" route="/" />
 
-      <View style={styles.imagem}>
-        <Image
-          source={require("../../../assets/logo2.png")}
-          style={{ width: 280, height: 90 }}
-        />
-      </View>
-
-      <Text style={styles.titulo}>Bem Vindo de volta!</Text>
-
-      <View style={styles.formControl}>
-        <View style={styles.field}>
-          <Icon style={styles.iconInput} name="email-outline" size={20} />
-          <TextInput
-            onChangeText={setEmail}
-            value={email}
-            placeholder="Email"
-            style={styles.textInput}
+      <ScrollView>
+        <View style={styles.imagem}>
+          <Image
+            source={require("../../../assets/logo2.png")}
+            style={{ width: 280, height: 90 }}
           />
         </View>
-        <ErrorMessage show={showErrors} text={erros.email} />
-      </View>
 
-      <View style={styles.formControl}>
-        <View style={styles.field}>
-          <Icon style={styles.iconInput} name="lock-outline" size={20} />
-          <TextInput
-            onChangeText={setSenha}
-            value={senha}
-            placeholder="Senha"
-            secureTextEntry={escondeSenha}
-            style={styles.passwordInput}
-          />
+        <Text style={styles.titulo}>Bem Vindo de volta!</Text>
 
-          <Icon
-            onPress={() => setEscondeSenha(!escondeSenha)}
-            style={styles.passwordIcon}
-            name={escondeSenha ? "eye-outline" : "eye-off-outline"}
-            size={20}
+        <View style={styles.formControl}>
+          <View style={styles.field}>
+            <Icon style={styles.iconInput} name="email-outline" size={20} />
+            <TextInput
+              onChangeText={setEmail}
+              value={email}
+              placeholder="Email"
+              style={styles.textInput}
+            />
+          </View>
+          <ErrorMessage show={showErrors} text={erros.email} />
+        </View>
+
+        <View style={styles.formControl}>
+          <View style={styles.field}>
+            <Icon style={styles.iconInput} name="lock-outline" size={20} />
+            <TextInput
+              onChangeText={setSenha}
+              value={senha}
+              placeholder="Senha"
+              secureTextEntry={escondeSenha}
+              style={styles.passwordInput}
+            />
+
+            <Icon
+              onPress={() => setEscondeSenha(!escondeSenha)}
+              style={styles.passwordIcon}
+              name={escondeSenha ? "eye-outline" : "eye-off-outline"}
+              size={20}
+            />
+          </View>
+          <ErrorMessage show={showErrors} text={erros.senha} />
+        </View>
+
+        <View style={styles.linkButton}>
+          <CustomButton
+            title="Entrar"
+            callbackFn={login}
+            showLoading={showLoading}
           />
         </View>
-        <ErrorMessage show={showErrors} text={erros.senha} />
-      </View>
-
-      <View style={styles.linkButton}>
-        <CustomButton
-          title="Entrar"
-          callbackFn={login}
-          showLoading={showLoading}
-        />
-      </View>
+      </ScrollView>
     </View>
   );
 }
@@ -180,13 +183,13 @@ const styles = StyleSheet.create({
     fontWeight: "300",
     textAlign: "center",
     marginBottom: 60,
-    marginTop: 65,
+    marginTop: 35,
   },
   imagem: {
     flex: 1,
     justifyContent: "center",
     alignItems: "center",
-    marginTop: 100,
+    marginTop: 50,
   },
   button: {
     width: "80%",

@@ -5,12 +5,14 @@ interface IProps {
   visible: boolean;
   callbackFn: () => unknown;
   closeModal: () => unknown;
+  message: string;
 }
 
 export default function ModalConfirmation({
   visible,
   callbackFn,
   closeModal,
+  message,
 }: Readonly<IProps>) {
   return (
     <View style={styles.centeredView}>
@@ -18,7 +20,8 @@ export default function ModalConfirmation({
         <View style={styles.centeredView}>
           <View style={styles.modalView}>
             <Text style={styles.modalText}>
-              Prosseguir com a exclusão da conta?
+              {/* Prosseguir com a exclusão da conta? */}
+              {message}
             </Text>
             <View style={styles.buttonContainer}>
               <Pressable

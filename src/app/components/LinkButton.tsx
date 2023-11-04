@@ -11,10 +11,14 @@ interface Props {
 export default function LinkButton({ title, href, backgroundColor }: Props) {
   const background = backgroundColor ?? "#2CCDB5";
 
-  const navigate = () => router.push(href);
+  const handleNavigate = () => router.push(href);
 
   return (
-    <Pressable style={styles(background).button} onPress={navigate}>
+    <Pressable
+      testID="link-button"
+      style={styles(background).button}
+      onPress={handleNavigate}
+    >
       <Text style={styles(background).buttonText}>{title}</Text>
     </Pressable>
   );

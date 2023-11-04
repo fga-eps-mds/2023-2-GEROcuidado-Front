@@ -1,6 +1,6 @@
 import { Link, router } from "expo-router";
 import React, { useEffect, useState } from "react";
-import { StyleSheet, Text, TextInput, View } from "react-native";
+import { Platform, StyleSheet, Text, TextInput, View } from "react-native";
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
 import { SelectList } from "react-native-dropdown-select-list";
 import { ScrollView } from "react-native-gesture-handler";
@@ -119,9 +119,7 @@ export default function CriaPublicacao() {
           <Icon name="chevron-left" size={40} color="#fff" />
         </Link>
 
-        <View>
-          <Text style={styles.tituloheader}>Nova publicação</Text>
-        </View>
+        <Text style={styles.tituloheader}>Nova publicação</Text>
       </View>
 
       <View style={styles.publicacao}>
@@ -143,8 +141,11 @@ export default function CriaPublicacao() {
             value={descricao}
             multiline={true}
             placeholder="Descrição"
-            numberOfLines={12}
-            style={styles.input}
+            numberOfLines={Platform.OS === "ios" ? undefined : 12}
+            style={[
+              styles.input,
+              { minHeight: Platform.OS === "ios" && 12 ? 20 * 12 : null },
+            ]}
           />
           <ErrorMessage show={showErrors} text={erros.descricao} />
         </View>
@@ -184,7 +185,6 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
     color: "white",
     fontSize: 20,
-    padding: 20,
   },
   publicacao: {
     borderRadius: 15,
@@ -204,6 +204,7 @@ const styles = StyleSheet.create({
     fontWeight: "700",
   },
   input: {
+    textAlignVertical: "top",
     borderWidth: 0,
     padding: 12,
     backgroundColor: "#F1F1F1",
