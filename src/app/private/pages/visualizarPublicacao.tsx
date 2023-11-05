@@ -8,19 +8,19 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import PublicacaoVisualizar from "../../components/PublicacaoVisualizar";
 import BackButton from "../../components/BackButton";
 import ModalConfirmation from "../../components/ModalConfirmation";
-import { deletePublicacaoById, updatePublicacao } from "../../services/forum.service";
+import {
+  deletePublicacaoById,
+  updatePublicacao,
+} from "../../services/forum.service";
 import Toast from "react-native-toast-message";
-import AntDesing from 'react-native-vector-icons/AntDesign';
+import AntDesing from "react-native-vector-icons/AntDesign";
 
 export default function VisualizarPublicacao() {
   const [idUsuario, setIdUsuario] = useState<number | null>(null);
   const [adminUsuario, setAdminUsuario] = useState<boolean>();
   const [modalVisibleApagar, setModalVisibleApagar] = useState(false);
-  const [modalVisibleReportar, setModalVisibleReportar] = useState(false);
-  const [showLoadingReportar, setShowLoadingReportar] = useState(false);
   const [token, setToken] = useState<string>("");
   const item = useLocalSearchParams() as unknown as IPublicacao & IUser;
-  const [contagemReportes, setContagemReportes] = useState(item.contagemReportes);
   const publicacao = {
     ...item,
     usuario: {
@@ -47,7 +47,7 @@ export default function VisualizarPublicacao() {
       params: params,
     });
   };
-  
+
   const getAdminUsuario = () => {
     AsyncStorage.getItem("usuario").then((response) => {
       const usuario = JSON.parse(response as string) as IUser;
@@ -55,51 +55,15 @@ export default function VisualizarPublicacao() {
     });
   };
 
-  
   const getToken = () => {
     AsyncStorage.getItem("token").then((response) => {
       setToken(response as string);
     });
   };
-  
+
   useEffect(() => getIdUsuario());
   useEffect(() => getToken());
   useEffect(() => getAdminUsuario(), []);
-
-  // const reportarPublicacao = async () => {
-  
-  //   const body: Partial<IPublicacao> = {
-  //       contagemReportes
-        
-  //   };
-  //   //console.log(body);
-
-  //   try {
-  //     setShowLoadingReportar(true);
-  //     setContagemReportes(Number(contagemReportes) + 1);
-  //     const response = await updatePublicacao(item.id,body, token);
-  //     console.log(response)
-  //     //console.log(item.contagemReportes);
-  //     //console.log(contagemReportes);
-  //     item.contagemReportes = Number(response.data?.contagemReportes);
-  //     //console.log(item.contagemReportes);
-  //     Toast.show({
-  //       type: "success",
-  //       text1: "Sucesso!",
-  //       text2: response.message as string,
-  //     });
-  //     router.replace("/private/tabs/forum");
-  //   } catch (err) {
-  //     const error = err as { message: string };
-  //     Toast.show({
-  //       type: "error",
-  //       text1: "Erro!",
-  //       text2: error.message,
-  //     });
-  //   } finally {
-  //     setShowLoadingReportar(false);
-  //   }
-  // };
 
   const apagarPublicacao = async () => {
     try {
@@ -123,19 +87,12 @@ export default function VisualizarPublicacao() {
     }
   };
 
-  
-
   const confirmationApagar = () => {
     setModalVisibleApagar(!modalVisibleApagar);
   };
 
-  const confirmationReportar = () => {
-    setModalVisibleReportar(!modalVisibleReportar);
-  };
-
   const closeModal = () => {
     setModalVisibleApagar(false);
-    setModalVisibleReportar(false);
   };
 
   return (
@@ -156,33 +113,18 @@ export default function VisualizarPublicacao() {
       )}
 
       {adminUsuario && (
-        <Pressable onPress={confirmationApagar} style={styles.editar}>
-          <Text style={styles.textoEditar}>Apagar</Text>
+        <Pressable onPress={confirmationApagar}>
+          <Text style={styles.apagar}>Apagar publicação</Text>
         </Pressable>
       )}
 
-        <ModalConfirmation
-          visible={modalVisibleApagar}
-          callbackFn={apagarPublicacao}
-          closeModal={closeModal}
-          message="Apagar publicação?"
-          messageButton="Apagar"
-          />
-
-      {/* {idUsuario &&(
-        <Pressable onPress={confirmationReportar} style={styles.editar}>
-          <Text style={styles.textoEditar}>Reportar</Text>
-          <AntDesing name="warning" size={20} color={"white"} />
-        </Pressable>
-      )}
-
-        <ModalConfirmation
-          visible={modalVisibleReportar}
-          callbackFn={reportarPublicacao}
-          closeModal={closeModal}
-          message="Reportar publicação?"
-          messageButton="Reportar"
-          /> */}
+      <ModalConfirmation
+        visible={modalVisibleApagar}
+        callbackFn={apagarPublicacao}
+        closeModal={closeModal}
+        message="Apagar publicação?"
+        messageButton="Apagar"
+      />
 
       {/* <View style={styles.botoes}> */}
       {/* Parte relacionado ao incremento */}
@@ -259,5 +201,12 @@ const styles = StyleSheet.create({
     color: "black",
     fontSize: 24,
     padding: 20,
+  },
+  apagar: {
+    color: "#FF7F7F",
+    alignSelf: "center",
+    fontSize: 18,
+    fontWeight: "600",
+    margin: 20,
   },
 });
