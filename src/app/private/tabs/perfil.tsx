@@ -9,7 +9,6 @@ import NaoAutenticado from "../../components/NaoAutenticado";
 
 export default function Perfil() {
   const [user, setUser] = useState<IUser | undefined>(undefined);
-  const [idUsuario, setIdUsuario] = useState<number | null>(null);
 
   const logout = () => {
     AsyncStorage.clear().then(() => router.replace("/"));
@@ -19,16 +18,12 @@ export default function Perfil() {
     router.push({ pathname: "/private/pages/editarPerfil", params: user });
   };
 
-  useEffect(() => getIdUsuario());
-
   const handleUser = () => {
     AsyncStorage.getItem("usuario").then((response) => {
       const usuario = JSON.parse(response as string);
       setUser(usuario);
     });
   };
-
-  useEffect(() => handleUser(), []);
 
   const hasFoto = (foto: string | null | undefined) => {
     if (!foto) return false;
@@ -51,20 +46,17 @@ export default function Perfil() {
     );
   };
 
-  const getIdUsuario = () => {
-    AsyncStorage.getItem("usuario").then((response) => {
-      const usuario = JSON.parse(response as string) as IUser;
-      setIdUsuario(usuario?.id);
-    });
-  };
+  useEffect(() => handleUser(), []);
 
-  return !idUsuario ? (
+  return !user?.id ? (
     <NaoAutenticado />
   ) : (
     <View>
       <View style={styles.header}>
         {getFoto(user?.foto)}
-        <Text style={styles.nomeUsuario}>Olá, {user?.nome}!</Text>
+        <Text style={styles.nomeUsuario}>
+          Olá, <Text style={styles.negrito}>{user?.nome}</Text>!
+        </Text>
       </View>
 
       <View style={styles.options}>
@@ -115,10 +107,12 @@ const styles = StyleSheet.create({
   },
   nomeUsuario: {
     color: "#FFFFFF",
-    fontWeight: "bold",
     fontSize: 16,
     marginLeft: 20,
     maxWidth: "75%",
+  },
+  negrito: {
+    fontWeight: "bold",
   },
   options: {
     flexDirection: "column",

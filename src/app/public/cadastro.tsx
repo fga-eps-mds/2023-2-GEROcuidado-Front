@@ -71,9 +71,9 @@ export default function Cadastro() {
     if (!nome) {
       erros.nome = "Campo obrigatório!";
     } else if (nome.length < 5) {
-      erros.nome = "O nome completo deve ter pelo menos 5 caractéres.";
+      erros.nome = "O nome completo deve ter pelo menos 5 caracteres!";
     } else if (nome.length > 60) {
-      erros.nome = "O nome completo deve ter no máximo 60 caractéres.";
+      erros.nome = "O nome completo deve ter no máximo 60 caracteres!";
     }
 
     if (!email) {
@@ -91,13 +91,13 @@ export default function Cadastro() {
     if (!senha) {
       erros.senha = "Campo Obrigatório!";
     } else if (senha.length < 6) {
-      erros.senha = "Senha deve ter no mínimo 6 caractéres";
+      erros.senha = "Senha deve ter no mínimo 6 caracteres!";
     }
 
     if (!confirmaSenha) {
-      erros.confirmaSenha = "Campo Obrigatório";
+      erros.confirmaSenha = "Campo Obrigatório!";
     } else if (confirmaSenha !== senha) {
-      erros.confirmaSenha = "As senhas precisam ser iguais";
+      erros.confirmaSenha = "As senhas precisam ser iguais!";
     }
 
     setErros(erros);

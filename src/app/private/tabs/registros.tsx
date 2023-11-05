@@ -5,16 +5,16 @@ import NaoAutenticado from "../../components/NaoAutenticado";
 import EmConstrucao from "../../components/EmConstrucao";
 
 export default function Registros() {
-  const [idUsuario, setIdUsuario] = useState<number | null>(null);
+  const [user, setUser] = useState<IUser | undefined>(undefined);
 
-  const getIdUsuario = () => {
+  const handleUser = () => {
     AsyncStorage.getItem("usuario").then((response) => {
-      const usuario = JSON.parse(response as string) as IUser;
-      setIdUsuario(usuario?.id);
+      const usuario = JSON.parse(response as string);
+      setUser(usuario);
     });
   };
 
-  useEffect(() => getIdUsuario());
+  useEffect(() => handleUser(), []);
 
-  return !idUsuario ? <NaoAutenticado></NaoAutenticado> : <EmConstrucao />;
+  return !user?.id ? <NaoAutenticado /> : <EmConstrucao />;
 }

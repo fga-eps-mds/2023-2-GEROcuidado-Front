@@ -13,9 +13,9 @@ export default function UploadImage({ setFoto, uri = null }: Readonly<Props>) {
 
   const pickImage = () => {
     ImagePicker.launchImageLibraryAsync({
-      mediaTypes: ImagePicker.MediaTypeOptions.All,
+      mediaTypes: ImagePicker.MediaTypeOptions.Images,
       allowsEditing: true,
-      aspect: [4, 3],
+      aspect: [1, 1],
       base64: true,
       quality: 0,
     }).then((result) => {

@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { View, Image, Text, StyleSheet, Pressable } from "react-native";
 import { IPublicacao } from "../interfaces/forum.interface";
+import { IPublicacaoUsuario } from "../interfaces/forum.interface";
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { IUser } from "../interfaces/user.interface";
@@ -11,7 +12,7 @@ import Toast from "react-native-toast-message";
 import { router } from "expo-router";
 
 interface IProps {
-  item: IPublicacao;
+  item: IPublicacaoUsuario;
 }
 
 export default function PublicacaoVisualizar({ item }: Readonly<IProps>) {
@@ -117,8 +118,9 @@ export default function PublicacaoVisualizar({ item }: Readonly<IProps>) {
   return (
     <View style={styles.postContainer}>
       <View style={styles.userInfo}>
-        {getFoto(item.usuario?.foto)}
-        <Text style={styles.username}>{item.usuario?.nome}</Text>
+        {getFoto(item.foto)}
+        <Text style={styles.username}>{item.nome}</Text>
+
         {idUsuario && (
           <Pressable onPress={confirmationReportar}>
             <AntDesing name="warning" size={20} color={"red"} />

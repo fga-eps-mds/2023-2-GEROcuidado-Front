@@ -21,10 +21,7 @@ export default function ModalConfirmation({
       <Modal animationType="fade" transparent={true} visible={visible}>
         <View style={styles.centeredView}>
           <View style={styles.modalView}>
-            <Text style={styles.modalText}>
-              {/* Prosseguir com a exclusão da conta? */}
-              {message}
-            </Text>
+            <Text style={styles.modalText}>{message}</Text>
             <View style={styles.buttonContainer}>
               <Pressable
                 style={[styles.button, styles.buttonCancel]}
