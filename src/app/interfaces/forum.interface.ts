@@ -23,7 +23,7 @@ export interface IPublicacao extends IPublicacaoBody {
 
 export interface IPublicacaoFilter {
   titulo?: string;
-  // contagemReports?: number;
+  isReported?: boolean;
 }
 
 export interface IOrder {

@@ -13,7 +13,7 @@ import BarraPesquisa from "../../../components/BarraPesquisa";
 import BackButton from "../../../components/BackButton";
 import { IOrder, IPublicacao } from "../../../interfaces/forum.interface";
 import Publicacao from "../../../components/Publicacao";
-import { getAllPublicacaoReportadas } from "../../../services/forum.service";
+import { getAllPublicacao } from "../../../services/forum.service";
 import Toast from "react-native-toast-message";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { IUser } from "../../../interfaces/user.interface";
@@ -30,6 +30,8 @@ export default function HomeScreen() {
     column: "dataHora",
     dir: "DESC",
   };
+
+  const isReported = true;
 
   const novaPublicacao = () => {
     router.push("private/pages/criaPublicacao");
@@ -49,7 +51,7 @@ export default function HomeScreen() {
     setLoadingCarregarMais(true);
     setLoading(reset);
 
-    getAllPublicacaoReportadas(offset, { titulo }, order)
+    getAllPublicacao(offset, { titulo, isReported}, order)
       .then((response) => {
         const newPublicacoes = response.data as IPublicacao[];
 

@@ -33,32 +33,6 @@ export const postPublicacao = async (
   return json;
 };
 
-export const getAllPublicacaoReportadas = async (
-  offset: number,
-  filter: IPublicacaoFilter,
-  order: IOrder,
-): Promise<IResponse<IPublicacao[] | null>> => {
-  const params = `limit=10&offset=${offset}&filter=${JSON.stringify(
-    filter,
-  )}&order=${JSON.stringify(order)}`;
-
-  const response = await fetch(`${BASE_URL}?${params}`, {
-    method: "GET",
-    headers: {
-      Accept: "application/json",
-      "Content-Type": "application/json",
-    },
-  });
-
-  const json = await response.json();
-
-  if (response.status !== 200) {
-    throw new Error(json.message as string);
-  }
-
-  return json;
-};
-
 export const getAllPublicacao = async (
   offset: number,
   filter: IPublicacaoFilter,
