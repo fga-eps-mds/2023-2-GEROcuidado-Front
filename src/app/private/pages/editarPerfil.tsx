@@ -173,6 +173,7 @@ export default function EditarPerfil() {
         callbackFn={apagarConta}
         closeModal={closeModal}
         message="Prosseguir com a exclusão da conta?"
+        messageButton="Apagar"
       />
     </View>
   );

@@ -6,6 +6,7 @@ interface IProps {
   callbackFn: () => unknown;
   closeModal: () => unknown;
   message: string;
+  messageButton: string;
 }
 
 export default function ModalConfirmation({
@@ -13,6 +14,7 @@ export default function ModalConfirmation({
   callbackFn,
   closeModal,
   message,
+  messageButton,
 }: Readonly<IProps>) {
   return (
     <View style={styles.centeredView}>
@@ -34,7 +36,7 @@ export default function ModalConfirmation({
                 style={[styles.button, styles.buttonClose]}
                 onPress={() => callbackFn()}
               >
-                <Text style={styles.textStyle}>Apagar</Text>
+                <Text style={styles.textStyle}>{messageButton}</Text>
               </Pressable>
             </View>
           </View>

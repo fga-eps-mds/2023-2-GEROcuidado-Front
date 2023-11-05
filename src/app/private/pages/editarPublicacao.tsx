@@ -242,6 +242,7 @@ export default function EditarPublicacao() {
           callbackFn={apagarPublicacao}
           closeModal={closeModal}
           message="Apagar publicação?"
+          messageButton="Apagar"
         />
       </View>
     </ScrollView>
