@@ -1,6 +1,6 @@
 import { router, useLocalSearchParams } from "expo-router";
 import React, { useEffect, useState } from "react";
-import { Pressable, StyleSheet, Text, View } from "react-native";
+import { Pressable, ScrollView, StyleSheet, Text, View } from "react-native";
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
 import { IPublicacao } from "../../interfaces/forum.interface";
 import { IUser } from "../../interfaces/user.interface";
@@ -10,18 +10,7 @@ import BackButton from "../../components/BackButton";
 
 export default function VisualizarPublicacao() {
   const [idUsuario, setIdUsuario] = useState<number | null>(null);
-
   const item = useLocalSearchParams() as unknown as IPublicacao & IUser;
-  const publicacao = {
-    ...item,
-    usuario: {
-      id: item.idUsuario,
-      foto: item.foto,
-      admin: item.admin,
-      nome: item.nome,
-      email: item.email,
-    },
-  };
 
   const getIdUsuario = () => {
     AsyncStorage.getItem("usuario").then((response) => {
@@ -31,11 +20,9 @@ export default function VisualizarPublicacao() {
   };
 
   const navigate = () => {
-    const params = { ...item, ...item.usuario };
-
     router.push({
       pathname: "/private/pages/editarPublicacao",
-      params: params,
+      params: item,
     });
   };
 
@@ -49,27 +36,16 @@ export default function VisualizarPublicacao() {
         <Text style={styles.tituloheader}>Visualizar Publicação</Text>
       </View>
 
-      <PublicacaoVisualizar item={publicacao as unknown as IPublicacao} />
+      <ScrollView>
+        <PublicacaoVisualizar item={item} />
 
-      {idUsuario && publicacao.idUsuario == idUsuario && (
-        <Pressable onPress={navigate} style={styles.editar}>
-          <Text style={styles.textoEditar}>Editar</Text>
-          <Icon name="pencil" size={20} color={"white"} />
-        </Pressable>
-      )}
-
-      {/* <View style={styles.botoes}> */}
-      {/* Parte relacionado ao incremento */}
-      {/* {idUsuario && publicacao.idUsuario == idUsuario && (
-          <View style={styles.botaoResponder}>
-            <Text style={styles.textoEditar}>Responder</Text>
-          </View>
-        )} */}
-      {/* </View> */}
-      {/* Parte relacionado ao incremento */}
-      {/* <View>
-        <Text style={styles.resposta}>Respostas</Text>
-      </View> */}
+        {idUsuario && item.idUsuario == idUsuario && (
+          <Pressable onPress={navigate} style={styles.editar}>
+            <Text style={styles.textoEditar}>Editar</Text>
+            <Icon name="pencil" size={20} color={"white"} />
+          </Pressable>
+        )}
+      </ScrollView>
     </View>
   );
 }

@@ -21,6 +21,8 @@ export interface IPublicacao extends IPublicacaoBody {
   usuario?: IUser;
 }
 
+export interface IPublicacaoUsuario extends IPublicacao, IUser {}
+
 export interface IPublicacaoFilter {
   titulo?: string;
 }

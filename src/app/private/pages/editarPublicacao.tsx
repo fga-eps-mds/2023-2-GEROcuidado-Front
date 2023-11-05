@@ -38,15 +38,13 @@ export default function EditarPublicacao() {
 
   const [titulo, setTitulo] = useState(item.titulo);
   const [descricao, setDescricao] = useState(item.descricao);
-  const [categoria, setCategoria] = useState<ECategoriaPublicacao | null>(
-    item.categoria ?? ECategoriaPublicacao.GERAL,
-  );
+  const [categoria, setCategoria] = useState(item.categoria);
   const [erros, setErros] = useState<IErrors>({});
   const [showErrors, setShowErrors] = useState(false);
   const [modalVisible, setModalVisible] = useState(false);
   const [showLoading, setShowLoading] = useState(false);
   const [showLoadingApagar, setShowLoadingApagar] = useState(false);
-  const [token, setToken] = useState<string>("");
+  const [token, setToken] = useState("");
 
   const getToken = () => {
     AsyncStorage.getItem("token").then((response) => {
@@ -89,8 +87,10 @@ export default function EditarPublicacao() {
   };
 
   const apagarPublicacao = async () => {
+    setModalVisible(false);
+    setShowLoadingApagar(true);
+
     try {
-      setShowLoadingApagar(true);
       const response = await deletePublicacaoById(item.id, token);
       Toast.show({
         type: "success",
@@ -108,14 +108,6 @@ export default function EditarPublicacao() {
     } finally {
       setShowLoadingApagar(false);
     }
-  };
-
-  const confirmation = () => {
-    setModalVisible(!modalVisible);
-  };
-
-  const closeModal = () => {
-    setModalVisible(false);
   };
 
   useEffect(() => handleErrors, [titulo, descricao, categoria]);
@@ -166,7 +158,7 @@ export default function EditarPublicacao() {
   };
 
   return (
-    <ScrollView>
+    <View>
       <View style={styles.header}>
         <Pressable onPress={navigate}>
           <Icon
@@ -180,71 +172,79 @@ export default function EditarPublicacao() {
         <Text style={styles.tituloheader}>Editar publicação</Text>
       </View>
 
-      <View style={styles.publicacao}>
-        <View style={styles.formControl}>
-          <Text style={styles.inputLabel}>Título</Text>
-          <TextInput
-            onChangeText={setTitulo}
-            value={titulo}
-            placeholder="Título"
-            style={styles.input}
-          />
-          <ErrorMessage show={showErrors} text={erros.titulo} />
-        </View>
+      <ScrollView>
+        <View style={styles.publicacao}>
+          <View style={styles.formControl}>
+            <Text style={styles.inputLabel}>Título</Text>
+            <TextInput
+              onChangeText={setTitulo}
+              value={titulo}
+              placeholder="Título"
+              style={styles.input}
+            />
+            <ErrorMessage show={showErrors} text={erros.titulo} />
+          </View>
 
-        <View style={styles.formControl}>
-          <Text style={styles.inputLabel}>Descrição</Text>
-          <TextInput
-            onChangeText={setDescricao}
-            value={descricao}
-            multiline={true}
-            placeholder="Descrição"
-            numberOfLines={Platform.OS === "ios" ? undefined : 12}
-            style={[
-              styles.input,
-              { minHeight: Platform.OS === "ios" && 12 ? 20 * 12 : null },
-            ]}
-          />
-          <ErrorMessage show={showErrors} text={erros.descricao} />
-        </View>
+          <View style={styles.formControl}>
+            <Text style={styles.inputLabel}>Descrição</Text>
+            <TextInput
+              onChangeText={setDescricao}
+              value={descricao}
+              multiline={true}
+              placeholder="Descrição"
+              numberOfLines={Platform.OS === "ios" ? undefined : 12}
+              style={[
+                styles.input,
+                { minHeight: Platform.OS === "ios" && 12 ? 20 * 12 : null },
+              ]}
+            />
+            <ErrorMessage show={showErrors} text={erros.descricao} />
+          </View>
 
-        <View style={styles.formControl}>
-          <View style={styles.selectInput}>
-            <SelectList
-              data={data}
-              setSelected={setCategoria}
-              placeholder="Categoria"
-              search={false}
-              defaultOption={{ key: item.categoria, value: item.categoria }}
+          <View style={styles.formControl}>
+            <View style={styles.selectInput}>
+              <SelectList
+                data={data}
+                setSelected={setCategoria}
+                placeholder="Categoria"
+                search={false}
+                defaultOption={{ key: item.categoria, value: item.categoria }}
+              />
+            </View>
+            <ErrorMessage show={showErrors} text={erros.categoria} />
+          </View>
+
+          <View style={styles.linkButton}>
+            <CustomButton
+              title="Salvar"
+              callbackFn={salvar}
+              showLoading={showLoading}
             />
           </View>
-          <ErrorMessage show={showErrors} text={erros.categoria} />
+
+          <Pressable onPress={() => setModalVisible(true)}>
+            {showLoadingApagar && (
+              <ActivityIndicator
+                style={styles.apagar}
+                size="small"
+                color="#FF7F7F"
+              />
+            )}
+
+            {!showLoadingApagar && (
+              <Text style={styles.apagar}>Apagar Publicação</Text>
+            )}
+          </Pressable>
         </View>
+      </ScrollView>
 
-        <View style={styles.linkButton}>
-          <CustomButton
-            title="Salvar"
-            callbackFn={salvar}
-            showLoading={showLoading}
-          />
-        </View>
-
-        <Pressable onPress={confirmation}>
-          {showLoadingApagar ? (
-            <ActivityIndicator size="small" color="#FF7F7F" />
-          ) : (
-            <Text style={styles.apagar}>Apagar Publicação</Text>
-          )}
-        </Pressable>
-
-        <ModalConfirmation
-          visible={modalVisible}
-          callbackFn={apagarPublicacao}
-          closeModal={closeModal}
-          message="Apagar publicação?"
-        />
-      </View>
-    </ScrollView>
+      <ModalConfirmation
+        visible={modalVisible}
+        callbackFn={apagarPublicacao}
+        closeModal={() => setModalVisible(false)}
+        message="Apagar publicação?"
+      />
+    </View>
   );
 }
 
@@ -297,7 +297,7 @@ const styles = StyleSheet.create({
   apagar: {
     color: "#FF7F7F",
     alignSelf: "center",
-    fontSize: 18,
+    fontSize: 16,
     fontWeight: "600",
     margin: 20,
   },

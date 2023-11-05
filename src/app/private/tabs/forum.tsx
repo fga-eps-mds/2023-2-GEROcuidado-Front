@@ -42,17 +42,18 @@ export default function Forum() {
     });
   };
 
-  const getPublicacoes = (reset = false) => {
-    setLoadingCarregarMais(true);
-    setLoading(reset);
+  const getPublicacoes = (
+    anterior: IPublicacao[],
+    titulo: string,
+    offset: number,
+  ) => {
+    setOffset(offset);
+    setTitulo(titulo);
 
     getAllPublicacao(offset, { titulo }, order)
       .then((response) => {
         const newPublicacoes = response.data as IPublicacao[];
-
-        reset
-          ? setPublicacoes(newPublicacoes)
-          : setPublicacoes([...publicacoes, ...newPublicacoes]);
+        setPublicacoes([...anterior, ...newPublicacoes]);
       })
       .catch((err) => {
         const error = err as { message: string };
@@ -68,21 +69,30 @@ export default function Forum() {
       });
   };
 
+  const handleCarregarMais = () => {
+    setLoadingCarregarMais(true);
+    getPublicacoes(publicacoes, titulo, offset + 1);
+  };
+
   const handlePesquisar = (newTitulo: string) => {
+    setLoading(true);
+    getPublicacoes([], newTitulo, 0);
+  };
+
+  const debouncePesquisar = (newTitulo: string) => {
     if (timer) clearTimeout(timer);
-    const temp = setTimeout(() => setTitulo(newTitulo), 500);
+    const temp = setTimeout(() => handlePesquisar(newTitulo), 1000);
     setTimer(temp);
   };
 
-  useEffect(() => getPublicacoes(), [offset]);
-  useEffect(() => getPublicacoes(true), [titulo]);
   useEffect(() => getIdUsuario(), []);
+  useEffect(() => getPublicacoes([], "", 0), []);
 
   return (
     <View style={styles.scrollView}>
       <View style={styles.cabecalho}>
         <Text style={styles.textoPublicacoes}>Publicações</Text>
-        <BarraPesquisa callbackFn={handlePesquisar} />
+        <BarraPesquisa callbackFn={debouncePesquisar} />
       </View>
 
       {idUsuario && (
@@ -109,7 +119,7 @@ export default function Forum() {
           {publicacoes.length > 0 && publicacoes.length % 10 === 0 && (
             <Pressable
               style={styles.botaoCarregarMais}
-              onPress={() => setOffset(offset + 1)}
+              onPress={handleCarregarMais}
             >
               {loadingCarregarMais && (
                 <ActivityIndicator size="small" color="#2CCDB5" />

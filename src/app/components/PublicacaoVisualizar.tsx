@@ -1,10 +1,10 @@
 import React from "react";
 import { View, Image, Text, StyleSheet } from "react-native";
-import { IPublicacao } from "../interfaces/forum.interface";
+import { IPublicacaoUsuario } from "../interfaces/forum.interface";
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
 
 interface IProps {
-  item: IPublicacao;
+  item: IPublicacaoUsuario;
 }
 
 export default function PublicacaoVisualizar({ item }: Readonly<IProps>) {
@@ -37,8 +37,8 @@ export default function PublicacaoVisualizar({ item }: Readonly<IProps>) {
   return (
     <View style={styles.postContainer}>
       <View style={styles.userInfo}>
-        {getFoto(item.usuario?.foto)}
-        <Text style={styles.username}>{item.usuario?.nome}</Text>
+        {getFoto(item.foto)}
+        <Text style={styles.username}>{item.nome}</Text>
       </View>
       <Text style={styles.titulo}>{item.titulo}</Text>
       <Text style={styles.descricao}>{item.descricao}</Text>
