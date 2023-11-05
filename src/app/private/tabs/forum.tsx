@@ -98,11 +98,16 @@ export default function Forum() {
       </View>
 
       <View style={styles.botoes}>
-        {idUsuario && adminUsuario && (<View style={styles.reportada}>
-          <Pressable style={styles.botaoPublicacaoReportada} onPress={reports}>
-            <Text style={styles.textoBotaoPesquisar}>Reportes </Text>
-          </Pressable>
-        </View>)}
+        {idUsuario && adminUsuario && (
+          <View style={styles.reportada}>
+            <Pressable
+              style={styles.botaoPublicacaoReportada}
+              onPress={reports}
+            >
+              <Text style={styles.textoBotaoPesquisar}>Reportes </Text>
+            </Pressable>
+          </View>
+        )}
         {idUsuario && (
           <Pressable
             style={styles.botaoCriarPublicacao}

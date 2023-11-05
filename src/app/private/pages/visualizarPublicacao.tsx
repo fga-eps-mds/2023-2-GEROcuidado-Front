@@ -8,12 +8,8 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import PublicacaoVisualizar from "../../components/PublicacaoVisualizar";
 import BackButton from "../../components/BackButton";
 import ModalConfirmation from "../../components/ModalConfirmation";
-import {
-  deletePublicacaoById,
-  updatePublicacao,
-} from "../../services/forum.service";
+import { deletePublicacaoById } from "../../services/forum.service";
 import Toast from "react-native-toast-message";
-import AntDesing from "react-native-vector-icons/AntDesign";
 
 export default function VisualizarPublicacao() {
   const [idUsuario, setIdUsuario] = useState<number | null>(null);

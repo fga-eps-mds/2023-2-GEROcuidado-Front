@@ -1,6 +1,5 @@
 import {
   ActivityIndicator,
-  Image,
   Pressable,
   ScrollView,
   StyleSheet,
@@ -51,7 +50,7 @@ export default function HomeScreen() {
     setLoadingCarregarMais(true);
     setLoading(reset);
 
-    getAllPublicacao(offset, { titulo, isReported}, order)
+    getAllPublicacao(offset, { titulo, isReported }, order)
       .then((response) => {
         const newPublicacoes = response.data as IPublicacao[];
 
