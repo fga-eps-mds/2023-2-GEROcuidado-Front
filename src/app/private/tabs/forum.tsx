@@ -21,6 +21,7 @@ import { ScrollView } from "react-native-gesture-handler";
 
 export default function Forum() {
   const [publicacoes, setPublicacoes] = useState<IPublicacao[]>([]);
+  const [showCarregarMais, setShowCarregarMais] = useState(true);
   const [loading, setLoading] = useState(true);
   const [loadingCarregarMais, setLoadingCarregarMais] = useState(true);
   const [usuario, setUsuario] = useState<IUser | null>(null);
@@ -56,6 +57,11 @@ export default function Forum() {
     getAllPublicacao(offset, { titulo, isReported }, order)
       .then((response) => {
         const newPublicacoes = response.data as IPublicacao[];
+
+        if (newPublicacoes.length === 0) {
+          setShowCarregarMais(false);
+        }
+
         setPublicacoes([...anterior, ...newPublicacoes]);
       })
       .catch((err) => {
@@ -78,11 +84,13 @@ export default function Forum() {
   };
 
   const handlePesquisar = (newTitulo: string) => {
+    setShowCarregarMais(true);
     setLoading(true);
     getPublicacoes([], newTitulo, isReported, 0);
   };
 
   const handleReports = (newValue: boolean) => {
+    setShowCarregarMais(true);
     setLoading(true);
     getPublicacoes([], titulo, newValue, 0);
   };
@@ -147,20 +155,24 @@ export default function Forum() {
             </View>
           ))}
 
-          {publicacoes.length > 0 && publicacoes.length % 10 === 0 && (
-            <Pressable
-              style={styles.botaoCarregarMais}
-              onPress={handleCarregarMais}
-            >
-              {loadingCarregarMais && (
-                <ActivityIndicator size="small" color="#2CCDB5" />
-              )}
+          {publicacoes.length > 0 &&
+            publicacoes.length % 10 === 0 &&
+            showCarregarMais && (
+              <Pressable
+                style={styles.botaoCarregarMais}
+                onPress={handleCarregarMais}
+              >
+                {loadingCarregarMais && (
+                  <ActivityIndicator size="small" color="#2CCDB5" />
+                )}
 
-              {!loadingCarregarMais && (
-                <Text style={styles.botaoCarregarMaisText}>Carregar mais</Text>
-              )}
-            </Pressable>
-          )}
+                {!loadingCarregarMais && (
+                  <Text style={styles.botaoCarregarMaisText}>
+                    Carregar mais
+                  </Text>
+                )}
+              </Pressable>
+            )}
         </ScrollView>
       )}
     </View>
