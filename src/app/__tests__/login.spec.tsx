@@ -1,7 +1,9 @@
-import React from "react";
-import { render, fireEvent } from "@testing-library/react-native";
-import Login from "../public/login";
 import "@react-native-async-storage/async-storage/jest/async-storage-mock";
+
+import { fireEvent, render } from "@testing-library/react-native";
+
+import Login from "../public/login";
+import React from "react";
 
 jest.mock("@react-native-async-storage/async-storage", () => ({
   setItem: jest.fn(),
@@ -17,9 +19,13 @@ describe("Login Component", () => {
     const passwordInput = getByPlaceholderText("Senha");
     const loginButton = getByText("Entrar");
 
+    // Use fireEvent para interagir com o componente
     fireEvent.changeText(emailInput, "seuemail@gmail.com");
     fireEvent.changeText(passwordInput, "suasenha");
     fireEvent.press(loginButton);
+
+    // Adicione asserções para verificar o comportamento esperado
+    // Por exemplo, você pode verificar se uma ação ocorreu após o pressionamento do botão
   });
 
   it("deve lidar com campos vazios e inválidos", () => {
