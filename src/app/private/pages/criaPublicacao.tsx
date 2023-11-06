@@ -63,7 +63,6 @@ export default function CriaPublicacao() {
       descricao,
       dataHora: new Date(),
       categoria: categoria as ECategoriaPublicacao,
-      contagemReportes: 0,
     };
 
     try {

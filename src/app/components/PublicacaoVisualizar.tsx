@@ -50,7 +50,7 @@ export default function PublicacaoVisualizar({ item }: Readonly<IProps>) {
       <View style={styles.secondUnderInfo}>
         <View style={styles.reports}>
           <AntDesing name="warning" size={18} color="#FFCC00" />
-          <Text style={styles.reportsText}>{item.contagemReportes}</Text>
+          <Text style={styles.reportsText}>{item.idUsuarioReporte.length}</Text>
         </View>
       </View>
     </View>

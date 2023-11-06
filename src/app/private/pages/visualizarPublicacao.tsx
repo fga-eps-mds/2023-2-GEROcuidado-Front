@@ -11,7 +11,10 @@ import {
 import AntDesing from "react-native-vector-icons/AntDesign";
 
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
-import { IPublicacao } from "../../interfaces/forum.interface";
+import {
+  IPublicacaoParams,
+  IPublicacaoUsuario,
+} from "../../interfaces/forum.interface";
 import { IUser } from "../../interfaces/user.interface";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import PublicacaoVisualizar from "../../components/PublicacaoVisualizar";
@@ -24,6 +27,7 @@ import {
 import Toast from "react-native-toast-message";
 
 export default function VisualizarPublicacao() {
+  const params = useLocalSearchParams() as unknown as IPublicacaoParams;
   const [idUsuario, setIdUsuario] = useState<number | null>(null);
   const [isAdmin, setIsAdmin] = useState<boolean | null>(null);
   const [modalVisibleApagar, setModalVisibleApagar] = useState(false);
@@ -31,7 +35,21 @@ export default function VisualizarPublicacao() {
   const [showLoadingApagar, setShowLoadingApagar] = useState(false);
   const [showLoadingReportar, setShowLoadingReportar] = useState(false);
   const [token, setToken] = useState<string>("");
-  const item = useLocalSearchParams() as unknown as IPublicacao & IUser;
+  const [publicacao, setPublicacao] = useState<IPublicacaoUsuario | null>(null);
+
+  const mapIdUsuarioReporte = (payload: string) => {
+    if (!payload) return [];
+
+    return payload.split(",").map((item) => Number(item));
+  };
+
+  const getPublicacaoFromParams = () => {
+    const payload: IPublicacaoUsuario = {
+      ...params,
+      idUsuarioReporte: mapIdUsuarioReporte(params.idUsuarioReporte),
+    };
+    setPublicacao(payload);
+  };
 
   const getUsuario = () => {
     AsyncStorage.getItem("usuario").then((response) => {
@@ -47,13 +65,10 @@ export default function VisualizarPublicacao() {
     });
   };
 
-  useEffect(() => getUsuario());
-  useEffect(() => getToken());
-
   const editarPublicacao = () => {
     router.push({
       pathname: "/private/pages/editarPublicacao",
-      params: item,
+      params: publicacao as IPublicacaoUsuario,
     });
   };
 
@@ -61,8 +76,10 @@ export default function VisualizarPublicacao() {
     setModalVisibleApagar(false);
     setShowLoadingApagar(true);
 
+    const id = (publicacao as IPublicacaoUsuario).id;
+
     try {
-      await deletePublicacaoById(item.id, token);
+      await deletePublicacaoById(id, token);
       router.replace("/private/tabs/forum");
     } catch (err) {
       const error = err as { message: string };
@@ -80,10 +97,21 @@ export default function VisualizarPublicacao() {
     setShowLoadingReportar(true);
     setModalVisibleReportar(false);
 
+    const publicacaoLoaded = publicacao as IPublicacaoUsuario;
+
+    const body = {
+      idUsuarioReporte: [
+        ...publicacaoLoaded.idUsuarioReporte,
+        Number(idUsuario),
+      ],
+    };
+
     try {
-      const body = { contagemReportes: +item.contagemReportes + 1 };
-      const response = await updatePublicacao(item.id, body, token);
-      item.contagemReportes = Number(response.data?.contagemReportes);
+      const response = await updatePublicacao(publicacaoLoaded.id, body, token);
+      setPublicacao({
+        ...publicacao,
+        ...(response.data as IPublicacaoUsuario),
+      });
     } catch (err) {
       const error = err as { message: string };
       Toast.show({
@@ -96,6 +124,10 @@ export default function VisualizarPublicacao() {
     }
   };
 
+  useEffect(() => getPublicacaoFromParams(), []);
+  useEffect(() => getUsuario(), []);
+  useEffect(() => getToken(), []);
+
   return (
     <View>
       <View style={styles.header}>
@@ -106,7 +138,7 @@ export default function VisualizarPublicacao() {
 
       <ScrollView>
         <View style={styles.actions}>
-          {(isAdmin || item.idUsuario == idUsuario) && (
+          {(isAdmin || publicacao?.idUsuario == idUsuario) && (
             <Pressable
               onPress={() => setModalVisibleApagar(true)}
               style={[styles.actionButton, styles.deleteButton]}
@@ -124,23 +156,25 @@ export default function VisualizarPublicacao() {
             </Pressable>
           )}
 
-          <Pressable
-            onPress={() => setModalVisibleReportar(true)}
-            style={[styles.actionButton, styles.reportButton]}
-          >
-            {showLoadingReportar && (
-              <ActivityIndicator size="small" color="#FFF" />
-            )}
+          {idUsuario && !publicacao?.idUsuarioReporte.includes(idUsuario) && (
+            <Pressable
+              onPress={() => setModalVisibleReportar(true)}
+              style={[styles.actionButton, styles.reportButton]}
+            >
+              {showLoadingReportar && (
+                <ActivityIndicator size="small" color="#FFF" />
+              )}
 
-            {!showLoadingReportar && (
-              <>
-                <Text style={styles.actionButtonText}>Reportar</Text>
-                <AntDesing name="warning" size={18} color="white" />
-              </>
-            )}
-          </Pressable>
+              {!showLoadingReportar && (
+                <>
+                  <Text style={styles.actionButtonText}>Reportar</Text>
+                  <AntDesing name="warning" size={18} color="white" />
+                </>
+              )}
+            </Pressable>
+          )}
 
-          {idUsuario && item.idUsuario == idUsuario && (
+          {idUsuario && publicacao?.idUsuario == idUsuario && (
             <Pressable
               onPress={editarPublicacao}
               style={[styles.actionButton, styles.editButton]}
@@ -151,7 +185,7 @@ export default function VisualizarPublicacao() {
           )}
         </View>
 
-        <PublicacaoVisualizar item={item} />
+        {publicacao && <PublicacaoVisualizar item={publicacao} />}
       </ScrollView>
 
       <ModalConfirmation
