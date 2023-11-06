@@ -3,6 +3,7 @@ import { View, Image, Text, StyleSheet, Pressable } from "react-native";
 import { IPublicacao } from "../interfaces/forum.interface";
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
 import { router } from "expo-router";
+import AntDesing from "react-native-vector-icons/AntDesign";
 
 interface IProps {
   item: IPublicacao;
@@ -79,6 +80,12 @@ export default function Publicacao({ item, crop }: Readonly<IProps>) {
         </View>
       </View>
       <Text style={styles.postContent}>{getDescricao(item.descricao)}</Text>
+      <View style={styles.underInfo}>
+        <View style={styles.reports}>
+          <AntDesing name="warning" size={18} color="#FFCC00" />
+          <Text style={styles.reportsText}>{item.contagemReportes}</Text>
+        </View>
+      </View>
     </Pressable>
   );
 }
@@ -150,5 +157,19 @@ const styles = StyleSheet.create({
     color: "#000000",
     opacity: 0.5,
     fontSize: 13,
+  },
+  underInfo: {
+    flexDirection: "row",
+    justifyContent: "flex-end",
+    width: "100%",
+    marginTop: 10,
+  },
+  reports: {
+    flexDirection: "row",
+    alignItems: "center",
+  },
+  reportsText: {
+    color: "#FFCC00",
+    marginLeft: 3,
   },
 });
