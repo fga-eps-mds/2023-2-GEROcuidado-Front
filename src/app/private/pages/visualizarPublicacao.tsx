@@ -1,6 +1,15 @@
 import { router, useLocalSearchParams } from "expo-router";
 import React, { useEffect, useState } from "react";
-import { Pressable, ScrollView, StyleSheet, Text, View } from "react-native";
+import {
+  ActivityIndicator,
+  Pressable,
+  ScrollView,
+  StyleSheet,
+  Text,
+  View,
+} from "react-native";
+import AntDesing from "react-native-vector-icons/AntDesign";
+
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
 import { IPublicacao } from "../../interfaces/forum.interface";
 import { IUser } from "../../interfaces/user.interface";
@@ -8,34 +17,27 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import PublicacaoVisualizar from "../../components/PublicacaoVisualizar";
 import BackButton from "../../components/BackButton";
 import ModalConfirmation from "../../components/ModalConfirmation";
-import { deletePublicacaoById } from "../../services/forum.service";
+import {
+  deletePublicacaoById,
+  updatePublicacao,
+} from "../../services/forum.service";
 import Toast from "react-native-toast-message";
 
 export default function VisualizarPublicacao() {
   const [idUsuario, setIdUsuario] = useState<number | null>(null);
-  const [adminUsuario, setAdminUsuario] = useState<boolean>();
+  const [isAdmin, setIsAdmin] = useState<boolean | null>(null);
   const [modalVisibleApagar, setModalVisibleApagar] = useState(false);
+  const [modalVisibleReportar, setModalVisibleReportar] = useState(false);
+  const [showLoadingApagar, setShowLoadingApagar] = useState(false);
+  const [showLoadingReportar, setShowLoadingReportar] = useState(false);
   const [token, setToken] = useState<string>("");
   const item = useLocalSearchParams() as unknown as IPublicacao & IUser;
 
-  const getIdUsuario = () => {
+  const getUsuario = () => {
     AsyncStorage.getItem("usuario").then((response) => {
       const usuario = JSON.parse(response as string) as IUser;
       setIdUsuario(usuario?.id);
-    });
-  };
-
-  const navigate = () => {
-    router.push({
-      pathname: "/private/pages/editarPublicacao",
-      params: item,
-    });
-  };
-
-  const getAdminUsuario = () => {
-    AsyncStorage.getItem("usuario").then((response) => {
-      const usuario = JSON.parse(response as string) as IUser;
-      setAdminUsuario(usuario?.admin);
+      setIsAdmin(usuario?.admin);
     });
   };
 
@@ -45,19 +47,22 @@ export default function VisualizarPublicacao() {
     });
   };
 
-  useEffect(() => getIdUsuario());
+  useEffect(() => getUsuario());
   useEffect(() => getToken());
-  useEffect(() => getAdminUsuario(), []);
+
+  const editarPublicacao = () => {
+    router.push({
+      pathname: "/private/pages/editarPublicacao",
+      params: item,
+    });
+  };
 
   const apagarPublicacao = async () => {
+    setModalVisibleApagar(false);
+    setShowLoadingApagar(true);
+
     try {
-      //setShowLoadingApagar(true);
-      const response = await deletePublicacaoById(item.id, token);
-      Toast.show({
-        type: "success",
-        text1: "Sucesso!",
-        text2: response.message as string,
-      });
+      await deletePublicacaoById(item.id, token);
       router.replace("/private/tabs/forum");
     } catch (err) {
       const error = err as { message: string };
@@ -67,16 +72,28 @@ export default function VisualizarPublicacao() {
         text2: error.message,
       });
     } finally {
-      //setShowLoadingApagar(false);
+      setShowLoadingApagar(false);
     }
   };
 
-  const confirmationApagar = () => {
-    setModalVisibleApagar(!modalVisibleApagar);
-  };
+  const reportarPublicacao = async () => {
+    setShowLoadingReportar(true);
+    setModalVisibleReportar(false);
 
-  const closeModal = () => {
-    setModalVisibleApagar(false);
+    try {
+      const body = { contagemReportes: +item.contagemReportes + 1 };
+      const response = await updatePublicacao(item.id, body, token);
+      item.contagemReportes = Number(response.data?.contagemReportes);
+    } catch (err) {
+      const error = err as { message: string };
+      Toast.show({
+        type: "error",
+        text1: "Erro!",
+        text2: error.message,
+      });
+    } finally {
+      setShowLoadingReportar(false);
+    }
   };
 
   return (
@@ -88,34 +105,84 @@ export default function VisualizarPublicacao() {
       </View>
 
       <ScrollView>
+        <View style={styles.actions}>
+          {(isAdmin || item.idUsuario == idUsuario) && (
+            <Pressable
+              onPress={() => setModalVisibleApagar(true)}
+              style={[styles.actionButton, styles.deleteButton]}
+            >
+              {showLoadingApagar && (
+                <ActivityIndicator size="small" color="#FFF" />
+              )}
+
+              {!showLoadingApagar && (
+                <>
+                  <Text style={styles.actionButtonText}>Apagar</Text>
+                  <Icon name="delete" size={18} color={"white"} />
+                </>
+              )}
+            </Pressable>
+          )}
+
+          <Pressable
+            onPress={() => setModalVisibleReportar(true)}
+            style={[styles.actionButton, styles.reportButton]}
+          >
+            {showLoadingReportar && (
+              <ActivityIndicator size="small" color="#FFF" />
+            )}
+
+            {!showLoadingReportar && (
+              <>
+                <Text style={styles.actionButtonText}>Reportar</Text>
+                <AntDesing name="warning" size={18} color="white" />
+              </>
+            )}
+          </Pressable>
+
+          {idUsuario && item.idUsuario == idUsuario && (
+            <Pressable
+              onPress={editarPublicacao}
+              style={[styles.actionButton, styles.editButton]}
+            >
+              <Text style={styles.actionButtonText}>Editar</Text>
+              <Icon name="pencil" size={18} color={"white"} />
+            </Pressable>
+          )}
+        </View>
+
         <PublicacaoVisualizar item={item} />
-
-        {idUsuario && item.idUsuario == idUsuario && (
-          <Pressable onPress={navigate} style={styles.editar}>
-            <Text style={styles.textoEditar}>Editar</Text>
-            <Icon name="pencil" size={20} color={"white"} />
-          </Pressable>
-        )}
-
-        {adminUsuario && (
-          <Pressable onPress={confirmationApagar}>
-            <Text style={styles.apagar}>Apagar publicação</Text>
-          </Pressable>
-        )}
-
-        <ModalConfirmation
-          visible={modalVisibleApagar}
-          callbackFn={apagarPublicacao}
-          closeModal={closeModal}
-          message="Apagar publicação?"
-          messageButton="Apagar"
-        />
       </ScrollView>
+
+      <ModalConfirmation
+        visible={modalVisibleApagar}
+        callbackFn={apagarPublicacao}
+        closeModal={() => setModalVisibleApagar(false)}
+        message="Apagar publicação?"
+        messageButton="Apagar"
+      />
+
+      <ModalConfirmation
+        visible={modalVisibleReportar}
+        callbackFn={reportarPublicacao}
+        closeModal={() => setModalVisibleReportar(false)}
+        message="Reportar publicação?"
+        messageButton="Reportar"
+      />
     </View>
   );
 }
 
 const styles = StyleSheet.create({
+  actions: {
+    flex: 1,
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
+    width: "100%",
+    padding: 10,
+    paddingBottom: 5,
+  },
   header: {
     backgroundColor: "#2CCDB5",
     height: 60,
@@ -131,27 +198,32 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     justifyContent: "space-between",
   },
-  editar: {
-    backgroundColor: "#2CCDB5",
+  actionButton: {
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "center",
     padding: 5,
-    marginLeft: "auto",
-    marginRight: "auto",
-    marginTop: 20,
-    marginBottom: 20,
-    borderRadius: 12,
-    width: 200,
+    borderRadius: 5,
+    width: 110,
     shadowColor: "#333",
     shadowOffset: { width: 0, height: 1 },
     shadowOpacity: 0.5,
     shadowRadius: 2,
   },
-  textoEditar: {
+  editButton: {
+    backgroundColor: "#2CCDB5",
+  },
+  deleteButton: {
+    backgroundColor: "#FF7F7F",
+  },
+  reportButton: {
+    backgroundColor: "#FFCC00",
+  },
+  actionButtonText: {
     color: "white",
-    fontSize: 18,
-    margin: 5,
+    fontSize: 13,
+    fontWeight: "700",
+    marginRight: 5,
   },
   botaoResponder: {
     backgroundColor: "#B4026D",

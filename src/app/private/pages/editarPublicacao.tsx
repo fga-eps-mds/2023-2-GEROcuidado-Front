@@ -7,7 +7,6 @@ import {
   Text,
   TextInput,
   Pressable,
-  ActivityIndicator,
   Platform,
 } from "react-native";
 import { SelectList } from "react-native-dropdown-select-list";
@@ -20,12 +19,8 @@ import {
 } from "../../interfaces/forum.interface";
 import { IUser } from "../../interfaces/user.interface";
 import Toast from "react-native-toast-message";
-import {
-  deletePublicacaoById,
-  updatePublicacao,
-} from "../../services/forum.service";
+import { updatePublicacao } from "../../services/forum.service";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import ModalConfirmation from "../../components/ModalConfirmation";
 
 interface IErrors {
   titulo?: string;
@@ -41,9 +36,7 @@ export default function EditarPublicacao() {
   const [categoria, setCategoria] = useState(item.categoria);
   const [erros, setErros] = useState<IErrors>({});
   const [showErrors, setShowErrors] = useState(false);
-  const [modalVisible, setModalVisible] = useState(false);
   const [showLoading, setShowLoading] = useState(false);
-  const [showLoadingApagar, setShowLoadingApagar] = useState(false);
   const [token, setToken] = useState("");
 
   const getToken = () => {
@@ -86,33 +79,6 @@ export default function EditarPublicacao() {
     }
   };
 
-  const apagarPublicacao = async () => {
-    setModalVisible(false);
-    setShowLoadingApagar(true);
-
-    try {
-      const response = await deletePublicacaoById(item.id, token);
-      Toast.show({
-        type: "success",
-        text1: "Sucesso!",
-        text2: response.message as string,
-      });
-      router.replace("/private/tabs/forum");
-    } catch (err) {
-      const error = err as { message: string };
-      Toast.show({
-        type: "error",
-        text1: "Erro!",
-        text2: error.message,
-      });
-    } finally {
-      setShowLoadingApagar(false);
-    }
-  };
-
-  useEffect(() => handleErrors, [titulo, descricao, categoria]);
-  useEffect(() => getToken());
-
   const handleErrors = () => {
     const erros: IErrors = {};
 
@@ -148,19 +114,20 @@ export default function EditarPublicacao() {
     },
   ];
 
-  const navigate = () => {
-    const params = { ...item, ...item.usuario, id: item.id };
-
+  const goBack = () => {
     router.push({
       pathname: "/private/pages/visualizarPublicacao",
-      params: params,
+      params: item,
     });
   };
+
+  useEffect(() => handleErrors, [titulo, descricao, categoria]);
+  useEffect(() => getToken());
 
   return (
     <View>
       <View style={styles.header}>
-        <Pressable onPress={navigate}>
+        <Pressable onPress={goBack}>
           <Icon
             name="chevron-left"
             size={40}
@@ -221,30 +188,8 @@ export default function EditarPublicacao() {
               showLoading={showLoading}
             />
           </View>
-
-          <Pressable onPress={() => setModalVisible(true)}>
-            {showLoadingApagar && (
-              <ActivityIndicator
-                style={styles.apagar}
-                size="small"
-                color="#FF7F7F"
-              />
-            )}
-
-            {!showLoadingApagar && (
-              <Text style={styles.apagar}>Apagar Publicação</Text>
-            )}
-          </Pressable>
         </View>
       </ScrollView>
-
-      <ModalConfirmation
-        visible={modalVisible}
-        callbackFn={apagarPublicacao}
-        closeModal={() => setModalVisible(false)}
-        message="Apagar publicação?"
-        messageButton="Apagar"
-      />
     </View>
   );
 }

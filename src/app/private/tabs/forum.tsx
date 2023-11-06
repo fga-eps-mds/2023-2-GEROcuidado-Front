@@ -2,6 +2,7 @@ import {
   ActivityIndicator,
   Pressable,
   StyleSheet,
+  Switch,
   Text,
   View,
 } from "react-native";
@@ -22,11 +23,11 @@ export default function Forum() {
   const [publicacoes, setPublicacoes] = useState<IPublicacao[]>([]);
   const [loading, setLoading] = useState(true);
   const [loadingCarregarMais, setLoadingCarregarMais] = useState(true);
-  const [idUsuario, setIdUsuario] = useState<number | null>(null);
-  const [adminUsuario, setAdminUsuario] = useState<boolean>();
+  const [usuario, setUsuario] = useState<IUser | null>(null);
   const [offset, setOffset] = useState(0);
   const [titulo, setTitulo] = useState("");
   const [timer, setTimer] = useState<NodeJS.Timeout | null>(null);
+  const [isReported, setIsReported] = useState(false);
   const order: IOrder = {
     column: "dataHora",
     dir: "DESC",
@@ -35,33 +36,24 @@ export default function Forum() {
   const novaPublicacao = () => {
     router.push("private/pages/criaPublicacao");
   };
-  const reports = () => {
-    router.push("private/pages/reports/adm_reports");
-  };
 
-  const getIdUsuario = () => {
+  const getUsuario = () => {
     AsyncStorage.getItem("usuario").then((response) => {
       const usuario = JSON.parse(response as string) as IUser;
-      setIdUsuario(usuario?.id);
-    });
-  };
-
-  const getAdminUsuario = () => {
-    AsyncStorage.getItem("usuario").then((response) => {
-      const usuario = JSON.parse(response as string) as IUser;
-      setAdminUsuario(usuario?.admin);
+      setUsuario(usuario);
     });
   };
 
   const getPublicacoes = (
     anterior: IPublicacao[],
     titulo: string,
+    isReported: boolean,
     offset: number,
   ) => {
     setOffset(offset);
     setTitulo(titulo);
 
-    getAllPublicacao(offset, { titulo }, order)
+    getAllPublicacao(offset, { titulo, isReported }, order)
       .then((response) => {
         const newPublicacoes = response.data as IPublicacao[];
         setPublicacoes([...anterior, ...newPublicacoes]);
@@ -82,12 +74,24 @@ export default function Forum() {
 
   const handleCarregarMais = () => {
     setLoadingCarregarMais(true);
-    getPublicacoes(publicacoes, titulo, offset + 1);
+    getPublicacoes(publicacoes, titulo, isReported, offset + 1);
   };
 
   const handlePesquisar = (newTitulo: string) => {
     setLoading(true);
-    getPublicacoes([], newTitulo, 0);
+    getPublicacoes([], newTitulo, isReported, 0);
+  };
+
+  const handleReports = (newValue: boolean) => {
+    setLoading(true);
+    getPublicacoes([], titulo, newValue, 0);
+  };
+
+  const debounceReports = (newTitulo: boolean) => {
+    setIsReported(newTitulo);
+    if (timer) clearTimeout(timer);
+    const temp = setTimeout(() => handleReports(newTitulo), 1000);
+    setTimer(temp);
   };
 
   const debouncePesquisar = (newTitulo: string) => {
@@ -96,9 +100,8 @@ export default function Forum() {
     setTimer(temp);
   };
 
-  useEffect(() => getIdUsuario(), []);
-  useEffect(() => getAdminUsuario(), []);
-  useEffect(() => getPublicacoes([], "", 0), []);
+  useEffect(() => getUsuario(), []);
+  useEffect(() => getPublicacoes([], "", false, 0), []);
 
   return (
     <View style={styles.scrollView}>
@@ -108,17 +111,18 @@ export default function Forum() {
       </View>
 
       <View style={styles.botoes}>
-        {idUsuario && adminUsuario && (
-          <View style={styles.reportada}>
-            <Pressable
-              style={styles.botaoPublicacaoReportada}
-              onPress={reports}
-            >
-              <Text style={styles.textoBotaoPesquisar}>Reportes </Text>
-            </Pressable>
+        {usuario?.id && usuario?.admin && (
+          <View style={styles.reportadas}>
+            <Switch
+              trackColor={{ false: "#767577", true: "#2CCDB5" }}
+              onValueChange={debounceReports}
+              value={isReported}
+            />
+            <Text style={styles.reportadasText}>Publicações reportadas</Text>
           </View>
         )}
-        {idUsuario && (
+
+        {usuario?.id && (
           <Pressable
             style={styles.botaoCriarPublicacao}
             onPress={novaPublicacao}
@@ -164,6 +168,20 @@ export default function Forum() {
 }
 
 const styles = StyleSheet.create({
+  reportadas: {
+    flex: 1,
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "flex-start",
+    marginVertical: 10,
+    marginLeft: 10,
+    fontWeight: "700",
+  },
+  reportadasText: {
+    fontWeight: "400",
+    marginLeft: 7,
+    fontSize: 12,
+  },
   loading: {
     flexDirection: "row",
     alignItems: "center",
