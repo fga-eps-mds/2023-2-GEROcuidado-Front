@@ -1,27 +1,39 @@
 # GEROcuidado Mobile App
 
-## Como instalar
+## Como rodar o projeto
 
-#### Clone o repositório
-
-```
-clone fga-eps-mds/2023-2-GEROcuidado-Front
-```
-
-#### Instale as dependências
-```
-npm install
-```
-#### Instalando o expo
-```
-npm install expo-cli --global
+1. Clonar o repositório:
+```bash
+git clone https://github.com/fga-eps-mds/2023-2-GEROcuidado-Front.git
 ```
 
-#### instale as dependências
+2. Ir para a pasta do projeto:
+```bash
+cd 2023-2-GEROcuidado-Front/
 ```
-npx expo start
 
+3. Rodar o container:
+- em ambiente de dev:
+```bash
+docker compose up
 ```
+
+- em ambiente de prod:
+```bash
+NODE_ENV=production docker compose up
+```
+
+### OBSERVAÇÃO IMPORTANTE
+
+Para testar a aplicação no celular, basta subir o container com os passos acima, ter baixado no seu dispositivo o aplicativo EXPO GO e por fim acessar o link exp://192.168.0.9:8081 no seu navegador. (A aplicação não aparecerá automaticamente no aplicativo do EXPO GO, é necessário acessar o link)
+
+## Testes Unitários
+
+Para rodar os testes unitários, basta executar o comando:
+```bash
+docker compose -f docker-compose.test.yml up
+```
+
 ## QR Code para testes
 ### IOS
 ![IOS](assets/testes/ios_27-10.png.jpeg)
