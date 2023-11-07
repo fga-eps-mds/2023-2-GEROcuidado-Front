@@ -1,0 +1,12 @@
+version: '3.7'
+services:
+  gerocuidado-usuario-front:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: gerocuidado-usuario-front
+    ports:
+      - '8081:8081'
+    volumes:
+      - ./:/app
+      - /app/node_modules
