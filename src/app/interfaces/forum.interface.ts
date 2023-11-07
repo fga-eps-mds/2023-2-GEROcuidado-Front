@@ -13,18 +13,25 @@ export interface IPublicacaoBody {
   descricao: string;
   dataHora: Date | string;
   categoria: ECategoriaPublicacao;
-  contagemReportes: number;
 }
 
 export interface IPublicacao extends IPublicacaoBody {
   id: number;
   usuario?: IUser;
+  idUsuarioReporte: number[];
+}
+
+export interface IPublicacaoParams extends IPublicacaoBody, IUser {
+  id: number;
+  usuario?: IUser;
+  idUsuarioReporte: string;
 }
 
 export interface IPublicacaoUsuario extends IPublicacao, IUser {}
 
 export interface IPublicacaoFilter {
   titulo?: string;
+  isReported?: boolean;
 }
 
 export interface IOrder {

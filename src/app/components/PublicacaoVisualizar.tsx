@@ -2,6 +2,7 @@ import React from "react";
 import { View, Image, Text, StyleSheet } from "react-native";
 import { IPublicacaoUsuario } from "../interfaces/forum.interface";
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
+import AntDesing from "react-native-vector-icons/AntDesign";
 
 interface IProps {
   item: IPublicacaoUsuario;
@@ -45,6 +46,12 @@ export default function PublicacaoVisualizar({ item }: Readonly<IProps>) {
       <View style={styles.underInfo}>
         <Text style={styles.categoria}>{item.categoria}</Text>
         <Text style={styles.date}>{getFormattedDate(item.dataHora)}</Text>
+      </View>
+      <View style={styles.secondUnderInfo}>
+        <View style={styles.reports}>
+          <AntDesing name="warning" size={18} color="#FFCC00" />
+          <Text style={styles.reportsText}>{item.idUsuarioReporte.length}</Text>
+        </View>
       </View>
     </View>
   );
@@ -98,6 +105,20 @@ const styles = StyleSheet.create({
     width: "100%",
     justifyContent: "space-between",
     marginTop: 30,
+  },
+  secondUnderInfo: {
+    flexDirection: "row",
+    justifyContent: "flex-end",
+    width: "100%",
+    marginTop: 10,
+  },
+  reports: {
+    flexDirection: "row",
+    alignItems: "center",
+  },
+  reportsText: {
+    color: "#FFCC00",
+    marginLeft: 3,
   },
   semFoto: { position: "relative", backgroundColor: "#EFEFF0" },
   semFotoIcon: {

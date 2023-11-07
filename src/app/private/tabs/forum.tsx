@@ -2,6 +2,7 @@ import {
   ActivityIndicator,
   Pressable,
   StyleSheet,
+  Switch,
   Text,
   View,
 } from "react-native";
@@ -20,12 +21,14 @@ import { ScrollView } from "react-native-gesture-handler";
 
 export default function Forum() {
   const [publicacoes, setPublicacoes] = useState<IPublicacao[]>([]);
+  const [showCarregarMais, setShowCarregarMais] = useState(true);
   const [loading, setLoading] = useState(true);
   const [loadingCarregarMais, setLoadingCarregarMais] = useState(true);
-  const [idUsuario, setIdUsuario] = useState<number | null>(null);
+  const [usuario, setUsuario] = useState<IUser | null>(null);
   const [offset, setOffset] = useState(0);
   const [titulo, setTitulo] = useState("");
   const [timer, setTimer] = useState<NodeJS.Timeout | null>(null);
+  const [isReported, setIsReported] = useState(false);
   const order: IOrder = {
     column: "dataHora",
     dir: "DESC",
@@ -35,24 +38,30 @@ export default function Forum() {
     router.push("private/pages/criaPublicacao");
   };
 
-  const getIdUsuario = () => {
+  const getUsuario = () => {
     AsyncStorage.getItem("usuario").then((response) => {
       const usuario = JSON.parse(response as string) as IUser;
-      setIdUsuario(usuario?.id);
+      setUsuario(usuario);
     });
   };
 
   const getPublicacoes = (
     anterior: IPublicacao[],
     titulo: string,
+    isReported: boolean,
     offset: number,
   ) => {
     setOffset(offset);
     setTitulo(titulo);
 
-    getAllPublicacao(offset, { titulo }, order)
+    getAllPublicacao(offset, { titulo, isReported }, order)
       .then((response) => {
         const newPublicacoes = response.data as IPublicacao[];
+
+        if (newPublicacoes.length === 0) {
+          setShowCarregarMais(false);
+        }
+
         setPublicacoes([...anterior, ...newPublicacoes]);
       })
       .catch((err) => {
@@ -71,12 +80,26 @@ export default function Forum() {
 
   const handleCarregarMais = () => {
     setLoadingCarregarMais(true);
-    getPublicacoes(publicacoes, titulo, offset + 1);
+    getPublicacoes(publicacoes, titulo, isReported, offset + 1);
   };
 
   const handlePesquisar = (newTitulo: string) => {
+    setShowCarregarMais(true);
     setLoading(true);
-    getPublicacoes([], newTitulo, 0);
+    getPublicacoes([], newTitulo, isReported, 0);
+  };
+
+  const handleReports = (newValue: boolean) => {
+    setShowCarregarMais(true);
+    setLoading(true);
+    getPublicacoes([], titulo, newValue, 0);
+  };
+
+  const debounceReports = (newTitulo: boolean) => {
+    setIsReported(newTitulo);
+    if (timer) clearTimeout(timer);
+    const temp = setTimeout(() => handleReports(newTitulo), 1000);
+    setTimer(temp);
   };
 
   const debouncePesquisar = (newTitulo: string) => {
@@ -85,8 +108,8 @@ export default function Forum() {
     setTimer(temp);
   };
 
-  useEffect(() => getIdUsuario(), []);
-  useEffect(() => getPublicacoes([], "", 0), []);
+  useEffect(() => getUsuario(), []);
+  useEffect(() => getPublicacoes([], "", false, 0), []);
 
   return (
     <View style={styles.scrollView}>
@@ -95,12 +118,28 @@ export default function Forum() {
         <BarraPesquisa callbackFn={debouncePesquisar} />
       </View>
 
-      {idUsuario && (
-        <Pressable style={styles.botaoCriarPublicacao} onPress={novaPublicacao}>
-          <Icon name="plus" color={"white"} size={20}></Icon>
-          <Text style={styles.textoBotaoPesquisar}>Nova publicação</Text>
-        </Pressable>
-      )}
+      <View style={styles.botoes}>
+        {usuario?.id && usuario?.admin && (
+          <View style={styles.reportadas}>
+            <Switch
+              trackColor={{ false: "#767577", true: "#2CCDB5" }}
+              onValueChange={debounceReports}
+              value={isReported}
+            />
+            <Text style={styles.reportadasText}>Publicações reportadas</Text>
+          </View>
+        )}
+
+        {usuario?.id && (
+          <Pressable
+            style={styles.botaoCriarPublicacao}
+            onPress={novaPublicacao}
+          >
+            <Icon name="plus" color={"white"} size={20}></Icon>
+            <Text style={styles.textoBotaoPesquisar}>Nova publicação</Text>
+          </Pressable>
+        )}
+      </View>
 
       {loading && (
         <View style={styles.loading}>
@@ -116,20 +155,24 @@ export default function Forum() {
             </View>
           ))}
 
-          {publicacoes.length > 0 && publicacoes.length % 10 === 0 && (
-            <Pressable
-              style={styles.botaoCarregarMais}
-              onPress={handleCarregarMais}
-            >
-              {loadingCarregarMais && (
-                <ActivityIndicator size="small" color="#2CCDB5" />
-              )}
+          {publicacoes.length > 0 &&
+            publicacoes.length % 10 === 0 &&
+            showCarregarMais && (
+              <Pressable
+                style={styles.botaoCarregarMais}
+                onPress={handleCarregarMais}
+              >
+                {loadingCarregarMais && (
+                  <ActivityIndicator size="small" color="#2CCDB5" />
+                )}
 
-              {!loadingCarregarMais && (
-                <Text style={styles.botaoCarregarMaisText}>Carregar mais</Text>
-              )}
-            </Pressable>
-          )}
+                {!loadingCarregarMais && (
+                  <Text style={styles.botaoCarregarMaisText}>
+                    Carregar mais
+                  </Text>
+                )}
+              </Pressable>
+            )}
         </ScrollView>
       )}
     </View>
@@ -137,6 +180,20 @@ export default function Forum() {
 }
 
 const styles = StyleSheet.create({
+  reportadas: {
+    flex: 1,
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "flex-start",
+    marginVertical: 10,
+    marginLeft: 10,
+    fontWeight: "700",
+  },
+  reportadasText: {
+    fontWeight: "400",
+    marginLeft: 7,
+    fontSize: 12,
+  },
   loading: {
     flexDirection: "row",
     alignItems: "center",
@@ -197,6 +254,45 @@ const styles = StyleSheet.create({
     marginVertical: 25,
     height: 40,
   },
+  botaoPublicacaoReportada: {
+    flexDirection: "row",
+    alignItems: "center",
+    backgroundColor: "#2CCDB5",
+    padding: 5,
+    borderRadius: 14,
+  },
+  reportada: {
+    backgroundColor: "white",
+    padding: 10,
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+  },
+  avatar: {
+    height: 50,
+    width: 50,
+    borderRadius: 50,
+  },
+  postHeader: {
+    flexDirection: "row",
+    alignItems: "center",
+    padding: 15,
+  },
+  userInfo: {
+    marginLeft: 10,
+  },
+  username: {
+    fontSize: 20,
+  },
+  date: {
+    fontSize: 12,
+  },
+  postContent: {
+    fontSize: 15,
+    maxHeight: 100,
+    padding: 6,
+    textAlign: "justify",
+  },
   botaoCarregarMaisText: {
     color: "#2CCDB5",
     fontWeight: "600",
@@ -206,5 +302,8 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     justifyContent: "space-between",
     padding: 10,
+  },
+  botoes: {
+    flexDirection: "row",
   },
 });
