@@ -1,32 +1,132 @@
 import { router, useLocalSearchParams } from "expo-router";
 import React, { useEffect, useState } from "react";
-import { Pressable, ScrollView, StyleSheet, Text, View } from "react-native";
+import {
+  ActivityIndicator,
+  Pressable,
+  ScrollView,
+  StyleSheet,
+  Text,
+  View,
+} from "react-native";
+import AntDesing from "react-native-vector-icons/AntDesign";
+
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
-import { IPublicacao } from "../../interfaces/forum.interface";
+import {
+  IPublicacaoParams,
+  IPublicacaoUsuario,
+} from "../../interfaces/forum.interface";
 import { IUser } from "../../interfaces/user.interface";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import PublicacaoVisualizar from "../../components/PublicacaoVisualizar";
 import BackButton from "../../components/BackButton";
+import ModalConfirmation from "../../components/ModalConfirmation";
+import {
+  deletePublicacaoById,
+  updatePublicacao,
+} from "../../services/forum.service";
+import Toast from "react-native-toast-message";
 
 export default function VisualizarPublicacao() {
+  const params = useLocalSearchParams() as unknown as IPublicacaoParams;
   const [idUsuario, setIdUsuario] = useState<number | null>(null);
-  const item = useLocalSearchParams() as unknown as IPublicacao & IUser;
+  const [isAdmin, setIsAdmin] = useState<boolean | null>(null);
+  const [modalVisibleApagar, setModalVisibleApagar] = useState(false);
+  const [modalVisibleReportar, setModalVisibleReportar] = useState(false);
+  const [showLoadingApagar, setShowLoadingApagar] = useState(false);
+  const [showLoadingReportar, setShowLoadingReportar] = useState(false);
+  const [token, setToken] = useState<string>("");
+  const [publicacao, setPublicacao] = useState<IPublicacaoUsuario | null>(null);
 
-  const getIdUsuario = () => {
+  const mapIdUsuarioReporte = (payload: string) => {
+    if (!payload) return [];
+
+    return payload.split(",").map((item) => Number(item));
+  };
+
+  const getPublicacaoFromParams = () => {
+    const payload: IPublicacaoUsuario = {
+      ...params,
+      idUsuarioReporte: mapIdUsuarioReporte(params.idUsuarioReporte),
+    };
+    setPublicacao(payload);
+  };
+
+  const getUsuario = () => {
     AsyncStorage.getItem("usuario").then((response) => {
       const usuario = JSON.parse(response as string) as IUser;
       setIdUsuario(usuario?.id);
+      setIsAdmin(usuario?.admin);
     });
   };
 
-  const navigate = () => {
+  const getToken = () => {
+    AsyncStorage.getItem("token").then((response) => {
+      setToken(response as string);
+    });
+  };
+
+  const editarPublicacao = () => {
     router.push({
       pathname: "/private/pages/editarPublicacao",
-      params: item,
+      params: publicacao as IPublicacaoUsuario,
     });
   };
 
-  useEffect(() => getIdUsuario());
+  const apagarPublicacao = async () => {
+    setModalVisibleApagar(false);
+    setShowLoadingApagar(true);
+
+    const id = (publicacao as IPublicacaoUsuario).id;
+
+    try {
+      await deletePublicacaoById(id, token);
+      router.replace("/private/tabs/forum");
+    } catch (err) {
+      const error = err as { message: string };
+      Toast.show({
+        type: "error",
+        text1: "Erro!",
+        text2: error.message,
+      });
+    } finally {
+      setShowLoadingApagar(false);
+    }
+  };
+
+  const reportarPublicacao = async () => {
+    setShowLoadingReportar(true);
+    setModalVisibleReportar(false);
+
+    const publicacaoLoaded = publicacao as IPublicacaoUsuario;
+
+    const body = {
+      idUsuarioReporte: [
+        ...publicacaoLoaded.idUsuarioReporte,
+        Number(idUsuario),
+      ],
+    };
+
+    try {
+      const response = await updatePublicacao(publicacaoLoaded.id, body, token);
+      setPublicacao({
+        ...publicacao,
+        ...(response.data as IPublicacaoUsuario),
+      });
+    } catch (err) {
+      const error = err as { message: string };
+      Toast.show({
+        type: "error",
+        text1: "Erro!",
+        text2: error.message,
+      });
+    } finally {
+      setShowLoadingReportar(false);
+    }
+  };
+
+  useEffect(() => getPublicacaoFromParams(), []);
+  useEffect(() => getUsuario(), []);
+  useEffect(() => getToken(), []);
 
   return (
     <View>
@@ -37,20 +137,86 @@ export default function VisualizarPublicacao() {
       </View>
 
       <ScrollView>
-        <PublicacaoVisualizar item={item} />
+        <View style={styles.actions}>
+          {(isAdmin || publicacao?.idUsuario == idUsuario) && (
+            <Pressable
+              onPress={() => setModalVisibleApagar(true)}
+              style={[styles.actionButton, styles.deleteButton]}
+            >
+              {showLoadingApagar && (
+                <ActivityIndicator size="small" color="#FFF" />
+              )}
 
-        {idUsuario && item.idUsuario == idUsuario && (
-          <Pressable onPress={navigate} style={styles.editar}>
-            <Text style={styles.textoEditar}>Editar</Text>
-            <Icon name="pencil" size={20} color={"white"} />
-          </Pressable>
-        )}
+              {!showLoadingApagar && (
+                <>
+                  <Text style={styles.actionButtonText}>Apagar</Text>
+                  <Icon name="delete" size={18} color={"white"} />
+                </>
+              )}
+            </Pressable>
+          )}
+
+          {idUsuario && !publicacao?.idUsuarioReporte.includes(idUsuario) && (
+            <Pressable
+              onPress={() => setModalVisibleReportar(true)}
+              style={[styles.actionButton, styles.reportButton]}
+            >
+              {showLoadingReportar && (
+                <ActivityIndicator size="small" color="#FFF" />
+              )}
+
+              {!showLoadingReportar && (
+                <>
+                  <Text style={styles.actionButtonText}>Reportar</Text>
+                  <AntDesing name="warning" size={18} color="white" />
+                </>
+              )}
+            </Pressable>
+          )}
+
+          {idUsuario && publicacao?.idUsuario == idUsuario && (
+            <Pressable
+              onPress={editarPublicacao}
+              style={[styles.actionButton, styles.editButton]}
+            >
+              <Text style={styles.actionButtonText}>Editar</Text>
+              <Icon name="pencil" size={18} color={"white"} />
+            </Pressable>
+          )}
+        </View>
+
+        {publicacao && <PublicacaoVisualizar item={publicacao} />}
       </ScrollView>
+
+      <ModalConfirmation
+        visible={modalVisibleApagar}
+        callbackFn={apagarPublicacao}
+        closeModal={() => setModalVisibleApagar(false)}
+        message="Apagar publicação?"
+        messageButton="Apagar"
+      />
+
+      <ModalConfirmation
+        visible={modalVisibleReportar}
+        callbackFn={reportarPublicacao}
+        closeModal={() => setModalVisibleReportar(false)}
+        message="Reportar publicação?"
+        messageButton="Reportar"
+      />
     </View>
   );
 }
 
 const styles = StyleSheet.create({
+  actions: {
+    flex: 1,
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
+    width: "100%",
+    padding: 10,
+    paddingBottom: 5,
+  },
   header: {
     backgroundColor: "#2CCDB5",
     height: 60,
@@ -66,27 +232,32 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     justifyContent: "space-between",
   },
-  editar: {
-    backgroundColor: "#2CCDB5",
+  actionButton: {
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "center",
     padding: 5,
-    marginLeft: "auto",
-    marginRight: "auto",
-    marginTop: 20,
-    marginBottom: 20,
-    borderRadius: 12,
-    width: 200,
+    borderRadius: 5,
+    width: 110,
     shadowColor: "#333",
     shadowOffset: { width: 0, height: 1 },
     shadowOpacity: 0.5,
     shadowRadius: 2,
   },
-  textoEditar: {
+  editButton: {
+    backgroundColor: "#2CCDB5",
+  },
+  deleteButton: {
+    backgroundColor: "#FF7F7F",
+  },
+  reportButton: {
+    backgroundColor: "#FFCC00",
+  },
+  actionButtonText: {
     color: "white",
-    fontSize: 18,
-    margin: 5,
+    fontSize: 13,
+    fontWeight: "700",
+    marginRight: 5,
   },
   botaoResponder: {
     backgroundColor: "#B4026D",
@@ -109,5 +280,12 @@ const styles = StyleSheet.create({
     color: "black",
     fontSize: 24,
     padding: 20,
+  },
+  apagar: {
+    color: "#FF7F7F",
+    alignSelf: "center",
+    fontSize: 18,
+    fontWeight: "600",
+    margin: 20,
   },
 });

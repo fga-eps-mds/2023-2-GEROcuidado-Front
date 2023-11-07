@@ -1,0 +1,198 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Home renderiza corretamente 1`] = `
+<View
+  style={
+    {
+      "alignItems": "center",
+      "flex": 1,
+      "justifyContent": "center",
+    }
+  }
+>
+  <Image
+    source={1}
+  />
+  <Text
+    style={
+      {
+        "fontSize": 37,
+        "fontWeight": "700",
+        "margin": 20,
+        "marginBottom": 70,
+        "textAlign": "center",
+      }
+    }
+  >
+     Seja um GEROcuidador! 
+  </Text>
+  <View
+    accessibilityState={
+      {
+        "busy": undefined,
+        "checked": undefined,
+        "disabled": undefined,
+        "expanded": undefined,
+        "selected": undefined,
+      }
+    }
+    accessibilityValue={
+      {
+        "max": undefined,
+        "min": undefined,
+        "now": undefined,
+        "text": undefined,
+      }
+    }
+    accessible={true}
+    collapsable={false}
+    focusable={true}
+    onBlur={[Function]}
+    onClick={[Function]}
+    onFocus={[Function]}
+    onResponderGrant={[Function]}
+    onResponderMove={[Function]}
+    onResponderRelease={[Function]}
+    onResponderTerminate={[Function]}
+    onResponderTerminationRequest={[Function]}
+    onStartShouldSetResponder={[Function]}
+    style={
+      {
+        "alignItems": "center",
+        "backgroundColor": "#2CCDB5",
+        "borderRadius": 20,
+        "marginBottom": 25,
+        "maxWidth": 350,
+        "paddingHorizontal": 26,
+        "paddingVertical": 16,
+        "width": "100%",
+      }
+    }
+    testID="link-button"
+  >
+    <Text
+      style={
+        {
+          "color": "white",
+          "fontSize": 18,
+          "fontWeight": "700",
+        }
+      }
+    >
+      Acessar Fórum
+    </Text>
+  </View>
+  <View
+    accessibilityState={
+      {
+        "busy": undefined,
+        "checked": undefined,
+        "disabled": undefined,
+        "expanded": undefined,
+        "selected": undefined,
+      }
+    }
+    accessibilityValue={
+      {
+        "max": undefined,
+        "min": undefined,
+        "now": undefined,
+        "text": undefined,
+      }
+    }
+    accessible={true}
+    collapsable={false}
+    focusable={true}
+    onBlur={[Function]}
+    onClick={[Function]}
+    onFocus={[Function]}
+    onResponderGrant={[Function]}
+    onResponderMove={[Function]}
+    onResponderRelease={[Function]}
+    onResponderTerminate={[Function]}
+    onResponderTerminationRequest={[Function]}
+    onStartShouldSetResponder={[Function]}
+    style={
+      {
+        "alignItems": "center",
+        "backgroundColor": "#2CCDB5",
+        "borderRadius": 20,
+        "marginBottom": 25,
+        "maxWidth": 350,
+        "paddingHorizontal": 26,
+        "paddingVertical": 16,
+        "width": "100%",
+      }
+    }
+    testID="link-button"
+  >
+    <Text
+      style={
+        {
+          "color": "white",
+          "fontSize": 18,
+          "fontWeight": "700",
+        }
+      }
+    >
+      Login
+    </Text>
+  </View>
+  <View
+    accessibilityState={
+      {
+        "busy": undefined,
+        "checked": undefined,
+        "disabled": undefined,
+        "expanded": undefined,
+        "selected": undefined,
+      }
+    }
+    accessibilityValue={
+      {
+        "max": undefined,
+        "min": undefined,
+        "now": undefined,
+        "text": undefined,
+      }
+    }
+    accessible={true}
+    collapsable={false}
+    focusable={true}
+    onBlur={[Function]}
+    onClick={[Function]}
+    onFocus={[Function]}
+    onResponderGrant={[Function]}
+    onResponderMove={[Function]}
+    onResponderRelease={[Function]}
+    onResponderTerminate={[Function]}
+    onResponderTerminationRequest={[Function]}
+    onStartShouldSetResponder={[Function]}
+    style={
+      {
+        "alignItems": "center",
+        "backgroundColor": "#B47B9D",
+        "borderRadius": 20,
+        "marginBottom": 25,
+        "maxWidth": 350,
+        "paddingHorizontal": 26,
+        "paddingVertical": 16,
+        "width": "100%",
+      }
+    }
+    testID="link-button"
+  >
+    <Text
+      style={
+        {
+          "color": "white",
+          "fontSize": 18,
+          "fontWeight": "700",
+        }
+      }
+    >
+      Cadastre-se
+    </Text>
+  </View>
+</View>
+`;
