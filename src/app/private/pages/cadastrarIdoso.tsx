@@ -18,10 +18,12 @@ import ErrorMessage from "../../components/ErrorMessage";
 import CustomButton from "../../components/CustomButton";
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
 import ModalConfirmation from "../../components/ModalConfirmation";
+import { SelectList } from "react-native-dropdown-select-list";
+import { ETipoSanguineo } from "../../interfaces/idoso.interface";
 
 interface IErrors {
   nome?: string;
-  //   dataNascimento:
+  dataNascimento?: string;
   tipoSanguineo?: string;
   telefoneResponsavel?: string;
   descricao?: string;
@@ -41,7 +43,11 @@ export default function CadastrarIdoso() {
   const [modalVisible, setModalVisible] = useState(false);
 
   const salvar = () => {
-    //TODO função de salvar idoso
+    if (Object.keys(erros).length > 0) {
+      setShowErrors(true);
+      return;
+    }
+    //TODO requisição pro back
   };
 
   const apagarIdoso = async () => {
@@ -56,10 +62,14 @@ export default function CadastrarIdoso() {
     setModalVisible(false);
   };
 
-  useEffect(() => handleErrors(), [nome, telefoneResponsavel]);
+  useEffect(
+    () => handleErrors(),
+    [nome, telefoneResponsavel, dataNascimento],
+  );
 
   const handleErrors = () => {
     const erros: IErrors = {};
+
     if (!nome) {
       erros.nome = "Campo obrigatório!";
     } else if (nome.length < 5) {
@@ -68,17 +78,49 @@ export default function CadastrarIdoso() {
       erros.nome = "O nome completo deve ter no máximo 60 caractéres.";
     }
 
-    // if(!dataNascimento){
-    //     erros.dataNascimento = "Campo obrigatório";
-    // }
+    if (!dataNascimento) {
+      erros.dataNascimento = "Campo obrigatório";
+    } else if (!/^\d{2}\/\d{2}\/\d{4}$/.test(dataNascimento)) {
+      erros.dataNascimento = "Data deve ser no formato dd/mm/yyyy!"
+    }
 
     if (!telefoneResponsavel) {
       erros.telefoneResponsavel = "Campo obrigatório!";
-    } else if (telefoneResponsavel.length < 11) {
+    } else if (!/^(\d{2})\d{5}-\d{4}$/.test(telefoneResponsavel)) {
       erros.telefoneResponsavel = "Deve estar no formato (XX)XXXXX-XXXX";
+      //TODO arrumar regex
     }
+
+    setErros(erros);
   };
 
+  const handleDataNascimento = (dataNascimento: string) => {
+    const cleanedDate = dataNascimento.replace(/\D/g, "");
+
+    if (cleanedDate.length <= 8) {
+      const formatedDate = cleanedDate
+        .slice(0, 2)
+        .concat('/', cleanedDate.slice(2, 4))
+        .concat('/', cleanedDate.slice(4, 8))
+
+      setDataNascimento(formatedDate)
+      console.log(formatedDate);
+    }
+  }
+
+  const data = [
+    { key: ETipoSanguineo.NENHUM, value: ETipoSanguineo.NENHUM},
+    { key: ETipoSanguineo.A_POSITIVO, value: ETipoSanguineo.A_POSITIVO },
+    { key: ETipoSanguineo.A_NEGATIVO, value: ETipoSanguineo.A_NEGATIVO },
+    { key: ETipoSanguineo.B_POSITIVO, value: ETipoSanguineo.B_POSITIVO },
+    { key: ETipoSanguineo.B_NEGATIVO, value: ETipoSanguineo.B_NEGATIVO },
+    { key: ETipoSanguineo.AB_POSITIVO, value: ETipoSanguineo.AB_POSITIVO },
+    { key: ETipoSanguineo.AB_NEGATIVO, value: ETipoSanguineo.AB_NEGATIVO },
+    { key: ETipoSanguineo.O_POSITIVO, value: ETipoSanguineo.O_POSITIVO },
+    { key: ETipoSanguineo.O_NEGATIVO, value: ETipoSanguineo.O_NEGATIVO },
+  ];
+
+ 
   return (
     <View>
       <BackButton route="/private/tabs/perfil" color="#000" />
@@ -107,26 +149,35 @@ export default function CadastrarIdoso() {
               size={20}
             />
             <TextInput
-              onChangeText={setDataNascimento}
+              onChangeText={handleDataNascimento}
               value={dataNascimento}
               placeholder="Data de Nascimento"
               style={styles.textInput}
             />
           </View>
-          {/* <ErrorMessage show={showErrors} text={erros.dataNascimento} /> */}
+          <ErrorMessage show={showErrors} text={erros.dataNascimento} />
         </View>
 
         <View style={styles.formControl}>
           <View style={styles.field}>
             <Fontisto style={styles.iconInput} name="blood-drop" size={20} />
-            <TextInput
+           {/*  <TextInput
               onChangeText={setTipoSanguineo}
               value={tipoSanguineo}
               placeholder="Tipo Sanguíneo"
               style={styles.bloodInput}
             />
-            <AntDesign style={styles.bloodIcon} name="down" size={20} />
-            {/* //TODO dropdown dos tipos sanguineos */}
+            <AntDesign style={styles.bloodIcon} name="down" size={20} /> */}
+            <View style={styles.formControl}>
+              <SelectList
+                boxStyles={styles.dropdown}
+                inputStyles={styles.textInput}
+                data={data}
+                setSelected={setTipoSanguineo}
+                placeholder="Tipo Sanguíneo"
+                search={false}
+                />
+            </View>
           </View>
           <ErrorMessage show={showErrors} text={erros.tipoSanguineo} />
         </View>
@@ -248,4 +299,11 @@ const styles = StyleSheet.create({
     fontSize: 18,
     fontWeight: "600",
   },
+  dropdown: {
+    width: 300,
+    borderWidth: 0,
+    paddingLeft: 10,
+    color: "#05375A",
+    fontSize: 17,
+  }
 });
