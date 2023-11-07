@@ -3,15 +3,12 @@
   "version": "1.0.0",
   "main": "expo-router/entry",
   "scripts": {
-    "start": "NODE_ENV=development expo start",
-    "android": "NODE_ENV=development expo start --android",
-    "ios": "NODE_ENV=development expo start --ios",
-    "web": "NODE_ENV=development expo start --web",
-    "start:prod": "NODE_ENV=production expo start --tunnel",
-    "android:prod": "NODE_ENV=production expo start --android",
-    "ios:prod": "NODE_ENV=production expo start --ios",
-    "web:prod": "NODE_ENV=production expo start --web",
-    "test": "jest",
+    "start": "expo start",
+    "start:tunnel": "expo start --tunnel",
+    "android": "expo start --android",
+    "ios": "expo start --ios",
+    "web": "expo start --web",
+    "test": "jest --forceExit --detectOpenHandles --colors --coverage",
     "lint": "eslint . --fix"
   },
   "dependencies": {
