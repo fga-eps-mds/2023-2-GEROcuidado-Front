@@ -23,9 +23,17 @@ docker compose up
 NODE_ENV=production docker compose up
 ```
 
-### OBSERVAÇÃO IMPORTANTE
+### OBSERVAÇÕES IMPORTANTES
 
-Para testar a aplicação no celular, basta subir o container com os passos acima, ter baixado no seu dispositivo o aplicativo EXPO GO e por fim acessar o link exp://192.168.0.9:8081 no seu navegador. (A aplicação não aparecerá automaticamente no aplicativo do EXPO GO, é necessário acessar o link)
+1. Para testar a aplicação no celular, basta subir o container com os passos acima, ter baixado no seu dispositivo o aplicativo EXPO GO e por fim acessar o link exp://192.168.0.9:8081 no seu navegador. (A aplicação não aparecerá automaticamente no aplicativo do EXPO GO, é necessário acessar o link)
+
+2. Para testar a aplicação no celular em ambiente de desenvolvimento, é necessário também remover essa configuração do app.json:
+
+```json
+"eas": {
+  "projectId": "xxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxx"
+}
+```
 
 ## Testes Unitários
 
