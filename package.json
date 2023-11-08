@@ -8,7 +8,7 @@
     "android": "expo start --android",
     "ios": "expo start --ios",
     "web": "expo start --web",
-    "test": "jest --forceExit --detectOpenHandles --colors --coverage",
+    "test": "jest  --detectOpenHandles --colors --coverage",
     "lint": "eslint . --fix"
   },
   "dependencies": {
@@ -55,7 +55,7 @@
     "setupFiles": [
       "./jest-setup.js"
     ],
-    "coverageDirectory": "../coverage",
+    "coverageDirectory": "./coverage",
     "transformIgnorePatterns": [
       "node_modules/(?!((jest-)?react-native|@react-native(-community)?)|expo(nent)?|@expo(nent)?/.*|@expo-google-fonts/.*|react-navigation|@react-navigation/.*|@unimodules/.*|unimodules|sentry-expo|native-base|react-native-svg)"
     ],
@@ -65,7 +65,8 @@
       "!**/coverage/**",
       "!**/node_modules/**",
       "!**/babel.config.js",
-      "!**/jest.setup.js"
+      "!**/jest.setup.js",
+      "!**/__tests__/**"
     ]
   }
 }
