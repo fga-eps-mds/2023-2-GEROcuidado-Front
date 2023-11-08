@@ -156,23 +156,25 @@ export default function VisualizarPublicacao() {
             </Pressable>
           )}
 
-          {idUsuario && !publicacao?.idUsuarioReporte.includes(idUsuario) && (
-            <Pressable
-              onPress={() => setModalVisibleReportar(true)}
-              style={[styles.actionButton, styles.reportButton]}
-            >
-              {showLoadingReportar && (
-                <ActivityIndicator size="small" color="#FFF" />
-              )}
+          {idUsuario &&
+            !publicacao?.idUsuarioReporte.includes(idUsuario) &&
+            !(publicacao?.idUsuario == idUsuario) && (
+              <Pressable
+                onPress={() => setModalVisibleReportar(true)}
+                style={[styles.actionButton, styles.reportButton]}
+              >
+                {showLoadingReportar && (
+                  <ActivityIndicator size="small" color="#FFF" />
+                )}
 
-              {!showLoadingReportar && (
-                <>
-                  <Text style={styles.actionButtonText}>Reportar</Text>
-                  <AntDesing name="warning" size={18} color="white" />
-                </>
-              )}
-            </Pressable>
-          )}
+                {!showLoadingReportar && (
+                  <>
+                    <Text style={styles.actionButtonText}>Reportar</Text>
+                    <AntDesing name="warning" size={18} color="white" />
+                  </>
+                )}
+              </Pressable>
+            )}
 
           {idUsuario && publicacao?.idUsuario == idUsuario && (
             <Pressable
