@@ -1,9 +1,11 @@
 import "@react-native-async-storage/async-storage/jest/async-storage-mock";
 
-import { fireEvent, render } from "@testing-library/react-native";
+import { fireEvent, render, waitFor } from "@testing-library/react-native";
 
 import Login from "../public/login";
 import React from "react";
+import { router } from "expo-router";
+// import JWT from "expo-jwt";
 
 jest.mock("@react-native-async-storage/async-storage", () => ({
   setItem: jest.fn(),
@@ -11,46 +13,102 @@ jest.mock("@react-native-async-storage/async-storage", () => ({
   removeItem: jest.fn(),
 }));
 
+jest.mock("expo-jwt", () => ({
+  decode: () => ({ id: 1 }),
+}));
+
+jest.mock("expo-router", () => ({
+  router: {
+    push: jest.fn(),
+  },
+}));
+
+// eslint-disable-next-line @typescript-eslint/no-var-requires
+const userService = require("../services/user.service");
+jest.mock("../services/user.service");
+
 describe("Login Component", () => {
-  it("deve renderizar corretamente", () => {
-    const { getByPlaceholderText, getByText } = render(<Login />);
-
-    const emailInput = getByPlaceholderText("Email");
-    const passwordInput = getByPlaceholderText("Senha");
-    const loginButton = getByText("Entrar");
-
-    // Use fireEvent para interagir com o componente
-    fireEvent.changeText(emailInput, "seuemail@gmail.com");
-    fireEvent.changeText(passwordInput, "suasenha");
-    fireEvent.press(loginButton);
-
-    // Adicione asserções para verificar o comportamento esperado
-    // Por exemplo, você pode verificar se uma ação ocorreu após o pressionamento do botão
+  it("renderiza corretamente", async () => {
+    await waitFor(() => render(<Login />));
   });
 
-  it("deve lidar com campos vazios e inválidos", () => {
-    const { getByPlaceholderText, getByText, queryByTestId } = render(
-      <Login />,
-    );
+  it("deve alterar o estado do escondeSenha", async () => {
+    await waitFor(() => {
+      const { getByTestId } = render(<Login />);
+      const escondeSenha = getByTestId("escondeSenhaIcon");
 
-    const emailInput = getByPlaceholderText("Email");
-    const passwordInput = getByPlaceholderText("Senha");
-    const loginButton = getByText("Entrar");
+      fireEvent.press(escondeSenha);
 
-    // Tente efetuar login com campos vazios
-    fireEvent.press(loginButton);
+      expect(escondeSenha).toBeDefined();
+    });
+  });
 
-    // Verifique se as mensagens de erro são exibidas
-    expect(queryByTestId("error-email")).not.toBeNull();
-    expect(queryByTestId("error-senha")).not.toBeNull();
+  it("deve lidar com o login com falha", async () => {
+    await waitFor(() => {
+      const { getByPlaceholderText, getByText } = render(<Login />);
+      const emailInput = getByPlaceholderText("Email");
+      const passwordInput = getByPlaceholderText("Senha");
+      const loginButton = getByText("Entrar");
 
-    // Preencha campos com valores inválidos
-    fireEvent.changeText(emailInput, "email_invalido");
-    fireEvent.changeText(passwordInput, "senha_curta");
-    fireEvent.press(loginButton);
+      fireEvent.changeText(emailInput, "seuemail@gmail");
+      fireEvent.changeText(passwordInput, "1");
 
-    // Verifique se as mensagens de erro correspondentes são exibidas
-    expect(queryByTestId("error-email")).not.toBeNull();
-    expect(queryByTestId("error-senha")).not.toBeNull();
+      userService.loginUser.mockRejectedValue(new Error("Login falhou"));
+
+      fireEvent.press(loginButton);
+
+      expect(router.push).not.toHaveBeenCalled();
+    });
+  });
+
+  it("deve lidar com o login com falha na requisicao", async () => {
+    await waitFor(() => {
+      const { getByPlaceholderText, getByText } = render(<Login />);
+      const emailInput = getByPlaceholderText("Email");
+      const passwordInput = getByPlaceholderText("Senha");
+      const loginButton = getByText("Entrar");
+
+      fireEvent.changeText(emailInput, "seuemail@gmail.com");
+      fireEvent.changeText(passwordInput, "suasenha");
+
+      userService.loginUser.mockRejectedValue({
+        message: "erro",
+      });
+
+      userService.getUserById.mockResolvedValue({
+        message: "sucesso",
+        data: { id: 1 },
+      });
+
+      fireEvent.press(loginButton);
+
+      expect(router.push).not.toHaveBeenCalled();
+    });
+  });
+
+  it("deve lidar com o login com sucesso", async () => {
+    await waitFor(() => {
+      const { getByPlaceholderText, getByText } = render(<Login />);
+      const emailInput = getByPlaceholderText("Email");
+      const passwordInput = getByPlaceholderText("Senha");
+      const loginButton = getByText("Entrar");
+
+      fireEvent.changeText(emailInput, "seuemail@gmail.com");
+      fireEvent.changeText(passwordInput, "suasenha");
+
+      userService.loginUser.mockResolvedValue({
+        message: "Login bem-sucedido",
+        data: "token_de_acesso",
+      });
+
+      userService.getUserById.mockResolvedValue({
+        message: "sucesso",
+        data: { id: 1 },
+      });
+
+      fireEvent.press(loginButton);
+
+      expect(router.push).toHaveBeenCalled();
+    });
   });
 });

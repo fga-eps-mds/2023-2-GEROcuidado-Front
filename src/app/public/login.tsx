@@ -141,6 +141,7 @@ export default function Login() {
             />
 
             <Icon
+              testID="escondeSenhaIcon"
               onPress={() => setEscondeSenha(!escondeSenha)}
               style={styles.passwordIcon}
               name={escondeSenha ? "eye-outline" : "eye-off-outline"}

@@ -3,7 +3,6 @@ import { render, fireEvent } from "@testing-library/react-native";
 import BackButton from "../components/BackButton";
 import router from "expo-router";
 
-// Mock da função router.back
 jest.mock("expo-router", () => ({
   router: {
     canGoBack: jest.fn().mockReturnValue(true), // Simula que pode voltar
