@@ -1,0 +1,14 @@
+version: '3.7'
+services:
+  gerocuidado-front-test:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: gerocuidado-front-test
+    ports:
+      - '8081:8081'
+    user: root
+    volumes:
+      - ./:/app
+      - /app/node_modules
+    entrypoint: ./.docker/entrypoint.test.sh

@@ -1,24 +1,27 @@
 name: Build
 on:
- push:
-   branches:
-     - main
- pull_request:
-   types: [opened, synchronize, reopened]
+  push:
+    branches:
+      - main
+  pull_request:
+    types: [opened, synchronize, reopened]
 jobs:
-  sonarcloud:
-    name: SonarCloud
+  test-unit:
+    name: Test Unit & Scan
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
+      - name: Checkout
+        uses: actions/checkout@v3
         with:
-          fetch-depth: 0 
-      - name: Install dependencies
-        run: yarn
-      - name: Test and coverage
-        run: yarn jest --coverage
+          fetch-depth: 0
+
+      - name: Test Unit
+        id: test-unit
+        run: |
+          docker-compose -f docker-compose.test.yml up -V --force-recreate --build --abort-on-container-exit --exit-code-from gerocuidado-front-test
+
       - name: SonarCloud Scan
         uses: SonarSource/sonarcloud-github-action@master
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}          
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}

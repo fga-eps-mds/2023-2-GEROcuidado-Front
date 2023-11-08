@@ -60,7 +60,11 @@ export default function Perfil() {
       </View>
 
       <View style={styles.options}>
-        <Pressable style={styles.option} onPress={navigate}>
+        <Pressable
+          testID="navigateBtn"
+          style={styles.option}
+          onPress={navigate}
+        >
           <AntDesign name="setting" size={45} color="#2f2f2f" />
 
           <View style={styles.optionText}>
@@ -69,7 +73,7 @@ export default function Perfil() {
           </View>
         </Pressable>
 
-        <Pressable style={styles.option} onPress={logout}>
+        <Pressable testID="logoutBtn" style={styles.option} onPress={logout}>
           <Icon name="logout-variant" size={45} color="#2f2f2f" />
 
           <View style={styles.optionText}>

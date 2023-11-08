@@ -9,6 +9,7 @@ describe("CustomButton", () => {
     );
     expect(toJSON()).toBeTruthy();
   });
+
   it("Chama a função de callback quando pressionado", () => {
     const callbackFn = jest.fn();
     const { getByText } = render(

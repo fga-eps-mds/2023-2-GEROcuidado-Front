@@ -45,8 +45,6 @@ test('O botão "Avançar" deve permitir navegar entre os slides', () => {
   // Adicione outras asserções se necessário
 });
 
-
-
 test('O botão "Avançar" deve permitir navegar entre os slides', () => {
   const { getByText } = render(<Tutorial />);
 
