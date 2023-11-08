@@ -158,7 +158,7 @@ export default function VisualizarPublicacao() {
 
           {idUsuario &&
             !publicacao?.idUsuarioReporte.includes(idUsuario) &&
-            !(publicacao?.idUsuario == idUsuario) && (
+            publicacao?.idUsuario != idUsuario && (
               <Pressable
                 onPress={() => setModalVisibleReportar(true)}
                 style={[styles.actionButton, styles.reportButton]}
