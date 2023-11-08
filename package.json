@@ -3,15 +3,12 @@
   "version": "1.0.0",
   "main": "expo-router/entry",
   "scripts": {
-    "start": "NODE_ENV=development expo start",
-    "android": "NODE_ENV=development expo start --android",
-    "ios": "NODE_ENV=development expo start --ios",
-    "web": "NODE_ENV=development expo start --web",
-    "start:prod": "NODE_ENV=production expo start --tunnel",
-    "android:prod": "NODE_ENV=production expo start --android",
-    "ios:prod": "NODE_ENV=production expo start --ios",
-    "web:prod": "NODE_ENV=production expo start --web",
-    "test": "jest",
+    "start": "expo start",
+    "start:tunnel": "expo start --tunnel",
+    "android": "expo start --android",
+    "ios": "expo start --ios",
+    "web": "expo start --web",
+    "test": "jest  --detectOpenHandles --colors --coverage",
     "lint": "eslint . --fix"
   },
   "dependencies": {
@@ -55,6 +52,10 @@
   "private": true,
   "jest": {
     "preset": "jest-expo",
+    "setupFiles": [
+      "./jest-setup.js"
+    ],
+    "coverageDirectory": "./coverage",
     "transformIgnorePatterns": [
       "node_modules/(?!((jest-)?react-native|@react-native(-community)?)|expo(nent)?|@expo(nent)?/.*|@expo-google-fonts/.*|react-navigation|@react-navigation/.*|@unimodules/.*|unimodules|sentry-expo|native-base|react-native-svg)"
     ],
@@ -64,7 +65,8 @@
       "!**/coverage/**",
       "!**/node_modules/**",
       "!**/babel.config.js",
-      "!**/jest.setup.js"
+      "!**/jest.setup.js",
+      "!**/__tests__/**"
     ]
   }
 }

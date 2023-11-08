@@ -161,6 +161,7 @@ export default function Cadastro() {
             />
 
             <Icon
+              testID="escondeSenhaIcon"
               onPress={() => setEscondeSenha(!escondeSenha)}
               style={styles.passwordIcon}
               name={escondeSenha ? "eye-outline" : "eye-off-outline"}
@@ -181,6 +182,7 @@ export default function Cadastro() {
               style={styles.passwordInput}
             />
             <Icon
+              testID="escondeConfirmaSenhaIcon"
               onPress={() => setEscondeConfirmaSenha(!escondeConfirmaSenha)}
               style={styles.passwordIcon}
               name={escondeConfirmaSenha ? "eye-outline" : "eye-off-outline"}

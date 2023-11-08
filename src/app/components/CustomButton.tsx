@@ -17,7 +17,11 @@ export default function CustomButton({
   const background = backgroundColor ?? "#2CCDB5";
 
   return (
-    <Pressable style={styles(background).button} onPress={() => callbackFn()}>
+    <Pressable
+      testID="customButtonId"
+      style={styles(background).button}
+      onPress={() => callbackFn()}
+    >
       {showLoading ? (
         <ActivityIndicator size="small" color="#fff" />
       ) : (

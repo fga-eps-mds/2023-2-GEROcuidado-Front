@@ -24,12 +24,14 @@ export default function ModalConfirmation({
             <Text style={styles.modalText}>{message}</Text>
             <View style={styles.buttonContainer}>
               <Pressable
+                testID="cancelarBtn"
                 style={[styles.button, styles.buttonCancel]}
                 onPress={() => closeModal()}
               >
                 <Text style={styles.textStyle}>Cancelar</Text>
               </Pressable>
               <Pressable
+                testID="callbackBtn"
                 style={[styles.button, styles.buttonClose]}
                 onPress={() => callbackFn()}
               >
