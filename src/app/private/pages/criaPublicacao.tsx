@@ -88,7 +88,7 @@ export default function CriaPublicacao() {
   };
 
   useEffect(() => handleErrors(), [titulo, descricao, categoria]);
-  useEffect(() => getIdUsuario());
+  useEffect(() => getIdUsuario(), []);
 
   const handleErrors = () => {
     const erros: IErrors = {};

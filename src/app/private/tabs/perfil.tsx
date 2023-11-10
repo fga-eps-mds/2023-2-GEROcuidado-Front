@@ -58,6 +58,15 @@ export default function Perfil() {
     });
   };
 
+  const navega = () => {
+    const params = { "id": 1, "idUsuario": 4, "foto":"data:image/png;base64,", "nome": "Guilherme", "dataNascimento": "2002-03-07T03:00:00.000Z", "tipoSanguineo": null, "telefoneResponsavel": "61999268251", "descricao": "" }
+
+    router.push({
+      pathname: "/private/pages/cadastrarEditarIdoso",
+      params: params,
+    });
+  };
+
   return !idUsuario ? (
     <NaoAutenticado />
   ) : (
@@ -85,11 +94,9 @@ export default function Perfil() {
             <Text style={styles.optionTextSubTitle}>Sair da sua conta</Text>
           </View>
         </Pressable>
-        <Pressable>
-            <Link href="/private/pages/cadastrarIdoso">
-              <Text>Cadastrar Idoso</Text>
-            </Link>
-          </Pressable>
+        <Pressable onPress={navega}>
+          <Text>Cadastrar Idoso</Text>
+        </Pressable>
       </View>
     </View>
   );
