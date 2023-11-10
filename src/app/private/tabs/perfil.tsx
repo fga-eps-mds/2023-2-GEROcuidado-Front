@@ -18,6 +18,10 @@ export default function Perfil() {
     router.push({ pathname: "/private/pages/editarPerfil", params: user });
   };
 
+  const navegaListagem = () => {
+    router.push({ pathname: "/private/pages/listarIdosos", params: user });
+  };
+
   const handleUser = () => {
     AsyncStorage.getItem("usuario").then((response) => {
       const usuario = JSON.parse(response as string);
@@ -80,6 +84,9 @@ export default function Perfil() {
             <Text style={styles.optionTextTitle}>Logout</Text>
             <Text style={styles.optionTextSubTitle}>Sair da sua conta</Text>
           </View>
+        </Pressable>
+        <Pressable onPress={navegaListagem}>
+          <Text>Listar Idosos</Text>
         </Pressable>
       </View>
     </View>
