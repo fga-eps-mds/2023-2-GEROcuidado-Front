@@ -6,6 +6,7 @@ import BackButton from "../../components/BackButton";
 import CardIdoso from "../../components/CardIdoso";
 import CustomButton from "../../components/CustomButton";
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
+import { router } from "expo-router";
 
 export default function ListarIdosos() {
   const dadosMock = [
@@ -32,6 +33,10 @@ export default function ListarIdosos() {
     }
   ];
 
+  const navigate = () => {
+    router.push({ pathname: "/private/pages/cadastrarEditarIdoso" })
+  }
+
   return (
     <View style={styles.screen}>
 
@@ -57,9 +62,11 @@ export default function ListarIdosos() {
           numColumns={2}
           data={dadosMock}
           renderItem={({ item }) => (
-            <TouchableOpacity style={styles.idoso}>
+            <Pressable 
+            onPress={navigate}
+            style={styles.idoso}>
               <CardIdoso nome ={item.nome}/>
-            </TouchableOpacity>
+            </Pressable>
           )}
         />
       </View>
