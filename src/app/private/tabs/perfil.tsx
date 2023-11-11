@@ -4,7 +4,7 @@ import { AntDesign } from "@expo/vector-icons";
 import { Text, View, StyleSheet, Image, Pressable } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { IUser } from "../../interfaces/user.interface";
-import { router } from "expo-router";
+import { Link, router } from "expo-router";
 import NaoAutenticado from "../../components/NaoAutenticado";
 
 export default function Perfil() {
@@ -21,6 +21,11 @@ export default function Perfil() {
   const navegaListagem = () => {
     router.push({ pathname: "/private/pages/listarIdosos", params: user });
   };
+  const idosos = () => {
+    router.push({ pathname: "/private/pages/cadastrarIdoso", params: user });
+  };
+
+  //useEffect(() => getIdUsuario());
 
   const handleUser = () => {
     AsyncStorage.getItem("usuario").then((response) => {
@@ -77,7 +82,16 @@ export default function Perfil() {
           </View>
         </Pressable>
 
-        <Pressable testID="logoutBtn" style={styles.option} onPress={logout}>
+        <Pressable style={styles.option} onPress={idosos}>
+          <Icon name="human-cane" size={45} color="#2f2f2f" />
+
+          <View style={styles.optionText}>
+            <Text style={styles.optionTextTitle}>Idosos</Text>
+            <Text style={styles.optionTextSubTitle}>Gerencie seus idosos</Text>
+          </View>
+        </Pressable>
+
+        <Pressable style={styles.option} onPress={logout}>
           <Icon name="logout-variant" size={45} color="#2f2f2f" />
 
           <View style={styles.optionText}>
