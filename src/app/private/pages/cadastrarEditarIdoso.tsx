@@ -97,9 +97,9 @@ export default function CadastrarEditarIdoso() {
 
     const body = { idUsuario: idUsuario as number, nome, dataNascimento: new Date(dataNascimento), telefoneResponsavel, foto, tipoSanguineo, descricao };
 
-    if (body.foto && isBase64Image(body.foto)) {
+    /* if (body.foto && isBase64Image(body.foto)) {
       delete body.foto;
-    }
+    } */
 
     try {
       setShowLoading(true);
@@ -184,7 +184,7 @@ export default function CadastrarEditarIdoso() {
 
   return (
     <View>
-      <BackButton route="/private/tabs/perfil" color="#000" />
+      <BackButton route="/private/pages/listarIdosos" color="#000" />
 
       <ScrollView>
       {foto && <UploadImage setFoto={setFoto} uri={foto} />}
@@ -288,6 +288,7 @@ export default function CadastrarEditarIdoso() {
           callbackFn={apagarIdoso}
           closeModal={closeModal}
           message="Apagar publicação?"
+          messageButton="Apagar"
         />
       </ScrollView>
     </View>
@@ -387,7 +388,4 @@ const styles = StyleSheet.create({
     fontSize: 17,
   }
 });
-function isBase64Image(foto: string) {
-  throw new Error("Function not implemented.");
-}
 
