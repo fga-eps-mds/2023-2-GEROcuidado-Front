@@ -3,6 +3,7 @@ on:
   push:
     branches:
       - main
+      - teste/sonar
   pull_request:
     types: [opened, synchronize, reopened]
 jobs:
@@ -25,3 +26,12 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+          
+      - name: Sincroniza cobertura de testes com o Codecov
+        uses: codecov/codecov-action@v3
+        with:
+          token: ${{ secrets.CODECOV_TOKEN }}
+          fail_ci_if_error: true
+          flags: jest
+          name: 2023-2-GEROcuidado-Front
+          verbose: true    
