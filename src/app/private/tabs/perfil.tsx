@@ -15,23 +15,27 @@ export default function Perfil() {
     AsyncStorage.clear().then(() => router.replace("/"));
   };
 
-  const navigate = () => {
+  const navigateEditarPerfil = () => {
     router.push({ pathname: "/private/pages/editarPerfil", params: user });
   };
 
-  const navegaListagem = () => {
+  const navigateIdosos = () => {
     router.push({ pathname: "/private/pages/listarIdosos", params: user });
   };
-  const idosos = () => {
-    router.push({ pathname: "/private/pages/cadastrarIdoso", params: user });
-  };
 
-  //useEffect(() => getIdUsuario());
+  useEffect(() => getIdUsuario());
 
   const handleUser = () => {
     AsyncStorage.getItem("usuario").then((response) => {
       const usuario = JSON.parse(response as string);
       setUser(usuario);
+    });
+  };
+
+  const getIdUsuario = () => {
+    AsyncStorage.getItem("usuario").then((response) => {
+      const usuario = JSON.parse(response as string) as IUser;
+      setIdUsuario(usuario?.id);
     });
   };
 
@@ -82,7 +86,7 @@ export default function Perfil() {
         <Pressable
           testID="navigateBtn"
           style={styles.option}
-          onPress={navigate}
+          onPress={navigateEditarPerfil}
         >
           <AntDesign name="setting" size={45} color="#2f2f2f" />
 
@@ -92,7 +96,7 @@ export default function Perfil() {
           </View>
         </Pressable>
 
-        <Pressable style={styles.option} onPress={idosos}>
+        <Pressable style={styles.option} onPress={navigateIdosos}>
           <Icon name="human-cane" size={45} color="#2f2f2f" />
 
           <View style={styles.optionText}>
@@ -109,14 +113,7 @@ export default function Perfil() {
             <Text style={styles.optionTextSubTitle}>Sair da sua conta</Text>
           </View>
         </Pressable>
-        
-        <Pressable onPress={navegaListagem}>
-          <Text>Listar Idosos</Text>
-        </Pressable>
 
-        <Pressable onPress={navega}>
-          <Text>Cadastrar Idoso</Text>
-        </Pressable>
       </View>
     </View>
   );
