@@ -34,23 +34,20 @@ interface IErrors {
 }
 
 export default function CadastrarEditarIdoso() {
-  const item = useLocalSearchParams() as unknown as IIdoso | undefined;
 
   const [foto, setFoto] = useState<string | null | undefined>("");
-  const [token, setToken] = useState<string>("");
   const [nome, setNome] = useState("");
   const [tipoSanguineo, setTipoSanguineo] = useState<ETipoSanguineo | null | undefined>(null);
   const [telefoneResponsavel, setTelefoneResponsavel] = useState("");
   const [dataNascimento, setDataNascimento] = useState("");
   const [descricao, setDescricao] = useState<string | undefined>("");
+  
+  const [token, setToken] = useState<string>("");
   const [erros, setErros] = useState<IErrors>({});
   const [showErrors, setShowErrors] = useState(false);
   const [showLoading, setShowLoading] = useState(false);
-  const [showLoadingApagar, setShowLoadingApagar] = useState(false);
-  const [modalVisible, setModalVisible] = useState(false);
   const [idUsuario, setIdUsuario] = useState<number | null>(null);
   const [maskedTelefoneResponsavel, setMaskedTelefoneResponsavel] = useState("");
-  const [id, setId] = useState<number | undefined>(undefined);
 
   const getIdUsuario = () => {
     AsyncStorage.getItem("usuario").then((response) => {
@@ -61,33 +58,6 @@ export default function CadastrarEditarIdoso() {
       setToken(response as string);
     });
   };
-
-  const hasFoto = (foto: string | null | undefined) => {
-    if (!foto) return false;
-
-    const raw = foto.split("data:image/png;base64,")[1];
-    return raw.length > 0;
-  };
-
-  const handleEdit = (item?: IIdoso) => {
-    if(!item){
-      return
-    }
-
-    //setDataNascimento(item.dataNascimento);
-    if(hasFoto(item.foto)) {
-      setFoto(item.foto);
-    }
-
-    setNome(item.nome);
-    setTelefoneResponsavel(item.telefoneResponsavel);
-    setMaskedTelefoneResponsavel(item.telefoneResponsavel);
-    setIdUsuario(item.idUsuario);
-    setDescricao(item.descricao);
-    setId(item.id);
-    setTipoSanguineo(item.tipoSanguineo);
-    
-  }
 
   const salvar = async () => {
     if (Object.keys(erros).length > 0) {
@@ -103,7 +73,7 @@ export default function CadastrarEditarIdoso() {
 
     try {
       setShowLoading(true);
-      const response = await (id ? updateIdoso(id, body, token) : postIdoso(body, token));
+      const response = await (postIdoso(body, token));
       Toast.show({
         type: "success",
         text1: "Sucesso!",
@@ -120,20 +90,6 @@ export default function CadastrarEditarIdoso() {
     } finally {
       setShowLoading(false);
     }
-
-  };
-
-  const apagarIdoso = async () => {
-
-    //TODO função de apagar idoso
-  };
-
-  const confirmation = () => {
-    setModalVisible(!modalVisible);
-  };
-
-  const closeModal = () => {
-    setModalVisible(false);
   };
 
   useEffect(
@@ -274,22 +230,7 @@ export default function CadastrarEditarIdoso() {
             showLoading={showLoading}
           />
         </View>
-
-        <Pressable onPress={confirmation}>
-          {showLoadingApagar ? (
-            <ActivityIndicator size="small" color="#FF7F7F" />
-          ) : (
-            <Text style={styles.apagar}>Apagar Idoso</Text>
-          )}
-        </Pressable>
-
-        <ModalConfirmation
-          visible={modalVisible}
-          callbackFn={apagarIdoso}
-          closeModal={closeModal}
-          message="Apagar publicação?"
-          messageButton="Apagar"
-        />
+        
       </ScrollView>
     </View>
   );
