@@ -1,6 +1,9 @@
-
 import { IOrder } from "../interfaces/forum.interface";
-import { IIdoso, IIdosoBody, IIdosoFilter } from "../interfaces/idoso.interface";
+import {
+  IIdoso,
+  IIdosoBody,
+  IIdosoFilter,
+} from "../interfaces/idoso.interface";
 import { IResponse } from "../interfaces/response.interface";
 
 const API_URL = process.env.EXPO_PUBLIC_API_URL;

@@ -11,19 +11,18 @@ import {
 } from "react-native";
 import Toast from "react-native-toast-message";
 import { AntDesign, Fontisto } from "@expo/vector-icons";
-import { postUser } from "../../services/user.service";
 import BackButton from "../../components/BackButton";
-import UploadImage from "../../components/UploadImage";
 import ErrorMessage from "../../components/ErrorMessage";
 import CustomButton from "../../components/CustomButton";
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
 import ModalConfirmation from "../../components/ModalConfirmation";
 import { SelectList } from "react-native-dropdown-select-list";
-import { ETipoSanguineo, IIdoso, IIdosoBody, IIdosoParams, IIdosoUsuario } from "../../interfaces/idoso.interface";
-import { deleteIdoso, postIdoso, updateIdoso } from "../../services/idoso.service";
+import { ETipoSanguineo, IIdoso } from "../../interfaces/idoso.interface";
+import { deleteIdoso, updateIdoso } from "../../services/idoso.service";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { IUser } from "../../interfaces/user.interface";
-import MaskInput, { Masks } from 'react-native-mask-input';
+import MaskInput, { Masks } from "react-native-mask-input";
+import UploadImageV2 from "../../components/UploadImageV2";
 
 interface IErrors {
   nome?: string;
@@ -34,15 +33,33 @@ interface IErrors {
 }
 
 export default function EditarIdoso() {
-  const item = useLocalSearchParams() as unknown as IIdosoParams;
+  const getDateFromEdit = (date: string) => {
+    const data = new Date(date);
+    const ano = data.getFullYear();
+    const mes = String(data.getMonth() + 1).padStart(2, "0");
+    const dia = String(data.getDate()).padStart(2, "0");
 
-  const [foto, setFoto] = useState<string | null | undefined>("");
-  const [nome, setNome] = useState(item?.nome);
-  const [tipoSanguineo, setTipoSanguineo] = useState<ETipoSanguineo | null | undefined>(item?.tipoSanguineo);
-  const [telefoneResponsavel, setTelefoneResponsavel] = useState(item?.telefoneResponsavel);
-  const [dataNascimento, setDataNascimento] = useState(item?.dataNascimento);
-  const [descricao, setDescricao] = useState<string | undefined>(item?.descricao);
-  
+    return `${dia}/${mes}/${ano}`;
+  };
+
+  const item = useLocalSearchParams() as unknown as IIdoso;
+
+  console.log(`foto: `, item.foto);
+  const [foto, setFoto] = useState<string | undefined>(item.foto);
+  const [nome, setNome] = useState(item.nome);
+  const [tipoSanguineo, setTipoSanguineo] = useState<
+    ETipoSanguineo | null | undefined
+  >(item.tipoSanguineo);
+  const [telefoneResponsavel, setTelefoneResponsavel] = useState(
+    item.telefoneResponsavel,
+  );
+  const [dataNascimento, setDataNascimento] = useState(
+    getDateFromEdit(item.dataNascimento as string),
+  );
+  const [descricao, setDescricao] = useState<string | undefined>(
+    item.descricao,
+  );
+
   const [token, setToken] = useState<string>("");
   const [erros, setErros] = useState<IErrors>({});
   const [showErrors, setShowErrors] = useState(false);
@@ -50,10 +67,8 @@ export default function EditarIdoso() {
   const [showLoadingApagar, setShowLoadingApagar] = useState(false);
   const [modalVisible, setModalVisible] = useState(false);
   const [idUsuario, setIdUsuario] = useState<number | null>(null);
-  const [maskedTelefoneResponsavel, setMaskedTelefoneResponsavel] = useState(telefoneResponsavel);
-  const [id, setId] = useState<number>(item?.id);
-  const [idoso, setIdoso] = useState<IIdosoUsuario | null>(null);
-  idoso
+  const [maskedTelefoneResponsavel, setMaskedTelefoneResponsavel] =
+    useState(telefoneResponsavel);
 
   const getIdUsuario = () => {
     AsyncStorage.getItem("usuario").then((response) => {
@@ -65,39 +80,11 @@ export default function EditarIdoso() {
     });
   };
 
-  const getIdosoFromParams = () => {
-    const payload: IIdosoUsuario = {
-      ...item,
-    };
-    setIdoso(payload);
+  const getDateIsoString = (value: string) => {
+    const dateArray = value.split("/");
+
+    return `${dateArray[2]}-${dateArray[1]}-${dateArray[0]}T12:00:00.000Z`;
   };
-
-  const hasFoto = (foto: string | null | undefined) => {
-    if (!foto) return false;
-
-    const raw = foto.split("data:image/png;base64,")[1];
-    return raw.length > 0;
-  };
-
-  const handleEdit = (item?: IIdoso) => {
-    if(!item){
-      return
-    }
-
-    //setDataNascimento(item.dataNascimento);
-    if(hasFoto(item.foto)) {
-      setFoto(item.foto);
-    }
-
-    setNome(item.nome);
-    setTelefoneResponsavel(item.telefoneResponsavel);
-    setMaskedTelefoneResponsavel(item.telefoneResponsavel);
-    setIdUsuario(item.idUsuario);
-    setDescricao(item.descricao);
-    setId(item.id);
-    setTipoSanguineo(item.tipoSanguineo);
-    
-  }
 
   const salvar = async () => {
     if (Object.keys(erros).length > 0) {
@@ -105,21 +92,25 @@ export default function EditarIdoso() {
       return;
     }
 
-    const body = { idUsuario: idUsuario as number, nome, dataNascimento, telefoneResponsavel, foto, tipoSanguineo, descricao };
-
-    /* if (body.foto && isBase64Image(body.foto)) {
-      delete body.foto;
-    } */
+    const body = {
+      idUsuario: idUsuario as number,
+      nome,
+      dataNascimento: getDateIsoString(dataNascimento),
+      telefoneResponsavel,
+      foto,
+      tipoSanguineo,
+      descricao,
+    };
 
     try {
       setShowLoading(true);
-      const response = await (updateIdoso(id, body, token));
+      const response = await updateIdoso(item.id, body, token);
       Toast.show({
         type: "success",
         text1: "Sucesso!",
         text2: response.message as string,
       });
-      router.back();
+      router.replace("private/pages/listarIdosos");
     } catch (err) {
       const error = err as { message: string };
       Toast.show({
@@ -130,17 +121,14 @@ export default function EditarIdoso() {
     } finally {
       setShowLoading(false);
     }
-
   };
 
   const apagarIdoso = async () => {
     setModalVisible(false);
     setShowLoadingApagar(true);
 
-    const id = (idoso as IIdosoUsuario).id;
-
     try {
-      await deleteIdoso(id, token);
+      await deleteIdoso(item.id, token);
       router.replace("/private/pages/listarIdosos");
     } catch (err) {
       const error = err as { message: string };
@@ -162,13 +150,8 @@ export default function EditarIdoso() {
     setModalVisible(false);
   };
 
-  useEffect(
-    () => handleErrors(),
-    [nome, telefoneResponsavel, dataNascimento],
-  );
+  useEffect(() => handleErrors(), [nome, telefoneResponsavel, dataNascimento]);
   useEffect(() => getIdUsuario(), []);
-  useEffect(() => getIdosoFromParams(), []);
-
 
   const handleErrors = () => {
     const erros: IErrors = {};
@@ -183,15 +166,14 @@ export default function EditarIdoso() {
 
     if (!dataNascimento) {
       erros.dataNascimento = "Campo obrigatório";
-    } else if (!/^\d{2}\/\d{2}\/\d{4}$/.test((dataNascimento as string))) {
-      erros.dataNascimento = "Data deve ser no formato dd/mm/yyyy!"
+    } else if (!/^\d{2}\/\d{2}\/\d{4}$/.test(dataNascimento as string)) {
+      erros.dataNascimento = "Data deve ser no formato dd/mm/yyyy!";
     }
 
     if (!telefoneResponsavel) {
       erros.telefoneResponsavel = "Campo obrigatório!";
     } else if (telefoneResponsavel.length !== 11) {
       erros.telefoneResponsavel = "Deve estar no formato (XX)XXXXX-XXXX";
-      //TODO arrumar regex
     }
 
     setErros(erros);
@@ -209,14 +191,12 @@ export default function EditarIdoso() {
     { key: ETipoSanguineo.O_NEGATIVO, value: ETipoSanguineo.O_NEGATIVO },
   ];
 
-
   return (
     <View>
       <BackButton route="/private/pages/listarIdosos" color="#000" />
 
       <ScrollView>
-      {foto && <UploadImage setFoto={setFoto} uri={foto} />}
-      {!foto && <UploadImage setFoto={setFoto} />}
+        <UploadImageV2 setPhotoCallback={setFoto} base64={foto}></UploadImageV2>
 
         <View style={styles.formControl}>
           <View style={styles.field}>
@@ -240,7 +220,7 @@ export default function EditarIdoso() {
             />
             <MaskInput
               style={styles.textInput}
-              value={dataNascimento as string }
+              value={dataNascimento as string}
               onChangeText={setDataNascimento}
               mask={Masks.DATE_DDMMYYYY}
               placeholder="Data de Nascimento"
@@ -289,7 +269,10 @@ export default function EditarIdoso() {
                 setSelected={setTipoSanguineo}
                 placeholder="Tipo Sanguíneo"
                 search={false}
-                defaultOption={{ key: item.tipoSanguineo, value: item.tipoSanguineo }}
+                defaultOption={{
+                  key: item.tipoSanguineo,
+                  value: item.tipoSanguineo,
+                }}
               />
             </View>
           </View>
@@ -415,6 +398,5 @@ const styles = StyleSheet.create({
     paddingLeft: 10,
     color: "#05375A",
     fontSize: 17,
-  }
+  },
 });
-

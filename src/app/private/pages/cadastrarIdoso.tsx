@@ -1,29 +1,19 @@
-import { router, useLocalSearchParams } from "expo-router";
+import { router } from "expo-router";
 import React, { useEffect, useState } from "react";
-import {
-  View,
-  TextInput,
-  StyleSheet,
-  ScrollView,
-  Pressable,
-  ActivityIndicator,
-  Text,
-} from "react-native";
+import { View, TextInput, StyleSheet, ScrollView } from "react-native";
 import Toast from "react-native-toast-message";
 import { AntDesign, Fontisto } from "@expo/vector-icons";
-import { postUser } from "../../services/user.service";
 import BackButton from "../../components/BackButton";
-import UploadImage from "../../components/UploadImage";
 import ErrorMessage from "../../components/ErrorMessage";
 import CustomButton from "../../components/CustomButton";
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
-import ModalConfirmation from "../../components/ModalConfirmation";
 import { SelectList } from "react-native-dropdown-select-list";
-import { ETipoSanguineo, IIdoso } from "../../interfaces/idoso.interface";
-import { postIdoso, updateIdoso } from "../../services/idoso.service";
+import { ETipoSanguineo } from "../../interfaces/idoso.interface";
+import { postIdoso } from "../../services/idoso.service";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { IUser } from "../../interfaces/user.interface";
-import MaskInput, { Masks } from 'react-native-mask-input';
+import MaskInput, { Masks } from "react-native-mask-input";
+import UploadImageV2 from "../../components/UploadImageV2";
 
 interface IErrors {
   nome?: string;
@@ -33,21 +23,23 @@ interface IErrors {
   descricao?: string;
 }
 
-export default function CadastrarEditarIdoso() {
-
-  const [foto, setFoto] = useState<string | null | undefined>("");
+export default function CadastrarIdoso() {
+  const [foto, setFoto] = useState<string>();
   const [nome, setNome] = useState("");
-  const [tipoSanguineo, setTipoSanguineo] = useState<ETipoSanguineo | null | undefined>(null);
+  const [tipoSanguineo, setTipoSanguineo] = useState<
+    ETipoSanguineo | null | undefined
+  >(null);
   const [telefoneResponsavel, setTelefoneResponsavel] = useState("");
   const [dataNascimento, setDataNascimento] = useState("");
   const [descricao, setDescricao] = useState<string | undefined>("");
-  
+
   const [token, setToken] = useState<string>("");
   const [erros, setErros] = useState<IErrors>({});
   const [showErrors, setShowErrors] = useState(false);
   const [showLoading, setShowLoading] = useState(false);
   const [idUsuario, setIdUsuario] = useState<number | null>(null);
-  const [maskedTelefoneResponsavel, setMaskedTelefoneResponsavel] = useState("");
+  const [maskedTelefoneResponsavel, setMaskedTelefoneResponsavel] =
+    useState("");
 
   const getIdUsuario = () => {
     AsyncStorage.getItem("usuario").then((response) => {
@@ -59,27 +51,37 @@ export default function CadastrarEditarIdoso() {
     });
   };
 
+  const getDateIsoString = (value: string) => {
+    const dateArray = value.split("/");
+
+    return `${dateArray[2]}-${dateArray[1]}-${dateArray[0]}T12:00:00.000Z`;
+  };
+
   const salvar = async () => {
     if (Object.keys(erros).length > 0) {
       setShowErrors(true);
       return;
     }
 
-    const body = { idUsuario: idUsuario as number, nome, dataNascimento: new Date(dataNascimento), telefoneResponsavel, foto, tipoSanguineo, descricao };
-
-    /* if (body.foto && isBase64Image(body.foto)) {
-      delete body.foto;
-    } */
+    const body = {
+      idUsuario: idUsuario as number,
+      nome,
+      dataNascimento: getDateIsoString(dataNascimento),
+      telefoneResponsavel,
+      foto,
+      tipoSanguineo,
+      descricao,
+    };
 
     try {
       setShowLoading(true);
-      const response = await (postIdoso(body, token));
+      const response = await postIdoso(body, token);
       Toast.show({
         type: "success",
         text1: "Sucesso!",
         text2: response.message as string,
       });
-      router.back();
+      router.replace("private/pages/listarIdosos");
     } catch (err) {
       const error = err as { message: string };
       Toast.show({
@@ -92,10 +94,7 @@ export default function CadastrarEditarIdoso() {
     }
   };
 
-  useEffect(
-    () => handleErrors(),
-    [nome, telefoneResponsavel, dataNascimento],
-  );
+  useEffect(() => handleErrors(), [nome, telefoneResponsavel, dataNascimento]);
   useEffect(() => getIdUsuario(), []);
 
   const handleErrors = () => {
@@ -112,14 +111,13 @@ export default function CadastrarEditarIdoso() {
     if (!dataNascimento) {
       erros.dataNascimento = "Campo obrigatório";
     } else if (!/^\d{2}\/\d{2}\/\d{4}$/.test(dataNascimento)) {
-      erros.dataNascimento = "Data deve ser no formato dd/mm/yyyy!"
+      erros.dataNascimento = "Data deve ser no formato dd/mm/yyyy!";
     }
 
     if (!telefoneResponsavel) {
       erros.telefoneResponsavel = "Campo obrigatório!";
     } else if (telefoneResponsavel.length !== 11) {
       erros.telefoneResponsavel = "Deve estar no formato (XX)XXXXX-XXXX";
-      //TODO arrumar regex
     }
 
     setErros(erros);
@@ -137,14 +135,12 @@ export default function CadastrarEditarIdoso() {
     { key: ETipoSanguineo.O_NEGATIVO, value: ETipoSanguineo.O_NEGATIVO },
   ];
 
-
   return (
     <View>
       <BackButton route="/private/pages/listarIdosos" color="#000" />
 
       <ScrollView>
-      {foto && <UploadImage setFoto={setFoto} uri={foto} />}
-      {!foto && <UploadImage setFoto={setFoto} />}
+        <UploadImageV2 setPhotoCallback={setFoto} base64={foto}></UploadImageV2>
 
         <View style={styles.formControl}>
           <View style={styles.field}>
@@ -230,7 +226,6 @@ export default function CadastrarEditarIdoso() {
             showLoading={showLoading}
           />
         </View>
-        
       </ScrollView>
     </View>
   );
@@ -327,6 +322,5 @@ const styles = StyleSheet.create({
     paddingLeft: 10,
     color: "#05375A",
     fontSize: 17,
-  }
+  },
 });
-

@@ -4,7 +4,7 @@ import { AntDesign } from "@expo/vector-icons";
 import { Text, View, StyleSheet, Image, Pressable } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { IUser } from "../../interfaces/user.interface";
-import { Link, router } from "expo-router";
+import { router } from "expo-router";
 import NaoAutenticado from "../../components/NaoAutenticado";
 
 export default function Perfil() {
@@ -62,15 +62,6 @@ export default function Perfil() {
 
   useEffect(() => handleUser(), []);
 
-  const navega = () => {
-    const params = { "id": 1, "idUsuario": 4, "foto":"data:image/png;base64,", "nome": "Guilherme", "dataNascimento": "2002-03-07T03:00:00.000Z", "tipoSanguineo": null, "telefoneResponsavel": "61999268251", "descricao": "" }
-
-    router.push({
-      pathname: "/private/pages/cadastrarEditarIdoso",
-      params: params,
-    });
-  };
-
   return !idUsuario ? (
     <NaoAutenticado />
   ) : (
@@ -113,7 +104,6 @@ export default function Perfil() {
             <Text style={styles.optionTextSubTitle}>Sair da sua conta</Text>
           </View>
         </Pressable>
-
       </View>
     </View>
   );

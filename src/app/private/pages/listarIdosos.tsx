@@ -1,5 +1,11 @@
 import React, { useEffect, useState } from "react";
-import { View, Text, StyleSheet, TouchableOpacity, Image, Pressable, ActivityIndicator } from "react-native";
+import {
+  View,
+  Text,
+  StyleSheet,
+  Pressable,
+  ActivityIndicator,
+} from "react-native";
 import { FlatList } from "react-native-gesture-handler";
 import { AntDesign } from "@expo/vector-icons";
 import BackButton from "../../components/BackButton";
@@ -8,7 +14,6 @@ import { router } from "expo-router";
 import { IIdoso, IOrder } from "../../interfaces/idoso.interface";
 import { getAllIdoso } from "../../services/idoso.service";
 import Toast from "react-native-toast-message";
-import ModalConfirmation from "../../components/ModalConfirmation";
 
 export default function ListarIdosos() {
   const [idosos, setIdosos] = useState<IIdoso[]>([]);
@@ -23,21 +28,13 @@ export default function ListarIdosos() {
     dir: "DESC",
   };
 
-  const getIdosos = (
-    anterior: IIdoso[],
-    nome: string,
-    offset: number,
-  ) => {
+  const getIdosos = (anterior: IIdoso[], nome: string, offset: number) => {
     setOffset(offset);
     setNome(nome);
 
     getAllIdoso(offset, { nome }, order)
       .then((response) => {
         const newIdosos = response.data as IIdoso[];
-
-        /* if (newIdosos.length === 0) {
-          setShowCarregarMais(false);
-        } */
 
         setIdosos([...anterior, ...newIdosos]);
       })
@@ -56,22 +53,20 @@ export default function ListarIdosos() {
 
   const selecionar = () => {
     setSelecionado(!selecionado);
-    console.log(selecionado);
-  }
+  };
 
   const navigateCadastrar = () => {
-    router.push({ pathname: "/private/pages/cadastrarIdoso" })
-  }
+    router.push({ pathname: "/private/pages/cadastrarIdoso" });
+  };
 
   const confirmation = () => {
-    setModalVisible(!modalVisible)
-  }
+    setModalVisible(!modalVisible);
+  };
 
   useEffect(() => getIdosos([], "", 0), []);
 
   return (
     <View style={styles.screen}>
-
       <View style={styles.backButton}>
         <BackButton route="/private/tabs/perfil" color="#000" />
       </View>
@@ -102,10 +97,8 @@ export default function ListarIdosos() {
             numColumns={2}
             data={idosos}
             renderItem={({ item }) => (
-              <Pressable
-                onPress={selecionar}>
-                <CardIdoso
-                  item={item} />
+              <Pressable onPress={selecionar}>
+                <CardIdoso item={item} />
               </Pressable>
             )}
           />
@@ -118,8 +111,6 @@ export default function ListarIdosos() {
           <Text style={styles.cadastroText}>Cadastrar um idoso</Text>
         </Pressable>
       </View>
-
-
     </View>
   );
 }
@@ -196,7 +187,5 @@ const styles = StyleSheet.create({
     backgroundColor: "white",
     marginTop: 50,
   },
-  idoso: {
-
-  },
+  idoso: {},
 });
