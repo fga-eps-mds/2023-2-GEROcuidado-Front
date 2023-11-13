@@ -57,6 +57,7 @@ const styles = StyleSheet.create({
   },
   texto: {
     alignSelf: "center",
+    marginTop: 10,
   },
   pencil: {
     position: "absolute",

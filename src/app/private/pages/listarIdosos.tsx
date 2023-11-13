@@ -14,6 +14,7 @@ import { router } from "expo-router";
 import { IIdoso, IOrder } from "../../interfaces/idoso.interface";
 import { getAllIdoso } from "../../services/idoso.service";
 import Toast from "react-native-toast-message";
+import { SelectList } from "react-native-dropdown-select-list";
 
 export default function ListarIdosos() {
   const [idosos, setIdosos] = useState<IIdoso[]>([]);
@@ -21,11 +22,12 @@ export default function ListarIdosos() {
   const [offset, setOffset] = useState(0);
   const [loading, setLoading] = useState(true);
   const [selecionado, setSelecionado] = useState(false);
-  const [modalVisible, setModalVisible] = useState(false);
+  const [dir, setDir] = useState<"DESC" | "ASC">("ASC");
+  const [filtro, setFiltro] = useState(true);
 
   const order: IOrder = {
     column: "nome",
-    dir: "DESC",
+    dir: dir,
   };
 
   const getIdosos = (anterior: IIdoso[], nome: string, offset: number) => {
@@ -59,11 +61,13 @@ export default function ListarIdosos() {
     router.push({ pathname: "/private/pages/cadastrarIdoso" });
   };
 
-  const confirmation = () => {
-    setModalVisible(!modalVisible);
-  };
+  useEffect(() => getIdosos([], "", 0), [dir]); // Provavelmente pode estar aqui o problema dos warnings
+  // Porem foi visto que os warnings aparecem quando se cadastra ou atualiza dados também
 
-  useEffect(() => getIdosos([], "", 0), []);
+  const data = [
+    { key: "Por nome: A-Z", value: "Por nome: A-Z" },
+    { key: "Por nome: Z-A", value: "Por nome: Z-A" },
+  ];
 
   return (
     <View style={styles.screen}>
@@ -75,13 +79,23 @@ export default function ListarIdosos() {
         <Text style={styles.header}>De quem está cuidando agora?</Text>
       </View>
 
-      <View style={styles.actions}>
-        <Pressable
-          onPress={confirmation}
-          style={[styles.actionButton, styles.editButton]}
-        >
-          <Text style={styles.actionButtonText}>Filtro</Text>
-        </Pressable>
+      <View>
+        <SelectList //Algo esta gerando warning
+          data={data}
+          setSelected={(item: string) => {
+            if (!item.includes("Filtro")) setFiltro(false);
+            item.includes("A-Z") ? setDir("ASC") : setDir("DESC");
+          }}
+          placeholder="Filtro"
+          search={false}
+          boxStyles={
+            filtro
+              ? (styles.boxDropDownDefault as any)
+              : (styles.boxDropDown as any)
+          }
+          inputStyles={styles.boxInputDropDown}
+          dropdownStyles={styles.dropDown}
+        />
       </View>
 
       {loading && (
@@ -187,5 +201,21 @@ const styles = StyleSheet.create({
     backgroundColor: "white",
     marginTop: 50,
   },
-  idoso: {},
+  boxDropDownDefault: {
+    borderWidth: 0,
+    width: 0,
+  },
+  boxDropDown: {
+    borderWidth: 0,
+    width: 150,
+  },
+  boxInputDropDown: {
+    textDecorationLine: "underline",
+  },
+  dropDown: {
+    borderColor: "black",
+    width: 150,
+    marginTop: 3,
+    marginLeft: 5,
+  },
 });
