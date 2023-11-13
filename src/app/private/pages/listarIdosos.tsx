@@ -66,9 +66,9 @@ export default function ListarIdosos() {
   // Porem foi visto que os warnings aparecem quando se cadastra ou atualiza dados também
 
   const data = [
-    { key: "Por nome: A-Z", value: "Por nome: A-Z" },
-    { key: "Por nome: Z-A", value: "Por nome: Z-A" },
-    { key: "Mais recente", value: "Mais recente" },
+    { key: "A-Z", value: "A-Z" },
+    { key: "Z-A", value: "Z-A" },
+    { key: "Mais recente", value: "Mais atual" },
     { key: "Mais antigo", value: "Mais antigo" },
   ];
 
@@ -82,7 +82,7 @@ export default function ListarIdosos() {
         <Text style={styles.header}>De quem está cuidando agora?</Text>
       </View>
 
-      <View>
+      <View style={styles.list}>
         <SelectList //Algo esta gerando warning
           data={data}
           setSelected={(item: string) => {
@@ -104,13 +104,9 @@ export default function ListarIdosos() {
           }}
           placeholder="Filtro"
           search={false}
-          boxStyles={
-            filtro
-              ? (styles.boxDropDownDefault as any)
-              : (styles.boxDropDown as any)
-          }
+          boxStyles={(styles.boxDropDown)}  
           inputStyles={styles.boxInputDropDown}
-          dropdownStyles={styles.dropDown}
+          dropdownStyles={styles.dropDown}          
         />
       </View>
 
@@ -166,6 +162,7 @@ const styles = StyleSheet.create({
   cadastroContainer: {
     alignItems: "center",
     maxWidth: "auto",
+    opacity: 0.9,
   },
   cadastroText: {
     marginTop: 8,
@@ -219,19 +216,30 @@ const styles = StyleSheet.create({
   },
   boxDropDownDefault: {
     borderWidth: 0,
-    width: 0,
+    backgroundColor: "#2CCDB5",
   },
   boxDropDown: {
     borderWidth: 0,
-    width: 150,
+    width: 149,
+    backgroundColor: "#2CCDB5",
+    shadowRadius: 1,
+    shadowColor: "#3d3d3d",
+    marginLeft: 5,
   },
   boxInputDropDown: {
-    textDecorationLine: "underline",
+    color: "#FFFFFF",
+    fontSize: 16,
+    paddingRight: 6,
   },
   dropDown: {
-    borderColor: "black",
-    width: 150,
+    borderColor: "#2CCDB5",
+    width: 150, 
     marginTop: 3,
     marginLeft: 5,
   },
+  list: {
+    width: "24%",
+    marginLeft: 10,
+    marginBottom: 20,
+  }
 });
