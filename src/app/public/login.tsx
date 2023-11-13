@@ -47,7 +47,7 @@ export default function Login() {
 
       handleUser(token);
       await AsyncStorage.setItem("token", token);
-      router.push("/public/tutorial");
+      router.push("/private/pages/listarIdosos");
     } catch (err) {
       const error = err as { message: string };
       Toast.show({
