@@ -17,6 +17,7 @@ export interface IIdosoBody {
   tipoSanguineo?: ETipoSanguineo | null;
   telefoneResponsavel: string;
   descricao?: string;
+  dataHora: Date | string;
 }
 
 export interface IIdoso extends IIdosoBody {

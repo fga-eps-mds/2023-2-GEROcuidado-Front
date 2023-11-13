@@ -71,6 +71,7 @@ export default function CadastrarIdoso() {
       foto,
       tipoSanguineo,
       descricao,
+      dataHora: new Date(),
     };
 
     try {

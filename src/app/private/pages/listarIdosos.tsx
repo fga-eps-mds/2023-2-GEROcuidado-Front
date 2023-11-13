@@ -23,10 +23,11 @@ export default function ListarIdosos() {
   const [loading, setLoading] = useState(true);
   const [selecionado, setSelecionado] = useState(false);
   const [dir, setDir] = useState<"DESC" | "ASC">("ASC");
+  const [column, setColumn] = useState<"nome" | "dataHora">("nome");
   const [filtro, setFiltro] = useState(true);
 
   const order: IOrder = {
-    column: "nome",
+    column: column,
     dir: dir,
   };
 
@@ -61,12 +62,14 @@ export default function ListarIdosos() {
     router.push({ pathname: "/private/pages/cadastrarIdoso" });
   };
 
-  useEffect(() => getIdosos([], "", 0), [dir]); // Provavelmente pode estar aqui o problema dos warnings
+  useEffect(() => getIdosos([], "", 0), [column, dir]); // Provavelmente pode estar aqui o problema dos warnings
   // Porem foi visto que os warnings aparecem quando se cadastra ou atualiza dados também
 
   const data = [
     { key: "Por nome: A-Z", value: "Por nome: A-Z" },
     { key: "Por nome: Z-A", value: "Por nome: Z-A" },
+    { key: "Mais recente", value: "Mais recente" },
+    { key: "Mais antigo", value: "Mais antigo" },
   ];
 
   return (
@@ -84,7 +87,20 @@ export default function ListarIdosos() {
           data={data}
           setSelected={(item: string) => {
             if (!item.includes("Filtro")) setFiltro(false);
-            item.includes("A-Z") ? setDir("ASC") : setDir("DESC");
+            // item.includes("A-Z") ? setDir("ASC") : setDir("DESC");
+            if (item.includes("A-Z")) {
+              setColumn("nome");
+              setDir("ASC");
+            } else if (item.includes("Z-A")) {
+              setColumn("nome");
+              setDir("DESC");
+            } else if (item.includes("Mais recente")) {
+              setColumn("dataHora");
+              setDir("DESC");
+            } else if (item.includes("Mais antigo")) {
+              setColumn("dataHora");
+              setDir("ASC");
+            }
           }}
           placeholder="Filtro"
           search={false}
