@@ -44,7 +44,6 @@ export default function EditarIdoso() {
 
   const item = useLocalSearchParams() as unknown as IIdoso;
 
-  console.log(`foto: `, item.foto);
   const [foto, setFoto] = useState<string | undefined>(item.foto);
   const [nome, setNome] = useState(item.nome);
   const [tipoSanguineo, setTipoSanguineo] = useState<
