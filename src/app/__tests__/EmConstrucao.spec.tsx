@@ -1,7 +1,8 @@
 import React from "react";
 import { render, screen } from "@testing-library/react-native";
+import "@testing-library/jest-native/extend-expect"; // Uncomment this line
+
 import EmConstrucao from "../components/EmConstrucao";
-import "@testing-library/jest-native/extend-expect";
 
 describe("EmConstrucao", () => {
   it("deve aplicar os estilos corretamente", () => {
