@@ -96,7 +96,7 @@ export default function Perfil() {
           </View>
         </Pressable>
 
-        <Pressable style={styles.option} onPress={logout}>
+        <Pressable style={styles.option} onPress={logout} testID="logoutBtn">
           <Icon name="logout-variant" size={45} color="#2f2f2f" />
 
           <View style={styles.optionText}>
