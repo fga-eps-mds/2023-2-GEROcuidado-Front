@@ -1,9 +1,5 @@
 import { IOrder } from "../interfaces/forum.interface";
-import {
-  IIdoso,
-  IIdosoBody,
-  IIdosoFilter,
-} from "../interfaces/idoso.interface";
+import { IIdoso, IIdosoBody } from "../interfaces/idoso.interface";
 import { IResponse } from "../interfaces/response.interface";
 
 const API_URL = process.env.EXPO_PUBLIC_API_URL;
@@ -34,13 +30,9 @@ export const postIdoso = async (
 };
 
 export const getAllIdoso = async (
-  offset: number,
-  filter: IIdosoFilter,
   order: IOrder,
 ): Promise<IResponse<IIdoso[] | null>> => {
-  const params = `limit=10&offset=${offset}&filter=${JSON.stringify(
-    filter,
-  )}&order=${JSON.stringify(order)}`;
+  const params = `limit=20&offset=0&order=${JSON.stringify(order)}`;
 
   const response = await fetch(`${BASE_URL}?${params}`, {
     method: "GET",

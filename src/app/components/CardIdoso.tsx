@@ -15,6 +15,14 @@ export default function CardIdoso({ item }: IProps) {
     return nome.length < 15 ? nome : nome.slice(0, 15) + "...";
   };
 
+  const selectIdoso = () => {
+    // TODO selecionar um idoso para a aplicacao
+
+    router.push({
+      pathname: "/private/tabs/rotinas",
+    });
+  };
+
   const navigate = () => {
     const params = { ...item, id: item.id, foto: getImageUri(item.foto) };
 
@@ -26,7 +34,7 @@ export default function CardIdoso({ item }: IProps) {
 
   return (
     <View>
-      <Pressable style={styles.idoso}>
+      <Pressable style={styles.idoso} onPress={selectIdoso}>
         <View>
           <Image
             source={{ uri: getImageUri(item.foto) }}

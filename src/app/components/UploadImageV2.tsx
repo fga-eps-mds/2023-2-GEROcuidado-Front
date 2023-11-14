@@ -17,7 +17,6 @@ export default function UploadImageV2({
   console.log(base64);
   if (base64) {
     base64 = getImageUri(base64);
-    console.log(base64);
   }
   const [photo, setPhoto] = useState<string | undefined>(base64);
 

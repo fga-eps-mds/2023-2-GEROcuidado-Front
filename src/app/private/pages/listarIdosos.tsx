@@ -16,30 +16,55 @@ import { getAllIdoso } from "../../services/idoso.service";
 import Toast from "react-native-toast-message";
 import { SelectList } from "react-native-dropdown-select-list";
 
+interface IOrderOption {
+  key: IOrder;
+  value: string;
+}
+
+const data: IOrderOption[] = [
+  {
+    key: {
+      column: "nome",
+      dir: "ASC",
+    },
+    value: "A-Z",
+  },
+  {
+    key: {
+      column: "nome",
+      dir: "DESC",
+    },
+    value: "Z-A",
+  },
+  {
+    key: {
+      column: "dataHora",
+      dir: "ASC",
+    },
+    value: "Mais atual",
+  },
+  {
+    key: {
+      column: "dataHora",
+      dir: "DESC",
+    },
+    value: "Mais antigo",
+  },
+];
+
 export default function ListarIdosos() {
   const [idosos, setIdosos] = useState<IIdoso[]>([]);
-  const [nome, setNome] = useState("");
-  const [offset, setOffset] = useState(0);
   const [loading, setLoading] = useState(true);
   const [selecionado, setSelecionado] = useState(false);
-  const [dir, setDir] = useState<"DESC" | "ASC">("ASC");
-  const [column, setColumn] = useState<"nome" | "dataHora">("nome");
-  const [filtro, setFiltro] = useState(true);
+  const [orderOption, setOrderOption] = useState<IOrderOption>(data[0]);
 
-  const order: IOrder = {
-    column: column,
-    dir: dir,
-  };
+  const getIdosos = () => {
+    setLoading(true);
 
-  const getIdosos = (anterior: IIdoso[], nome: string, offset: number) => {
-    setOffset(offset);
-    setNome(nome);
-
-    getAllIdoso(offset, { nome }, order)
+    getAllIdoso(orderOption.key)
       .then((response) => {
         const newIdosos = response.data as IIdoso[];
-
-        setIdosos([...anterior, ...newIdosos]);
+        setIdosos(newIdosos);
       })
       .catch((err) => {
         const error = err as { message: string };
@@ -62,15 +87,7 @@ export default function ListarIdosos() {
     router.push({ pathname: "/private/pages/cadastrarIdoso" });
   };
 
-  useEffect(() => getIdosos([], "", 0), [column, dir]); // Provavelmente pode estar aqui o problema dos warnings
-  // Porem foi visto que os warnings aparecem quando se cadastra ou atualiza dados também
-
-  const data = [
-    { key: "A-Z", value: "A-Z" },
-    { key: "Z-A", value: "Z-A" },
-    { key: "Mais recente", value: "Mais atual" },
-    { key: "Mais antigo", value: "Mais antigo" },
-  ];
+  useEffect(() => getIdosos(), [orderOption]);
 
   return (
     <View style={styles.screen}>
@@ -78,35 +95,17 @@ export default function ListarIdosos() {
         <BackButton route="/private/tabs/perfil" color="#000" />
       </View>
 
-      <View>
-        <Text style={styles.header}>De quem está cuidando agora?</Text>
-      </View>
+      <Text style={styles.header}>De quem está cuidando agora?</Text>
 
       <View style={styles.list}>
-        <SelectList //Algo esta gerando warning
+        <SelectList
           data={data}
-          setSelected={(item: string) => {
-            if (!item.includes("Filtro")) setFiltro(false);
-            // item.includes("A-Z") ? setDir("ASC") : setDir("DESC");
-            if (item.includes("A-Z")) {
-              setColumn("nome");
-              setDir("ASC");
-            } else if (item.includes("Z-A")) {
-              setColumn("nome");
-              setDir("DESC");
-            } else if (item.includes("Mais recente")) {
-              setColumn("dataHora");
-              setDir("DESC");
-            } else if (item.includes("Mais antigo")) {
-              setColumn("dataHora");
-              setDir("ASC");
-            }
-          }}
-          placeholder="Filtro"
+          setSelected={(item: IOrderOption) => setOrderOption(item)}
           search={false}
-          boxStyles={(styles.boxDropDown)}  
+          boxStyles={styles.boxDropDown}
           inputStyles={styles.boxInputDropDown}
-          dropdownStyles={styles.dropDown}          
+          dropdownStyles={styles.dropDown}
+          placeholder="selecione"
         />
       </View>
 
@@ -119,6 +118,7 @@ export default function ListarIdosos() {
       {!loading && (
         <View style={styles.cardIdoso}>
           <FlatList
+            // style={{ marginBottom: 150 }}
             showsVerticalScrollIndicator={false}
             numColumns={2}
             data={idosos}
@@ -130,9 +130,8 @@ export default function ListarIdosos() {
           />
         </View>
       )}
-
       <View style={styles.cadastroContainer}>
-        <Pressable style={styles.cadastroContainer} onPress={navigateCadastrar}>
+        <Pressable style={styles.cadastroBtn} onPress={navigateCadastrar}>
           <AntDesign name="pluscircleo" size={54} />
           <Text style={styles.cadastroText}>Cadastrar um idoso</Text>
         </Pressable>
@@ -156,13 +155,26 @@ const styles = StyleSheet.create({
     fontSize: 25,
     fontWeight: "bold",
     color: "#3d3d3d",
-    marginBottom: 15,
+    marginBottom: 20,
     textAlign: "center",
   },
   cadastroContainer: {
+    flexDirection: "column",
     alignItems: "center",
-    maxWidth: "auto",
-    opacity: 0.9,
+    justifyContent: "center",
+    position: "absolute",
+    bottom: 0,
+    right: 0,
+    left: 0,
+    backgroundColor: "white",
+    paddingTop: 10,
+    paddingBottom: 10,
+  },
+  cadastroBtn: {
+    flexDirection: "column",
+    alignItems: "center",
+    justifyContent: "center",
+    width: "100%",
   },
   cadastroText: {
     marginTop: 8,
@@ -171,7 +183,7 @@ const styles = StyleSheet.create({
   cardIdoso: {
     alignItems: "center",
     justifyContent: "space-between",
-    height: "65%",
+    marginBottom: 250,
   },
   idosoSelecionado: {
     marginLeft: 16,
@@ -212,7 +224,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "center",
     backgroundColor: "white",
-    marginTop: 50,
+    marginVertical: 50,
   },
   boxDropDownDefault: {
     borderWidth: 0,
@@ -233,7 +245,7 @@ const styles = StyleSheet.create({
   },
   dropDown: {
     borderColor: "#2CCDB5",
-    width: 150, 
+    width: 150,
     marginTop: 3,
     marginLeft: 5,
   },
@@ -241,5 +253,5 @@ const styles = StyleSheet.create({
     width: "24%",
     marginLeft: 10,
     marginBottom: 20,
-  }
+  },
 });
