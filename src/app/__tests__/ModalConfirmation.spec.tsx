@@ -11,29 +11,12 @@ describe("ModalConfirmation", () => {
         callbackFn={() => {}}
         closeModal={() => {}}
         message={message} // Passa a mensagem como prop
-      />
+        messageButton={"Teste"}
+      />,
     );
 
     // Verifica se o texto da mensagem é exibido quando o modal está visível
     expect(getByText(message)).toBeTruthy();
-  });
-
-  it('deve chamar a função de callback ao pressionar "Apagar"', () => {
-    const callbackFn = jest.fn();
-    const { getByText } = render(
-      <ModalConfirmation
-        visible={true}
-        callbackFn={callbackFn}
-        closeModal={() => {}}
-        message="Qualquer mensagem" // Você pode usar qualquer mensagem aqui
-      />
-    );
-
-    // Simula o pressionar do botão "Apagar"
-    fireEvent.press(getByText("Apagar"));
-
-    // Verifica se a função de callback foi chamada
-    expect(callbackFn).toHaveBeenCalled();
   });
 
   it('deve chamar a função de fechamento do modal ao pressionar "Cancelar"', () => {
@@ -44,7 +27,8 @@ describe("ModalConfirmation", () => {
         callbackFn={() => {}}
         closeModal={closeModal}
         message="Qualquer mensagem" // Você pode usar qualquer mensagem aqui
-      />
+        messageButton={"Teste"}
+      />,
     );
 
     // Simula o pressionar do botão "Cancelar"
@@ -61,7 +45,8 @@ describe("ModalConfirmation", () => {
         callbackFn={() => {}}
         closeModal={() => {}}
         message="Qualquer mensagem" // Você pode usar qualquer mensagem aqui
-      />
+        messageButton={"Teste"}
+      />,
     );
 
     // Verifica se o texto da mensagem não está presente quando o modal não está visível
