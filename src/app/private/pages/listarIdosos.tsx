@@ -39,14 +39,14 @@ const data: IOrderOption[] = [
   {
     key: {
       column: "dataHora",
-      dir: "ASC",
+      dir: "DESC",
     },
     value: "Mais atual",
   },
   {
     key: {
       column: "dataHora",
-      dir: "DESC",
+      dir: "ASC",
     },
     value: "Mais antigo",
   },
@@ -56,12 +56,14 @@ export default function ListarIdosos() {
   const [idosos, setIdosos] = useState<IIdoso[]>([]);
   const [loading, setLoading] = useState(true);
   const [selecionado, setSelecionado] = useState(false);
-  const [orderOption, setOrderOption] = useState<IOrderOption>(data[0]);
+  const [orderOption, setOrderOption] = useState<IOrder>(data[0].key);
+
+  console.log("TESTE", orderOption);
 
   const getIdosos = () => {
     setLoading(true);
 
-    getAllIdoso(orderOption.key)
+    getAllIdoso(orderOption)
       .then((response) => {
         const newIdosos = response.data as IIdoso[];
         setIdosos(newIdosos);
@@ -100,7 +102,9 @@ export default function ListarIdosos() {
       <View style={styles.list}>
         <SelectList
           data={data}
-          setSelected={(item: IOrderOption) => setOrderOption(item)}
+          setSelected={(item: IOrder) => {
+            setOrderOption(item);
+          }}
           search={false}
           boxStyles={styles.boxDropDown}
           inputStyles={styles.boxInputDropDown}
