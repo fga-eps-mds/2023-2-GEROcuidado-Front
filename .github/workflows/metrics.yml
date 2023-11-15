@@ -2,39 +2,37 @@ name: Export de métricas
 
 on:
   push:
-    branches: [main, develop]
+    branches:
+      - develop
     tags:
-      - 'v*'
+      - "v*"
 
 jobs:
   release:
-    runs-on: 'ubuntu-latest'
+    runs-on: "ubuntu-latest"
+
     steps:
-      - uses: actions/checkout@v3
+      - name: Checkout repository
+        uses: actions/checkout@v2
         with:
           fetch-depth: 0
-      - name: Criar diretório
-        run: mkdir analytics-raw-data
 
-      - name: Coletar métricas no SonarCloud
-        run: python parser.py ${{ github.event.repository.name }} ${{ github.ref_name }}
-
-      - name: Envia métricas para repo de Doc
+      - name: Create .env file
         run: |
-          git config --global user.email "${{secrets.USER_EMAIL}}"
-          git config --global user.name "${{secrets.USER_NAME}}"
-          git clone --single-branch --branch main "https://x-access-token:${{secrets.API_TOKEN_DOC}}@github.com/fga-eps-mds/2023-2-GEROcuidado-Doc" docs
-          mkdir -p docs/analytics-raw-data
-          cp -R analytics-raw-data/*.json docs/analytics-raw-data
-          cd docs/
-          git add .
-          git commit -m "Adicionando métricas do repositório ${{ github.event.repository.name }} ${{ github.ref_name }}"
-          git push
+          touch ./scripts/.env
+          echo "TOKEN=${{ secrets.API_TOKEN_GITHUB }}" >> ./scripts/.env
+          echo "RELEASE_MAJOR=${{ contains(github.event.pull_request.labels.*.name, 'MAJOR RELEASE') }}" >> ./scripts/.env
+          echo "RELEASE_MINOR=${{ contains(github.event.pull_request.labels.*.name, 'MINOR RELEASE') }}" >> ./scripts/.env
 
-      - name: Envia métricas como assets da release
-        if: startsWith(github.ref, 'refs/tags')
-        uses: AButler/upload-release-assets@v2.0
-        with:
-          files: 'analytics-raw-data/*'
-          repo-token: ${{ secrets.GITHUB_TOKEN }}
-          release-tag: ${{ github.ref_name }}
+      - name: Generate release and send metrics to DOC repository
+        run: |
+          cd scripts && yarn install && node release.js
+          git config --global user.email "${{ secrets.USER_EMAIL }}"
+          git config --global user.name "${{ secrets.USER_NAME }}"
+          git clone --single-branch --branch main "https://x-access-token:${{ secrets.API_TOKEN_GITHUB }}"@github.com/fga-eps-mds/${{ secrets.API_TOKEN_DOC}} ${{ secrets.API_TOKEN_DOC}}
+          mkdir -p ${{ secrets.API_TOKEN_DOC }}/analytics-raw-data
+          cp -R analytics-raw-data/*.json ${{ secrets.API_TOKEN_DOC }}/analytics-raw-data
+          cd ${{ secrets.API_TOKEN_DOC }}
+          git add .
+          git commit -m "Add metrics from repository ${{ github.event.repository.name }} ${{ github.ref_name }}"
+          git push
