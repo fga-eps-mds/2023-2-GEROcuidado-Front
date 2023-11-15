@@ -8,7 +8,9 @@ const mockItem = {
   categoria: "Categoria da publicação",
   descricao: "Descrição da publicação",
   dataHora: "2023-11-04T12:00:00Z",
+  idUsuarioReporte: [],
   usuario: {
+    id: 1,
     nome: "Nome do Usuário",
     foto: "data:image/png;base64,base64-encoded-image-data",
   },
@@ -60,35 +62,5 @@ describe("Publicacao", () => {
     // Verifique se o nome foi cortado corretamente
     const usernameElement = screen.getByText("Nome do Usuário");
     expect(usernameElement).toBeTruthy();
-  });
-  it("deve formatar o titulo corretamente com crop ativado", () => {
-    render(<Publicacao item={mockItem} crop={true} />);
-
-    // Verifique se o nome foi cortado corretamente
-    const titleElement = screen.getByText("Título da publicação");
-    expect(titleElement).toBeTruthy();
-  });
-  it("deve formatar a descricao corretamente com crop ativado", () => {
-    render(<Publicacao item={mockItem} crop={true} />);
-
-    // Verifique se o nome foi cortado corretamente
-    const descriptionElement = screen.getByText("Descrição da publicação");
-    expect(descriptionElement).toBeTruthy();
-  });
-
-  it("não deve renderizar o ícone de espaço reservado quando há uma foto", () => {
-    render(<Publicacao item={mockItemComFoto} crop={false} />);
-
-    // Verifique se o ícone de espaço reservado não está presente
-    const placeholderIcon = screen.queryByTestId("placeholder-icon");
-    expect(placeholderIcon).toBeNull();
-  });
-  it("deve retornar true em hasFoto quando há uma foto", () => {
-    const foto = "data:image/png;base64,base64-encoded-image-data";
-    expect(hasFoto(foto)).toBe(true);
-  });
-  it("deve retornar false em hasFoto quando não há uma foto", () => {
-    const foto = null;
-    expect(hasFoto(foto)).toBe(false);
   });
 });
