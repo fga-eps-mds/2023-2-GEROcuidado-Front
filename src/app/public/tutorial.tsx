@@ -27,7 +27,7 @@ export default function Tutorial() {
   );
 
   const skip = () => {
-    router.replace("/private/tabs/rotinas");
+    router.replace("/public/login");
   };
 
   return (
