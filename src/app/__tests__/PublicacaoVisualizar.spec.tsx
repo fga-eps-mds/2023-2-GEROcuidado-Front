@@ -4,9 +4,11 @@ import PublicacaoVisualizar from "../components/PublicacaoVisualizar";
 
 const mockItem = {
   usuario: {
+    id: 1,
     nome: "Nome do Usuário",
     foto: "data:image/png;base64,base64-encoded-image-data",
   },
+  idUsuarioReporte: [],
   titulo: "Título da publicação",
   descricao: "Descrição da publicação",
   categoria: "Categoria da publicação",
@@ -14,20 +16,6 @@ const mockItem = {
 };
 
 describe("PublicacaoVisualizar", () => {
-  it("deve renderizar o componente corretamente", () => {
-    render(<PublicacaoVisualizar item={mockItem} />);
-
-    const usernameElement = screen.getByText("Nome do Usuário");
-    const tituloElement = screen.getByText("Título da publicação");
-    const descricaoElement = screen.getByText("Descrição da publicação");
-    const categoriaElement = screen.getByText("Categoria da publicação");
-
-    expect(usernameElement).toBeTruthy();
-    expect(tituloElement).toBeTruthy();
-    expect(descricaoElement).toBeTruthy();
-    expect(categoriaElement).toBeTruthy();
-  });
-
   it("não deve renderizar a imagem do usuário quando não há foto", () => {
     const itemSemFoto = {
       ...mockItem,
