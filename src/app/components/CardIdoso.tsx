@@ -34,7 +34,11 @@ export default function CardIdoso({ item }: IProps) {
 
   return (
     <View>
-      <Pressable style={styles.idoso} onPress={selectIdoso}>
+      <Pressable
+        style={styles.idoso}
+        onPress={selectIdoso}
+        testID="cardIdosoPressable"
+      >
         <View>
           <Image
             source={{ uri: getImageUri(item.foto) }}
