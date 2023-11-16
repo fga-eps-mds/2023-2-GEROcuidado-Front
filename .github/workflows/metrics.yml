@@ -3,7 +3,7 @@ name: Export de métricas
 on:
   push:
     branches:
-      - develop
+      - sonar_corrigindo_sonar
     tags:
       - "v*"
 
