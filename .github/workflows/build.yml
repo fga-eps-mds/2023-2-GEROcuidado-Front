@@ -4,6 +4,8 @@ on:
     branches:
       - main
       - teste/sonar
+      - sonar/carrigindo_sonar
+
   pull_request:
     types: [opened, synchronize, reopened]
 
@@ -14,7 +16,7 @@ jobs:
     steps:
       - uses: actions/checkout@v2
         with:
-          fetch-depth: 0 
+          fetch-depth: 0
       - name: Install dependencies
         run: yarn
       - name: Test and coverage
@@ -24,7 +26,7 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-          
+
       - name: Sincroniza cobertura de testes com o Codecov
         uses: codecov/codecov-action@v3
         with:
@@ -32,4 +34,4 @@ jobs:
           fail_ci_if_error: true
           flags: jest
           name: 2023-2-GEROcuidado-Front
-          verbose: true    
+          verbose: true
