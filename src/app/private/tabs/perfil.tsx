@@ -9,19 +9,33 @@ import NaoAutenticado from "../../components/NaoAutenticado";
 
 export default function Perfil() {
   const [user, setUser] = useState<IUser | undefined>(undefined);
+  const [idUsuario, setIdUsuario] = useState<number | null>(null);
 
   const logout = () => {
     AsyncStorage.clear().then(() => router.replace("/"));
   };
 
-  const navigate = () => {
+  const navigateEditarPerfil = () => {
     router.push({ pathname: "/private/pages/editarPerfil", params: user });
   };
+
+  const navigateIdosos = () => {
+    router.push({ pathname: "/private/pages/listarIdosos", params: user });
+  };
+
+  useEffect(() => getIdUsuario());
 
   const handleUser = () => {
     AsyncStorage.getItem("usuario").then((response) => {
       const usuario = JSON.parse(response as string);
       setUser(usuario);
+    });
+  };
+
+  const getIdUsuario = () => {
+    AsyncStorage.getItem("usuario").then((response) => {
+      const usuario = JSON.parse(response as string) as IUser;
+      setIdUsuario(usuario?.id);
     });
   };
 
@@ -48,7 +62,7 @@ export default function Perfil() {
 
   useEffect(() => handleUser(), []);
 
-  return !user?.id ? (
+  return !idUsuario ? (
     <NaoAutenticado />
   ) : (
     <View>
@@ -63,7 +77,7 @@ export default function Perfil() {
         <Pressable
           testID="navigateBtn"
           style={styles.option}
-          onPress={navigate}
+          onPress={navigateEditarPerfil}
         >
           <AntDesign name="setting" size={45} color="#2f2f2f" />
 
@@ -73,7 +87,16 @@ export default function Perfil() {
           </View>
         </Pressable>
 
-        <Pressable testID="logoutBtn" style={styles.option} onPress={logout}>
+        <Pressable style={styles.option} onPress={navigateIdosos}>
+          <Icon name="human-cane" size={45} color="#2f2f2f" />
+
+          <View style={styles.optionText}>
+            <Text style={styles.optionTextTitle}>Idosos</Text>
+            <Text style={styles.optionTextSubTitle}>Gerencie seus idosos</Text>
+          </View>
+        </Pressable>
+
+        <Pressable style={styles.option} onPress={logout} testID="logoutBtn">
           <Icon name="logout-variant" size={45} color="#2f2f2f" />
 
           <View style={styles.optionText}>

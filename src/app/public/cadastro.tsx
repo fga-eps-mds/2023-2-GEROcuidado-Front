@@ -47,7 +47,7 @@ export default function Cadastro() {
         text1: "Sucesso!",
         text2: response.message as string,
       });
-      router.push("/public/login");
+      router.push("/public/tutorial");
     } catch (err) {
       const error = err as { message: string };
       Toast.show({
