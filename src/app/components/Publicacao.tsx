@@ -27,7 +27,12 @@ export default function Publicacao({ item, crop }: Readonly<IProps>) {
 
     return (
       <View style={[styles.semFoto, styles.fotoPerfil]}>
-        <Icon style={styles.semFotoIcon} name="image-outline" size={15} />
+        <Icon
+          style={styles.semFotoIcon}
+          name="image-outline"
+          size={15}
+          testID="placeholder-icon"
+        />
       </View>
     );
   };

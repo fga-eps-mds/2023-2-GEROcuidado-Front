@@ -30,7 +30,7 @@ test('O botão "Pular" deve chamar a função "router.replace" com o caminho cor
   fireEvent.press(pularButton);
 
   // Verifica se a função "router.replace" foi chamada com o caminho correto
-  expect(router.replace).toHaveBeenCalledWith("/private/tabs/rotinas");
+  expect(router.replace).toHaveBeenCalledWith("/public/login");
 });
 
 test('O botão "Avançar" deve permitir navegar entre os slides', () => {

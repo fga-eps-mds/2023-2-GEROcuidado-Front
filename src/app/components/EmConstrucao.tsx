@@ -4,7 +4,7 @@ import Icon from "react-native-vector-icons/MaterialCommunityIcons";
 
 export default function EmConstrucao() {
   return (
-    <View style={styles.container}>
+    <View style={styles.container} testID="em-construcao-container">
       <Icon name="progress-wrench" color="#2CCDB5" size={60} />
       <Text style={styles.text}>Página em construção!</Text>
     </View>

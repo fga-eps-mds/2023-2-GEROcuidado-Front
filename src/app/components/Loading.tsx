@@ -3,8 +3,8 @@ import { StyleSheet, View, ActivityIndicator } from "react-native";
 
 export default function Loading() {
   return (
-    <View style={styles.container}>
-      <ActivityIndicator size="large" color="#fff" />
+    <View style={styles.container} testID="loading-container">
+      <ActivityIndicator size="large" color="#fff" testID="loading-indicator" />
     </View>
   );
 }

@@ -44,10 +44,8 @@ export default function Login() {
       });
 
       const token = response.data;
-
-      handleUser(token);
-      await AsyncStorage.setItem("token", token);
-      router.push("/public/tutorial");
+      await handleUser(token);
+      router.push("/private/pages/listarIdosos");
     } catch (err) {
       const error = err as { message: string };
       Toast.show({
@@ -78,28 +76,28 @@ export default function Login() {
     setErros(erros);
   };
 
-  const handleUser = (token: string) => {
+  const handleUser = async (token: string) => {
+    AsyncStorage.setItem("token", token);
     const key = process.env.EXPO_PUBLIC_JWT_TOKEN_SECRET as string;
     const userInfo = JWT.decode(token as string, key) as unknown as IUser;
-    getUser(userInfo.id, token as string);
+    await getUser(userInfo.id, token as string);
   };
 
-  const getUser = (id: number, token: string) => {
-    getUserById(id, token)
-      .then((response) => {
-        const responseUser = response.data as IUser & {
-          foto: { data: Uint8Array };
-        };
-        AsyncStorage.setItem("usuario", JSON.stringify(responseUser)).then();
-      })
-      .catch((err) => {
-        const error = err as { message: string };
-        Toast.show({
-          type: "error",
-          text1: "Erro!",
-          text2: error.message,
-        });
+  const getUser = async (id: number, token: string) => {
+    try {
+      const response = await getUserById(id, token);
+      const responseUser = response.data as IUser & {
+        foto: { data: Uint8Array };
+      };
+      await AsyncStorage.setItem("usuario", JSON.stringify(responseUser));
+    } catch (err) {
+      const error = err as { message: string };
+      Toast.show({
+        type: "error",
+        text1: "Erro!",
+        text2: error.message,
       });
+    }
   };
 
   return (
