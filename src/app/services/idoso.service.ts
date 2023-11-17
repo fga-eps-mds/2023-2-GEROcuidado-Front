@@ -30,9 +30,12 @@ export const postIdoso = async (
 };
 
 export const getAllIdoso = async (
+  idUsuario: number,
   order: IOrder,
 ): Promise<IResponse<IIdoso[] | null>> => {
-  const params = `limit=20&offset=0&order=${JSON.stringify(order)}`;
+  const params = `limit=20&offset=0&order=${JSON.stringify(
+    order,
+  )}&filter=${JSON.stringify({ idUsuario })}`;
 
   const response = await fetch(`${BASE_URL}?${params}`, {
     method: "GET",

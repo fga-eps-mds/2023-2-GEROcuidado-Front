@@ -15,6 +15,8 @@ import { IIdoso, IOrder } from "../../interfaces/idoso.interface";
 import { getAllIdoso } from "../../services/idoso.service";
 import Toast from "react-native-toast-message";
 import { SelectList } from "react-native-dropdown-select-list";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import { IUser } from "../../interfaces/user.interface";
 
 interface IOrderOption {
   key: IOrder;
@@ -57,13 +59,21 @@ export default function ListarIdosos() {
   const [loading, setLoading] = useState(true);
   const [selecionado, setSelecionado] = useState(false);
   const [orderOption, setOrderOption] = useState<IOrder>(data[0].key);
+  const [idUsuario, setIdUsuario] = useState<number | null>(null);
 
-  console.log("TESTE", orderOption);
+  const getIdUsuario = () => {
+    AsyncStorage.getItem("usuario").then((response) => {
+      const usuario = JSON.parse(response as string) as IUser;
+      setIdUsuario(usuario.id);
+    });
+  };
 
   const getIdosos = () => {
+    if (!idUsuario) return;
+
     setLoading(true);
 
-    getAllIdoso(orderOption)
+    getAllIdoso(idUsuario, orderOption)
       .then((response) => {
         const newIdosos = response.data as IIdoso[];
         setIdosos(newIdosos);
@@ -89,7 +99,8 @@ export default function ListarIdosos() {
     router.push({ pathname: "/private/pages/cadastrarIdoso" });
   };
 
-  useEffect(() => getIdosos(), [orderOption]);
+  useEffect(() => getIdUsuario(), []);
+  useEffect(() => getIdosos(), [orderOption, idUsuario]);
 
   return (
     <View style={styles.screen}>
