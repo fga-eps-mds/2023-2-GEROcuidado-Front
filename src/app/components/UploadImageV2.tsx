@@ -14,7 +14,6 @@ export default function UploadImageV2({
   setPhotoCallback,
   base64,
 }: Readonly<Props>) {
-  console.log(base64);
   if (base64) {
     base64 = getImageUri(base64);
   }

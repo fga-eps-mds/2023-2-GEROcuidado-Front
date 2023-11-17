@@ -26,6 +26,7 @@ export interface IIdoso extends IIdosoBody {
 
 export interface IIdosoFilter {
   nome?: string;
+  idUsuario?: number;
 }
 
 export interface IOrder {
