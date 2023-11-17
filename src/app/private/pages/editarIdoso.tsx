@@ -101,6 +101,10 @@ export default function EditarIdoso() {
       descricao,
     };
 
+    if (body.foto && isBase64Image(body.foto)) {
+      delete body.foto;
+    }
+
     try {
       setShowLoading(true);
       const response = await updateIdoso(item.id, body, token);
@@ -120,6 +124,13 @@ export default function EditarIdoso() {
     } finally {
       setShowLoading(false);
     }
+  };
+
+  const isBase64Image = (str: string): boolean => {
+    const expression = `data:image\/([a-zA-Z]*);base64,([^\"]*)`;
+    const regex = new RegExp(expression);
+
+    return regex.test(str);
   };
 
   const apagarIdoso = async () => {
