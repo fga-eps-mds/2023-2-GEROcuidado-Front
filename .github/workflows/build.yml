@@ -3,25 +3,35 @@ on:
   push:
     branches:
       - main
+      - teste/sonar
+      - sonar/carrigindo_sonar
+
   pull_request:
     types: [opened, synchronize, reopened]
+
 jobs:
-  test-unit:
-    name: Test Unit & Scan
+  sonarcloud:
+    name: SonarCloud
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout
-        uses: actions/checkout@v3
+      - uses: actions/checkout@v2
         with:
           fetch-depth: 0
-
-      - name: Test Unit
-        id: test-unit
-        run: |
-          docker-compose -f docker-compose.test.yml up -V --force-recreate --build --abort-on-container-exit --exit-code-from gerocuidado-front-test
-
+      - name: Install dependencies
+        run: yarn
+      - name: Test and coverage
+        run: yarn jest --coverage
       - name: SonarCloud Scan
         uses: SonarSource/sonarcloud-github-action@master
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+
+      - name: Sincroniza cobertura de testes com o Codecov
+        uses: codecov/codecov-action@v3
+        with:
+          token: ${{ secrets.CODECOV_TOKEN }}
+          fail_ci_if_error: true
+          flags: jest
+          name: 2023-2-GEROcuidado-Front
+          verbose: true
