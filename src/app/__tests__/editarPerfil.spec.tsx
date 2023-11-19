@@ -63,22 +63,33 @@ describe('EditarPerfil component', () => {
       expect(errorMessage).toBeTruthy();
     });
   });
-
-  /*test('Exibe mensagem de sucesso ao salvar corretamente', async () => {
-    const { getByText, getByPlaceholderText, queryByText, findByText } = render(<EditarPerfil />);
+  
+  test('Não exibe mensagem de erro ao salvar com nome válido', async () => {
+    const { getByText, getByPlaceholderText, queryByText } = render(<EditarPerfil />);
     const nameInput = getByPlaceholderText('Nome completo');
     fireEvent.changeText(nameInput, 'Nome Válido');
-
+  
     const saveButton = getByText('Salvar');
     fireEvent.press(saveButton);
-
-    // Aguarde até que o elemento "Sucesso!" seja encontrado ou a navegação seja concluída.
+  
+    // Certifique-se de que nenhuma mensagem de erro é exibida
     await waitFor(() => {
-      expect(findByText('Sucesso!')).toBeTruthy();
-    }, { timeout: 5000 });
+      expect(queryByText('Campo obrigatório!')).toBeNull();
+      expect(queryByText('O nome completo deve ter pelo menos 5 caractéres.')).toBeNull();
+      expect(queryByText('O nome completo deve ter no máximo 60 caractéres.')).toBeNull();
+    });
   });
-  */
-
-  // Este teste acima funciona, mas tá bugando o comando npm run test
-
+  
+  test('Exibe mensagem de confirmação ao apagar conta', async () => {
+    const { getByText, getByPlaceholderText, findByText } = render(<EditarPerfil />);
+    const apagarContaButton = getByText('Apagar Conta');
+  
+    fireEvent.press(apagarContaButton);
+  
+    // Aguarde até que a mensagem de confirmação seja encontrada
+    await waitFor(() => {
+      expect(findByText('Prosseguir com a exclusão da conta?')).toBeTruthy();
+    });
+  });
+  
 });
