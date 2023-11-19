@@ -17,23 +17,28 @@ import { ECategoriaRotina } from "../../interfaces/rotina.interface";
 import WeekDays from "../../components/weekDay";
 import Calendar from "react-native-vector-icons/Feather";
 import { Fontisto } from "@expo/vector-icons";
+import CustomButton from "../../components/CustomButton";
+import MaskInput, { Masks } from "react-native-mask-input";
+import MaskHour from "../../components/MaskHour";
 
 export default function Rotina() {
   const [titulo, setTitulo] = useState("");
+  const [data, setData] = useState("");
+  const [hora, setHora] = useState("");
+  const [descricao, setDescricao] = useState("");
   const [categoria, setCategoria] = useState<ECategoriaRotina | null>(null);
-
-  const data = [
+  const [showLoading, setShowLoading] = useState(false);
+  
+  const categorias = [
     { key: ECategoriaRotina.GERAL, value: ECategoriaRotina.GERAL },
     { key: ECategoriaRotina.MEDICAMENTO, value: ECategoriaRotina.MEDICAMENTO },
-    {
-      key: ECategoriaRotina.ALIMENTACAO,
-      value: ECategoriaRotina.ALIMENTACAO,
-    },
-    {
-      key: ECategoriaRotina.EXERCICIOS,
-      value: ECategoriaRotina.EXERCICIOS,
-    },
+    { key: ECategoriaRotina.ALIMENTACAO, value: ECategoriaRotina.ALIMENTACAO },
+    { key: ECategoriaRotina.EXERCICIOS, value: ECategoriaRotina.EXERCICIOS },
   ];
+
+  const salvar = async () => {
+    
+  };
 
   return (
     <ScrollView>
@@ -43,52 +48,51 @@ export default function Rotina() {
         </Link>
         <Text style={styles.tituloheader}>Nova rotina</Text>
       </View>
+
       <View style={styles.rotina}>
-        <View style={styles.field}>
+
+        <View style={styles.titulo}>
           <TextInput
             onChangeText={setTitulo}
             value={titulo}
             placeholder="Adicionar título"
-            style={styles.textInputTitulo}
+            style={styles.inputTitulo}
           />
         </View>
 
-        <View style={styles.data}>
-          <Calendar style={styles.iconInput} name="calendar" size={20} />
-          <TextInput
-            //onChangeText={setEmail}
-            //value={email}
-            placeholder="Data da rotina"
-            style={styles.textInput}
-          />
+        <View style={styles.dataHora}>
+          <Calendar style={styles.iconDataHora} name="calendar" size={20} />
+          <MaskInput
+              style={styles.textInput}
+              value={data}
+              onChangeText={setData}
+              mask={Masks.DATE_DDMMYYYY}
+              placeholder="Data da rotina"
+            />
         </View>
 
-        <View style={styles.data}>
+        <View style={styles.dataHora}>
           <Icon
-            style={styles.iconInput}
+            style={styles.iconDataHora}
             name="clock-time-four-outline"
             size={20}
           />
-          <TextInput
-            //onChangeText={setEmail}
-            //value={email}
-            placeholder="Horário de início"
+          <MaskHour
             style={styles.textInput}
+            placeholder="Horário de início"
+            value={hora}
+            maxLength={5}
+            inputMaskChange={(text:string) => setHora(text)}
           />
         </View>
 
         <View>
-          <View
-            style={{
-              flexDirection: "row",
-              borderBottomWidth: 1,
-            }}
-          >
-            <Icon style={styles.iconInput3} name="view-grid-outline" />
+          <View style={styles.categoria}>
+            <Icon style={styles.iconCategoria} name="view-grid-outline" />
             <SelectList
               boxStyles={styles.dropdown}
-              inputStyles={styles.categoria}
-              data={data}
+              inputStyles={styles.categoriaSelecionada}
+              data={categorias}
               setSelected={setCategoria}
               placeholder="Categoria"
               search={false}
@@ -97,8 +101,8 @@ export default function Rotina() {
           {/* <ErrorMessage show={showErrors} text={erros.categoria} /> */}
         </View>
 
-        <View style={styles.text1}>
-          <Text style={styles.text2}>Se repete às:</Text>
+        <View style={styles.repete}>
+          <Text style={styles.repete}>Se repete às:</Text>
         </View>
 
         <View style={styles.weekDays}>
@@ -112,7 +116,7 @@ export default function Rotina() {
         </View>
 
         <View style={styles.descricao}>
-          <Fontisto style={styles.iconInput2} name="left-align" size={15} />
+          <Fontisto style={styles.iconDesciption} name="left-align" size={15} />
           <TextInput
             //onChangeText={setEmail}
             //value={email}
@@ -120,6 +124,15 @@ export default function Rotina() {
             style={styles.textInput}
           />
         </View>
+
+        <View style={styles.linkButton}>
+          <CustomButton
+            title="Salvar"
+            callbackFn={salvar}
+            showLoading={showLoading}
+          />
+        </View>
+        
       </View>
     </ScrollView>
   );
@@ -132,44 +145,11 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
   },
-
   tituloheader: {
     fontWeight: "bold",
     color: "white",
     fontSize: 20,
   },
-  categoria: {
-    paddingLeft: 10,
-    color: "#05375a",
-    fontSize: 17,
-    width: 230,
-  },
-
-  iconInput: {
-    fontSize: 25,
-  },
-  iconInput2: {
-    width: "10%",
-    fontSize: 18,
-  },
-  iconInput3: {
-    width: "15%",
-    fontSize: 25,
-    marginTop: 9,
-  },
-  formControl: {
-    marginBottom: 15,
-  },
-  // selectInput: {
-  //   marginBottom: 5,
-  // },
-  dropdown: {
-    borderWidth: 0,
-    paddingLeft: 0,
-    color: "#05375A",
-    fontSize: 17,
-  },
-
   rotina: {
     borderRadius: 15,
     backgroundColor: "white",
@@ -181,80 +161,98 @@ const styles = StyleSheet.create({
     shadowRadius: 6,
     alignItems: "center",
   },
-
-  formControl2: {
-    flexDirection: "row",
-    width: 320,
-    alignItems: "flex-start",
-    alignSelf: "center",
-    marginTop: 10,
-  },
-
-  field: {
+  titulo: {
     flexDirection: "row",
     marginTop: 10,
     borderBottomWidth: 1,
-    borderBottomColor: "black",
+    borderBottomColor: "#333333",
     paddingBottom: 5,
-    width: 220,
-    alignSelf: "center",
+    // width: 220,
+    // alignSelf: "center",
     marginBottom: 40,
   },
-  field2: {
-    flexDirection: "row",
-    width: 320,
-    borderBottomWidth: 1,
-    borderBottomColor: "#AFB1B6",
-    paddingBottom: 5,
-    alignSelf: "center",
-    marginBottom: 5,
-  },
-  data: {
-    flexDirection: "row",
-    marginTop: 10,
-    borderBottomWidth: 1,
-    borderBottomColor: "black",
-    paddingBottom: 5,
-    width: 300,
-    height: 30,
-    marginBottom: 25,
-  },
-  textInput: {
-    width: "90%",
-    paddingLeft: 10,
-    color: "#05375a",
-    fontSize: 17,
-    // textAlign: "center",
-  },
-  textInputTitulo: {
-    width: "100%",
-    paddingLeft: 10,
+  inputTitulo: {
+    // width: "100%",
+    // paddingLeft: 10,
     color: "#05375a",
     fontSize: 17,
     textAlign: "center",
   },
-  text1: {
-    alignSelf: "flex-start",
+  dataHora: {
+    flexDirection: "row",
+    // marginTop: 10,
+    borderBottomWidth: 1,
+    borderBottomColor: "black",
+    paddingBottom: 5,
+    width: 300,
+    // height: 30,
+    marginBottom: 25,
   },
-  text2: {
+  iconDataHora: {
+    fontSize: 25,
+  },
+  textInput: {
+    // width: "90%",
+    paddingLeft: 10,
+    color: "#05375a",
+    fontSize: 17,
+    width:280,
+    // textAlign: "center",
+  },
+  categoria:{
+    flexDirection: "row",
+    borderBottomWidth: 1,
+    width:300,
+    alignItems:"baseline",
+    paddingBottom:5,
+  },
+  iconCategoria: {
+    // width: "15%",
+    fontSize: 25,
+    // marginTop: 9,
+  },
+  dropdown: {
+    borderWidth: 0,
+    paddingLeft: 10,
+    // color: "#05375A",
+    width:280,
+    fontSize: 17,
+  },
+  categoriaSelecionada: {
+    // paddingLeft: 10,
+    // color: "#05375a",
+    fontSize: 17,
+    // width: 230,
+  },
+  repete: {
+    alignSelf: "flex-start",
     marginTop: 30,
-    marginLeft: 10,
+    // marginLeft: 10,
     fontSize: 17,
     color: "#616161",
   },
   weekDays: {
     flexDirection: "row",
     marginTop: 15,
+    marginBottom:30
   },
-
+  iconDesciption: {
+    width: "10%",
+    fontSize: 18,
+  },
   descricao: {
     flexDirection: "row",
-    marginTop: 30,
+    // marginTop: 30,
     borderBottomWidth: 1,
     borderBottomColor: "black",
     paddingBottom: 5,
     width: 300,
-    height: 30,
-    marginBottom: 25,
+    // height: 30,
+    // marginBottom: 25,
+  },
+  linkButton: {
+    marginTop: 60,
+    marginBottom: 40,
+    alignItems: "center",
   },
 });
