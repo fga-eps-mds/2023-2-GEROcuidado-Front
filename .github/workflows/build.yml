@@ -2,7 +2,7 @@ name: Build
 on:
   push:
     branches:
-      - main
+      - develop
       - teste/sonar
       - sonar/carrigindo_sonar
       - teste/sonarcloud
