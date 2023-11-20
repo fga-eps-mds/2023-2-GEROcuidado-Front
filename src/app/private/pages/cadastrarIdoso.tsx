@@ -222,7 +222,7 @@ export default function CadastrarIdoso() {
 
         <View style={styles.linkButton}>
           <CustomButton
-            title="Salvar"
+            title="Cadastrar"
             callbackFn={salvar}
             showLoading={showLoading}
           />

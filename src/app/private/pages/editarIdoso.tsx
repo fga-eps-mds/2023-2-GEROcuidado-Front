@@ -401,6 +401,8 @@ const styles = StyleSheet.create({
     alignSelf: "center",
     fontSize: 18,
     fontWeight: "600",
+    marginBottom: 60,
+    alignItems: "center",
   },
   dropdown: {
     width: 300,
