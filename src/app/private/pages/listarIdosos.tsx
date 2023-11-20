@@ -58,8 +58,6 @@ export default function ListarIdosos() {
   const [selecionado, setSelecionado] = useState(false);
   const [orderOption, setOrderOption] = useState<IOrder>(data[0].key);
 
-  console.log("TESTE", orderOption);
-
   const getIdosos = () => {
     setLoading(true);
 

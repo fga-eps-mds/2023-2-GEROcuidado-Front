@@ -11,15 +11,53 @@ import {
   Switch,
   Text,
   View,
+  Image,
 } from "react-native";
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
-import { router } from "expo-router";
+import { router, useLocalSearchParams } from "expo-router";
+import { IIdoso, IIdosoParams } from "../../interfaces/idoso.interface";
 
 export default function Rotinas() {
+  const params = useLocalSearchParams() as unknown as IIdosoParams;
   const [user, setUser] = useState<IUser | undefined>(undefined);
+  const [idoso, setIdoso] = useState<IIdoso | undefined>(undefined);
+
+  const getIdosoFromParams = () => {
+    const payload: IIdoso = {
+      ...params,
+      id: params.id,
+    };
+    setIdoso(payload);
+
+  };
+
+  // const hasFoto = (foto: string | null | undefined) => {
+  //   if (!foto) return false;
+
+  //   const raw = foto.split("data:image/png;base64,")[1];
+  //   return raw.length > 0;
+  // };
+
+  // const getFoto = (foto: string | null | undefined) => {
+  //   if (hasFoto(foto)) {
+  //     return (
+  //       <Image source={{ uri: foto as string }} style={styles.fotoPerfil} />
+  //     );
+  //   }
+
+  //   return (
+  //     <View style={[styles.semFoto, styles.fotoPerfil]}>
+  //       <Icon style={styles.semFotoIcon} name="image-outline" size={15} />
+  //     </View>
+  //   );
+  // };
 
   const novaRotina = () => {
-    router.push("private/pages/cadastrarRotina");
+    const params = {...idoso, id: idoso?.id}
+    router.push({
+      pathname:"private/pages/cadastrarRotina",
+      params: params,
+    });
   };
 
   const handleUser = () => {
@@ -29,9 +67,16 @@ export default function Rotinas() {
     });
   };
   useEffect(() => handleUser(), []);
+  useEffect(() => getIdosoFromParams(), []);
 
   return !user?.id ? <NaoAutenticado /> : 
-  <View> 
+  <View>
+    <View style={styles.header}>
+        {/* {getFoto(idoso?.foto)} */}
+        <Text style={styles.nomeUsuario}>
+          <Text style={styles.negrito}>{idoso?.nome}</Text>!
+        </Text>
+      </View>
     <Pressable
       style={styles.botaoCriarRotina}
       onPress={novaRotina}
@@ -44,6 +89,37 @@ export default function Rotinas() {
 }
 
 const styles = StyleSheet.create({
+  header: {
+    backgroundColor: "#2CCDB5",
+    width: "100%",
+    padding: 10,
+    flexDirection: "row",
+    alignItems: "center",
+  },
+  fotoPerfil: {
+    width: 60,
+    aspectRatio: 1,
+    borderRadius: 100,
+  },
+  semFoto: { position: "relative", backgroundColor: "#EFEFF0" },
+  semFotoIcon: {
+    position: "absolute",
+    right: "38%",
+    bottom: "38%",
+    opacity: 0.4,
+    margin: "auto",
+    alignSelf: "center",
+    zIndex: 1,
+  },
+  nomeUsuario: {
+    color: "#FFFFFF",
+    fontSize: 16,
+    marginLeft: 20,
+    maxWidth: "75%",
+  },
+  negrito: {
+    fontWeight: "bold",
+  },
   botaoCriarRotina: {
     flexDirection: "row",
     alignItems: "center",

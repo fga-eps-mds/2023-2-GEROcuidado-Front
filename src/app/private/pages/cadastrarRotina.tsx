@@ -11,7 +11,7 @@ import {
 import React, { useEffect, useState } from "react";
 import { ScrollView } from "react-native-gesture-handler";
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
-import { Link, router } from "expo-router";
+import { Link, router, useLocalSearchParams } from "expo-router";
 import { SelectList } from "react-native-dropdown-select-list";
 import { ECategoriaRotina } from "../../interfaces/rotina.interface";
 import WeekDays from "../../components/weekDay";
@@ -20,15 +20,53 @@ import { Fontisto } from "@expo/vector-icons";
 import CustomButton from "../../components/CustomButton";
 import MaskInput, { Masks } from "react-native-mask-input";
 import MaskHour from "../../components/MaskHour";
+import { postRotina } from "../../services/rotina.service";
+import Toast from "react-native-toast-message";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import { IUser } from "../../interfaces/user.interface";
+import { IIdoso, IIdosoParams } from "../../interfaces/idoso.interface";
+
+interface IErrors {
+  nome?: string;
+  dataNascimento?: string;
+  tipoSanguineo?: string;
+  telefoneResponsavel?: string;
+  descricao?: string;
+}
 
 export default function Rotina() {
+  const params = useLocalSearchParams() as unknown as IIdosoParams;
+  const [idPaciente, setIdPaciente] = useState<number | null>(null);
   const [titulo, setTitulo] = useState("");
   const [data, setData] = useState("");
   const [hora, setHora] = useState("");
   const [descricao, setDescricao] = useState("");
   const [categoria, setCategoria] = useState<ECategoriaRotina | null>(null);
   const [showLoading, setShowLoading] = useState(false);
+  const [erros, setErros] = useState<IErrors>({});
+  const [showErrors, setShowErrors] = useState(false);
+  const [token, setToken] = useState<string>("");
+  const [idUsuario, setIdUsuario] = useState<number | null>(null);
   
+const getIdUsuario = () => {
+    AsyncStorage.getItem("usuario").then((response) => {
+      const usuario = JSON.parse(response as string) as IUser;
+      setIdUsuario(usuario.id);
+    });
+    AsyncStorage.getItem("token").then((response) => {
+      setToken(response as string);
+    });
+  };
+
+  const getIdosoFromParams = () => {
+    const payload: IIdoso = {
+      ...params,
+      id: params.id,
+    };
+    setIdPaciente(Number(payload.id));
+
+  };
+
   const categorias = [
     { key: ECategoriaRotina.GERAL, value: ECategoriaRotina.GERAL },
     { key: ECategoriaRotina.MEDICAMENTO, value: ECategoriaRotina.MEDICAMENTO },
@@ -36,9 +74,52 @@ export default function Rotina() {
     { key: ECategoriaRotina.EXERCICIOS, value: ECategoriaRotina.EXERCICIOS },
   ];
 
-  const salvar = async () => {
-    
+  const getDateIsoString = (data: string, hora:string) => {
+    const dateArray = data.split("/");
+
+    console.log(`${dateArray[2]}-${dateArray[1]}-${dateArray[0]}T${hora}:00.000Z`);
+
+    return `${dateArray[2]}-${dateArray[1]}-${dateArray[0]}T${hora}:00.000Z`;
   };
+
+  const salvar = async () => {
+    if (Object.keys(erros).length > 0) {
+      setShowErrors(true);
+      return;
+    }
+
+    const body = {
+      idPaciente: idPaciente as number,
+      titulo,
+      // dataNascimento: getDateIsoString(dataNascimento),
+      dataHora:  getDateIsoString(data, hora),
+      categoria,
+      descricao,
+    };
+
+    try {
+      setShowLoading(true);
+      const response = await postRotina(body, token);
+      Toast.show({
+        type: "success",
+        text1: "Sucesso!",
+        text2: response.message as string,
+      });
+      router.replace("private/tabs/rotinas");
+    } catch (err) {
+      const error = err as { message: string };
+      Toast.show({
+        type: "error",
+        text1: "Erro!",
+        text2: error.message,
+      });
+    } finally {
+      setShowLoading(false);
+    }
+  };
+
+  useEffect(() => getIdUsuario(), []);
+  useEffect(() => getIdosoFromParams(), []);
 
   return (
     <ScrollView>
@@ -53,13 +134,12 @@ export default function Rotina() {
 
         <View style={styles.titulo}>
           <TextInput
-            onChangeText={setTitulo}
             value={titulo}
+            onChangeText={(titulo) => setTitulo(titulo)}
             placeholder="Adicionar título"
             style={styles.inputTitulo}
           />
         </View>
-
         <View style={styles.dataHora}>
           <Calendar style={styles.iconDataHora} name="calendar" size={20} />
           <MaskInput
@@ -82,7 +162,7 @@ export default function Rotina() {
             placeholder="Horário de início"
             value={hora}
             maxLength={5}
-            inputMaskChange={(text:string) => setHora(text)}
+            inputMaskChange={(hora) => setHora(hora)}
           />
         </View>
 
@@ -118,8 +198,8 @@ export default function Rotina() {
         <View style={styles.descricao}>
           <Fontisto style={styles.iconDesciption} name="left-align" size={15} />
           <TextInput
-            //onChangeText={setEmail}
-            //value={email}
+            onChangeText={setDescricao}
+            value={descricao}
             placeholder="Descrição"
             style={styles.textInput}
           />
