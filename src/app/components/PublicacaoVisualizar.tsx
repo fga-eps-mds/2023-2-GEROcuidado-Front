@@ -48,10 +48,12 @@ export default function PublicacaoVisualizar({ item }: Readonly<IProps>) {
         <Text style={styles.date}>{getFormattedDate(item.dataHora)}</Text>
       </View>
       <View style={styles.secondUnderInfo}>
+      {item.idUsuarioReporte.length > 0 && (
         <View style={styles.reports}>
           <AntDesing name="warning" size={18} color="#FFCC00" />
           <Text style={styles.reportsText}>{item.idUsuarioReporte.length}</Text>
         </View>
+      )}
       </View>
     </View>
   );

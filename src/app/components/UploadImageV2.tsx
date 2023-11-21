@@ -13,7 +13,8 @@ interface Props {
 export default function UploadImageV2({
   setPhotoCallback,
   base64,
-}: Props) {
+
+}: Readonly<Props>) {
   if (base64) {
     base64 = getImageUri(base64);
   }

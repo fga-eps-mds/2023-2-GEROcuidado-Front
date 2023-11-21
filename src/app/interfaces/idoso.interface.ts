@@ -6,7 +6,7 @@ export enum ETipoSanguineo {
   AB_POSITIVO = "AB+",
   AB_NEGATIVO = "AB-",
   O_POSITIVO = "O+",
-  O_NEGATIVO = "O",
+  O_NEGATIVO = "O-",
 }
 
 export interface IIdosoBody {
@@ -26,6 +26,7 @@ export interface IIdoso extends IIdosoBody {
 
 export interface IIdosoFilter {
   nome?: string;
+  idUsuario?: number;
 }
 
 export interface IOrder {
