@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { StyleSheet, Pressable } from "react-native";
+import { StyleSheet, Pressable, View, Text } from "react-native";
 import * as ImagePicker from "expo-image-picker";
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
 import { getImageUri, noImage } from "../shared/helpers/image.helper";
@@ -13,6 +13,7 @@ interface Props {
 export default function UploadImageV2({
   setPhotoCallback,
   base64,
+
 }: Readonly<Props>) {
   if (base64) {
     base64 = getImageUri(base64);
@@ -35,7 +36,7 @@ export default function UploadImageV2({
   };
 
   return (
-    <Pressable style={styles.foto} onPress={pickPhoto}>
+    <Pressable style={styles.foto} onPress={pickPhoto} testID="uploadImageButton">
       <Icon style={styles.icone} name="image-outline" size={20} />
       <Image
         source={{ uri: photo }}
