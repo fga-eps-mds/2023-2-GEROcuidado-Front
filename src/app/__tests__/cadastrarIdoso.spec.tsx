@@ -23,8 +23,7 @@ describe('CadastrarIdoso component', () => {
 
     const { getByText } = render(<CadastrarIdoso />);
     
-    // You can add more specific queries based on your UI
-    const saveButton = getByText('Salvar');
-    expect(saveButton).toBeTruthy();
+    const cadastrarButton = getByText('Cadastrar');
+    expect(cadastrarButton).toBeTruthy();
   });
 });
