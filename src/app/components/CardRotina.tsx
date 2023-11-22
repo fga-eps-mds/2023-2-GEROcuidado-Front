@@ -1,10 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { View, Text, StyleSheet, Pressable, Touchable } from "react-native";
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
-import { IIdoso } from "../interfaces/idoso.interface";
 import { router } from "expo-router";
-import { getImageUri, noImage } from "../shared/helpers/image.helper";
-import { Image } from "expo-image";
 import { ECategoriaRotina, IRotina } from "../interfaces/rotina.interface";
 import { TouchableOpacity } from "react-native-gesture-handler";
 
@@ -42,6 +39,11 @@ export default function CardRotina({ item }: IProps) {
     return nome.length < 15 ? nome : nome.slice(0, 15) + "...";
   };
 
+  const getDescricao = (descricao?: string): string | undefined => {
+    if(descricao)
+      return descricao.length < 80 ? descricao : descricao.slice(0, 80) + "...";
+  }
+
   const selectIdoso = () => {
     const params = { ...item, id: item.id };
     router.push({
@@ -70,8 +72,8 @@ export default function CardRotina({ item }: IProps) {
           <Icon size={40} name={nameIcon}></Icon>
         </View>
         <View style={styles.texts}>
-          <Text style={styles.title}>{item.titulo}</Text>
-          <Text style={styles.description}>{item.descricao}</Text>
+          <Text style={styles.title}>{getTitulo(item.titulo)}</Text>
+          <Text style={styles.description}>{getDescricao(item.descricao)}</Text>
         </View>
         <TouchableOpacity onPress={handleCheck} style={styles.checkBox}>
           {check && <Icon name="check" size={30}></Icon>}
@@ -88,28 +90,28 @@ const styles = StyleSheet.create({
   container: {
     flexDirection: "row",
     alignItems: "center",
-    // backgroundColor: "#FFC6C6",
     marginTop: 30,
     width: 298,
     height: 90,
-    shadowColor: "#000",
+    /* shadowColor: "#000",
     shadowOffset: { width: 2, height: 4 },
     shadowOpacity: 0.3,
-    shadowRadius: 8,
+    shadowRadius: 8, */
     borderRadius: 8,
-    padding: 5,
+    padding: 10,
   },
   texts: {
     flexDirection: "column",
     marginLeft: 10,
     marginBottom: 8,
-    marginTop: 8,
+    marginTop: 5,
     marginRight: 8,
     flex: 1,
   },
   title: {
     fontWeight: "500",
     fontSize: 18,
+
   },
   description: {
     color: "#767676",

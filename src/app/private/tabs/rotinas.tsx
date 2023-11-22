@@ -76,8 +76,10 @@ export default function Rotinas() {
 
   const getRotinas = () => {
     setLoading(true);
+    
+    console.log(idoso?.id)
 
-    getAllRotina()
+    getAllRotina(idoso?.id)
       .then((response) => {
         const newRotinas = response.data as IRotina[];
         setRotinas(newRotinas);
@@ -96,7 +98,7 @@ export default function Rotinas() {
   };
 
   useEffect(() => handleUser(), []);
-  useEffect(() => getRotinas(), []);
+  useEffect(() => getRotinas(), [idoso?.id]);
   useEffect(() => getIdosoFromParams(), []);
 
   return !user?.id ? (
