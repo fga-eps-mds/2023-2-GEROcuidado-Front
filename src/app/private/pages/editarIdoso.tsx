@@ -190,7 +190,6 @@ export default function EditarIdoso() {
   };
 
   const data = [
-    { key: null, value: "Nenhum" },
     { key: ETipoSanguineo.A_POSITIVO, value: ETipoSanguineo.A_POSITIVO },
     { key: ETipoSanguineo.A_NEGATIVO, value: ETipoSanguineo.A_NEGATIVO },
     { key: ETipoSanguineo.B_POSITIVO, value: ETipoSanguineo.B_POSITIVO },
