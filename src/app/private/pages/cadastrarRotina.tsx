@@ -50,8 +50,8 @@ export default function Rotina() {
   const [showErrors, setShowErrors] = useState(false);
   const [token, setToken] = useState<string>("");
   const [idUsuario, setIdUsuario] = useState<number | null>(null);
-  
-const getIdUsuario = () => {
+
+  const getIdUsuario = () => {
     AsyncStorage.getItem("usuario").then((response) => {
       const usuario = JSON.parse(response as string) as IUser;
       setIdUsuario(usuario.id);
@@ -67,14 +67,14 @@ const getIdUsuario = () => {
       id: params.id,
     };
     setIdPaciente(Number(payload.id));
-
   };
 
   const handleErrors = () => {
     const erros: IErrors = {};
 
     if (!titulo) {
-      erros.titulo = "Campo obrigatório!";}
+      erros.titulo = "Campo obrigatório!";
+    }
     // } else if (titulo.length < 5) {
     //   erros.titulo = "O nome completo deve ter pelo menos 5 caractéres.";
     // } else if (titulo.length > 60) {
@@ -93,7 +93,7 @@ const getIdUsuario = () => {
       erros.hora = "Hora deve ser no formato hh:mm!";
     }
 
-    if (!categoria){
+    if (!categoria) {
       erros.categoria = "Campo obrigatório";
     }
 
@@ -107,7 +107,7 @@ const getIdUsuario = () => {
     { key: ECategoriaRotina.EXERCICIOS, value: ECategoriaRotina.EXERCICIOS },
   ];
 
-  const getDateIsoString = (data: string, hora:string) => {
+  const getDateIsoString = (data: string, hora: string) => {
     const dateArray = data.split("/");
 
     // console.log(`${dateArray[2]}-${dateArray[1]}-${dateArray[0]}T${hora}:00.000Z`);
@@ -124,7 +124,7 @@ const getIdUsuario = () => {
     const body = {
       idPaciente: idPaciente as number,
       titulo,
-      dataHora:  getDateIsoString(data, hora),
+      dataHora: getDateIsoString(data, hora),
       categoria: categoria as ECategoriaRotina,
       // diasRepeticao: [1, 2, 3, 4, 5, 6, 7],
       descricao,
@@ -139,8 +139,8 @@ const getIdUsuario = () => {
         text2: response.message as string,
       });
       router.replace({
-        pathname:"private/tabs/rotinas",
-        params:params
+        pathname: "private/tabs/rotinas",
+        params: params,
       });
     } catch (err) {
       const error = err as { message: string };
@@ -168,7 +168,6 @@ const getIdUsuario = () => {
       </View>
 
       <View style={styles.rotina}>
-
         <View style={styles.titulo}>
           <TextInput
             value={titulo}
@@ -183,12 +182,12 @@ const getIdUsuario = () => {
         <View style={styles.dataHora}>
           <Calendar style={styles.iconDataHora} name="calendar" size={20} />
           <MaskInput
-              style={styles.textInput}
-              value={data}
-              onChangeText={setData}
-              mask={Masks.DATE_DDMMYYYY}
-              placeholder="Data da rotina"
-            />
+            style={styles.textInput}
+            value={data}
+            onChangeText={setData}
+            mask={Masks.DATE_DDMMYYYY}
+            placeholder="Data da rotina"
+          />
         </View>
         <View style={styles.erro}>
           <ErrorMessage show={showErrors} text={erros.data} />
@@ -214,10 +213,19 @@ const getIdUsuario = () => {
 
         <View>
           <View style={styles.categoria}>
-            {!categoria || categoria === ECategoriaRotina.GERAL && (<Icon style={styles.iconCategoria} name="view-grid-outline" />)}
-            {categoria === ECategoriaRotina.ALIMENTACAO && (<Icon style={styles.iconCategoria} name="food-apple-outline" />)}
-            {categoria === ECategoriaRotina.MEDICAMENTO && (<Icon style={styles.iconCategoria} name="medical-bag" />)}
-            {categoria === ECategoriaRotina.EXERCICIOS && (<Icon style={styles.iconCategoria} name="medical-bag" />)}
+            {!categoria ||
+              (categoria === ECategoriaRotina.GERAL && (
+                <Icon style={styles.iconCategoria} name="view-grid-outline" />
+              ))}
+            {categoria === ECategoriaRotina.ALIMENTACAO && (
+              <Icon style={styles.iconCategoria} name="food-apple-outline" />
+            )}
+            {categoria === ECategoriaRotina.MEDICAMENTO && (
+              <Icon style={styles.iconCategoria} name="medical-bag" />
+            )}
+            {categoria === ECategoriaRotina.EXERCICIOS && (
+              <Icon style={styles.iconCategoria} name="dumbbell" />
+            )}
             {/* <Icon style={styles.iconCategoria} name="view-grid-outline" /> */}
             <SelectList
               boxStyles={styles.dropdown}
@@ -262,7 +270,6 @@ const getIdUsuario = () => {
             showLoading={showLoading}
           />
         </View>
-        
       </View>
     </ScrollView>
   );
@@ -319,14 +326,14 @@ const styles = StyleSheet.create({
     paddingLeft: 10,
     color: "#05375a",
     fontSize: 17,
-    width:280,
+    width: 280,
   },
-  categoria:{
+  categoria: {
     flexDirection: "row",
     borderBottomWidth: 1,
-    width:300,
-    alignItems:"baseline",
-    paddingBottom:5,
+    width: 300,
+    alignItems: "baseline",
+    paddingBottom: 5,
   },
   iconCategoria: {
     fontSize: 25,
@@ -334,7 +341,7 @@ const styles = StyleSheet.create({
   dropdown: {
     borderWidth: 0,
     paddingLeft: 10,
-    width:280,
+    width: 280,
     fontSize: 17,
   },
   categoriaSelecionada: {
@@ -349,7 +356,7 @@ const styles = StyleSheet.create({
   weekDays: {
     flexDirection: "row",
     marginTop: 15,
-    marginBottom:30
+    marginBottom: 30,
   },
   iconDesciption: {
     width: "10%",
@@ -367,11 +374,11 @@ const styles = StyleSheet.create({
     marginBottom: 40,
     alignItems: "center",
   },
-  erroTitulo:{
-    marginBottom:35,
+  erroTitulo: {
+    marginBottom: 35,
   },
-  erro:{
-    marginBottom:15,
-    alignSelf:"flex-start",
+  erro: {
+    marginBottom: 15,
+    alignSelf: "flex-start",
   },
 });
