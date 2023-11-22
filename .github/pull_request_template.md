@@ -5,6 +5,10 @@
 ## Descrição
 <!--- insira uma descrição geral do que foi alterado neste PR -->
 
+## US
+<!--- cole a TAG da US -->
+<!--- Closes #NUMERO_US -->
+
 ## Issue
 <!--- cole a TAG da issue -->
 <!--- Closes #NUMERO_ISSUE -->
