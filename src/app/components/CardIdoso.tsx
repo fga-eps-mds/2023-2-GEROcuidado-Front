@@ -48,7 +48,7 @@ export default function CardIdoso({ item }: IProps) {
           />
         </View>
         <Text style={styles.texto}>{getNome(item.nome)}</Text>
-        <Pressable style={styles.pencil} onPress={navigate}>
+        <Pressable style={styles.pencil} onPress={navigate} testID="pencil-icon">
           <Icon
             style={styles.pencilIcon}
             name="pencil-outline"

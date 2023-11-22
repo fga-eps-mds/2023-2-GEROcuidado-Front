@@ -101,6 +101,10 @@ export default function EditarIdoso() {
       descricao,
     };
 
+    if (body.foto && isBase64Image(body.foto)) {
+      delete body.foto;
+    }
+
     try {
       setShowLoading(true);
       const response = await updateIdoso(item.id, body, token);
@@ -120,6 +124,13 @@ export default function EditarIdoso() {
     } finally {
       setShowLoading(false);
     }
+  };
+
+  const isBase64Image = (str: string): boolean => {
+    const expression = `data:image\/([a-zA-Z]*);base64,([^\"]*)`;
+    const regex = new RegExp(expression);
+
+    return regex.test(str);
   };
 
   const apagarIdoso = async () => {
@@ -179,7 +190,6 @@ export default function EditarIdoso() {
   };
 
   const data = [
-    { key: null, value: "Nenhum" },
     { key: ETipoSanguineo.A_POSITIVO, value: ETipoSanguineo.A_POSITIVO },
     { key: ETipoSanguineo.A_NEGATIVO, value: ETipoSanguineo.A_NEGATIVO },
     { key: ETipoSanguineo.B_POSITIVO, value: ETipoSanguineo.B_POSITIVO },
@@ -390,6 +400,8 @@ const styles = StyleSheet.create({
     alignSelf: "center",
     fontSize: 18,
     fontWeight: "600",
+    marginBottom: 60,
+    alignItems: "center",
   },
   dropdown: {
     width: 300,

@@ -125,7 +125,6 @@ export default function CadastrarIdoso() {
   };
 
   const data = [
-    { key: null, value: "Nenhum" },
     { key: ETipoSanguineo.A_POSITIVO, value: ETipoSanguineo.A_POSITIVO },
     { key: ETipoSanguineo.A_NEGATIVO, value: ETipoSanguineo.A_NEGATIVO },
     { key: ETipoSanguineo.B_POSITIVO, value: ETipoSanguineo.B_POSITIVO },
@@ -222,7 +221,7 @@ export default function CadastrarIdoso() {
 
         <View style={styles.linkButton}>
           <CustomButton
-            title="Salvar"
+            title="Cadastrar"
             callbackFn={salvar}
             showLoading={showLoading}
           />
