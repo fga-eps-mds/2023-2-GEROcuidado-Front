@@ -37,7 +37,7 @@ interface IErrors {
   descricao?: string;
 }
 
-export default function Rotina() {
+export default function CadastrarRotina() {
   const params = useLocalSearchParams() as unknown as IIdosoParams;
   const [idPaciente, setIdPaciente] = useState<number | null>(null);
   const [titulo, setTitulo] = useState("");
@@ -109,8 +109,6 @@ const getIdUsuario = () => {
 
   const getDateIsoString = (data: string, hora:string) => {
     const dateArray = data.split("/");
-
-    // console.log(`${dateArray[2]}-${dateArray[1]}-${dateArray[0]}T${hora}:00.000Z`);
 
     return `${dateArray[2]}-${dateArray[1]}-${dateArray[0]}T${hora}:00.000Z`;
   };

@@ -16,12 +16,13 @@ import {
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
 import { router, useLocalSearchParams } from "expo-router";
 import { IIdoso, IIdosoParams } from "../../interfaces/idoso.interface";
+import { IRotina } from "../../interfaces/rotina.interface";
 
 export default function Rotinas() {
   const params = useLocalSearchParams() as unknown as IIdosoParams;
   const [user, setUser] = useState<IUser | undefined>(undefined);
   const [idoso, setIdoso] = useState<IIdoso | undefined>(undefined);
-
+  const [rotina, setRotina] = useState<IRotina | null>(null);
   const getIdosoFromParams = () => {
     const payload: IIdoso = {
       ...params,
@@ -29,6 +30,15 @@ export default function Rotinas() {
     };
     setIdoso(payload);
 
+  };
+
+
+
+  const editarRotina = () => {
+    router.push({
+      pathname: "/private/pages/editarRotina",
+      params: rotina as IRotina,
+    });
   };
 
   // const hasFoto = (foto: string | null | undefined) => {
@@ -83,6 +93,13 @@ export default function Rotinas() {
     >
       <Icon name="plus" color={"white"} size={20}></Icon>
       <Text style={styles.textoBotaoCriarRotina}>Nova Rotina</Text>
+    </Pressable>
+    <Pressable
+      style={styles.botaoCriarRotina}
+      onPress={editarRotina}
+    >
+      <Icon name="plus" color={"white"} size={20}></Icon>
+      <Text style={styles.textoBotaoCriarRotina}>Editar Rotina</Text>
     </Pressable>
   </View>;
   ;
