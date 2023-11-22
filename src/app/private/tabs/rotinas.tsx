@@ -12,24 +12,30 @@ import {
   Text,
   View,
   Image,
+  FlatList,
+  ScrollView,
 } from "react-native";
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
 import { router, useLocalSearchParams } from "expo-router";
 import { IIdoso, IIdosoParams } from "../../interfaces/idoso.interface";
 import { IRotina } from "../../interfaces/rotina.interface";
+import CardRotina from "../../components/CardRotina";
+import { getAllRotina } from "../../services/rotina.service";
+import Toast from "react-native-toast-message";
 
 export default function Rotinas() {
   const params = useLocalSearchParams() as unknown as IIdosoParams;
   const [user, setUser] = useState<IUser | undefined>(undefined);
   const [idoso, setIdoso] = useState<IIdoso | undefined>(undefined);
-  const [rotina, setRotina] = useState<IRotina | null>(null);
+  const [rotinas, setRotinas] = useState<IRotina[]>([]);
+  const [loading, setLoading] = useState(true);
+
   const getIdosoFromParams = () => {
     const payload: IIdoso = {
       ...params,
       id: params.id,
     };
     setIdoso(payload);
-
   };
 
 
@@ -63,9 +69,9 @@ export default function Rotinas() {
   // };
 
   const novaRotina = () => {
-    const params = {...idoso, id: idoso?.id}
+    const params = { ...idoso, id: idoso?.id };
     router.push({
-      pathname:"private/pages/cadastrarRotina",
+      pathname: "private/pages/cadastrarRotina",
       params: params,
     });
   };
@@ -76,33 +82,62 @@ export default function Rotinas() {
       setUser(usuario);
     });
   };
+
+  const getRotinas = () => {
+    setLoading(true);
+
+    getAllRotina()
+      .then((response) => {
+        const newRotinas = response.data as IRotina[];
+        setRotinas(newRotinas);
+      })
+      .catch((err) => {
+        const error = err as { message: string };
+        Toast.show({
+          type: "error",
+          text1: "Erro!",
+          text2: error.message,
+        });
+      })
+      .finally(() => {
+        setLoading(false);
+      });
+  };
+
   useEffect(() => handleUser(), []);
+  useEffect(() => getRotinas(), []);
   useEffect(() => getIdosoFromParams(), []);
 
-  return !user?.id ? <NaoAutenticado /> : 
-  <View>
-    <View style={styles.header}>
+  return !user?.id ? (
+    <NaoAutenticado />
+  ) : (
+    <View>
+      <View style={styles.header}>
         {/* {getFoto(idoso?.foto)} */}
         <Text style={styles.nomeUsuario}>
           <Text style={styles.negrito}>{idoso?.nome}</Text>
         </Text>
       </View>
-    <Pressable
-      style={styles.botaoCriarRotina}
-      onPress={novaRotina}
-    >
-      <Icon name="plus" color={"white"} size={20}></Icon>
-      <Text style={styles.textoBotaoCriarRotina}>Nova Rotina</Text>
-    </Pressable>
-    <Pressable
-      style={styles.botaoCriarRotina}
-      onPress={editarRotina}
-    >
-      <Icon name="plus" color={"white"} size={20}></Icon>
-      <Text style={styles.textoBotaoCriarRotina}>Editar Rotina</Text>
-    </Pressable>
-  </View>;
-  ;
+      <Pressable style={styles.botaoCriarRotina} onPress={novaRotina}>
+        <Icon name="plus" color={"white"} size={20}></Icon>
+        <Text style={styles.textoBotaoCriarRotina}>Nova Rotina</Text>
+      </Pressable>
+
+      <View style={styles.cardIdoso}>
+        <FlatList
+          // style={{ marginBottom: 150 }}
+          showsVerticalScrollIndicator={false}
+          numColumns={1}
+          data={rotinas}
+          renderItem={({ item }) => (
+            <Pressable>
+              <CardRotina item={item} />
+            </Pressable>
+          )}
+        />
+      </View>
+    </View>
+  );
 }
 
 const styles = StyleSheet.create({
@@ -153,5 +188,10 @@ const styles = StyleSheet.create({
     fontWeight: "600",
     fontSize: 14,
     marginLeft: 5,
+  },
+  cardIdoso: {
+    alignItems: "center",
+    justifyContent: "space-between",
+    marginBottom: 250,
   },
 });
