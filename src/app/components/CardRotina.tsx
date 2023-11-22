@@ -54,7 +54,7 @@ export default function CardRotina({ item }: IProps) {
     const params = { ...item, id: item.id };
 
     router.push({
-      pathname: "/private/pages/editarIdoso",
+      pathname: "/private/pages/editarRotina",
       params: params,
     });
   };

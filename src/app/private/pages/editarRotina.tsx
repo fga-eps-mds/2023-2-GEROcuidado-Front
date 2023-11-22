@@ -40,19 +40,20 @@ import {
   export default function EditarRotina() {
     //const params = useLocalSearchParams() as unknown as IIdosoParams;
     // const [rotina, setRotina] = useState<IRotina | null>(null);
+    //const params: {rotina: IRotina, idoso:IIdoso} =  useLocalSearchParams() as unknown as {rotina: IRotina, idoso:IIdoso};
     const params = useLocalSearchParams() as unknown as IRotina & IIdoso;
-    const [idPaciente, setIdPaciente] = useState<number | null>(null);
+    const [idPaciente, setIdPaciente] = useState<number | null>(Number(params.idPaciente));
     const [titulo, setTitulo] = useState(params.titulo);
-    const [data, setData] = useState("");
-    const [hora, setHora] = useState("");
     const [descricao, setDescricao] = useState(params.descricao);
-    const [categoria, setCategoria] = useState<ECategoriaRotina | null>(params.categoria as ECategoriaRotina);
+    const [categoria, setCategoria] = useState(params.categoria);
     const [showLoading, setShowLoading] = useState(false);
     const [erros, setErros] = useState<IErrors>({});
     const [showErrors, setShowErrors] = useState(false);
     const [token, setToken] = useState<string>("");
+    const [data, setData] = useState("");
+    const [hora, setHora] = useState("");
     const [idUsuario, setIdUsuario] = useState<number | null>(null);
-    
+
     const getIdUsuario = () => {
       AsyncStorage.getItem("usuario").then((response) => {
         const usuario = JSON.parse(response as string) as IUser;
@@ -62,19 +63,16 @@ import {
         setToken(response as string);
       });
     };
-
+ 
     const separaDataHora = () =>{
         //const value = params.dataHora as string;
-        const value = "1972-11-23T09:00:00";
+        const value = params.dataHora as string;
         const valueFinal = value.split("T");
         const separaData = valueFinal[0].split("-");
         setData(`${separaData[2]}/${separaData[1]}/${separaData[0]}`);
         const separaHora = valueFinal[1].split(":");
         setHora(`${separaHora[0]}:${separaHora[1]}`);
     };
-
-
-    
   
     // const getRotinaFromParams = () => {
     //   const payload: IRotina = {
@@ -169,14 +167,14 @@ import {
     useEffect(() => getIdUsuario(), []);
     //useEffect(() => getIdosoFromParams(), []);
     useEffect(() => handleErrors(), [titulo, data, hora, categoria]);
-    useEffect(() => separaDataHora());
+    useEffect(() => separaDataHora(), []);
 
     const goBack = () => {
-        router.push({
-          pathname: "/private/tabs/rotinas",
-          params: params as IIdoso,
-        });
-      };
+      router.push({
+        pathname: "/private/tabs/rotinas",
+        params: params,
+      });
+    };
 
     return (
       <ScrollView>
@@ -237,7 +235,7 @@ import {
               {!categoria || categoria === ECategoriaRotina.GERAL && (<Icon style={styles.iconCategoria} name="view-grid-outline" />)}
               {categoria === ECategoriaRotina.ALIMENTACAO && (<Icon style={styles.iconCategoria} name="food-apple-outline" />)}
               {categoria === ECategoriaRotina.MEDICAMENTO && (<Icon style={styles.iconCategoria} name="medical-bag" />)}
-              {categoria === ECategoriaRotina.EXERCICIOS && (<Icon style={styles.iconCategoria} name="medical-bag" />)}
+              {categoria === ECategoriaRotina.EXERCICIOS && (<Icon style={styles.iconCategoria} name="dumbbell" />)}
               {/* <Icon style={styles.iconCategoria} name="view-grid-outline" /> */}
               <SelectList
                 boxStyles={styles.dropdown}
@@ -245,6 +243,7 @@ import {
                 data={categorias}
                 setSelected={setCategoria}
                 placeholder="Categoria"
+                defaultOption={{ key: params.categoria, value: params.categoria }}
                 search={false}
               />
             </View>

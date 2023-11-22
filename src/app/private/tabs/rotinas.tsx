@@ -40,10 +40,13 @@ export default function Rotinas() {
 
 
 
-  const editarRotina = () => {
+  const editarRotina = (item: IRotina) => {
+    const rotina = {...item, id: item.id};
+  
     router.push({
       pathname: "/private/pages/editarRotina",
-      params: rotina as IRotina,
+      params: rotina,
+
     });
   };
 
@@ -130,7 +133,7 @@ export default function Rotinas() {
           numColumns={1}
           data={rotinas}
           renderItem={({ item }) => (
-            <Pressable>
+            <Pressable onPress={() => editarRotina(item)}>
               <CardRotina item={item} />
             </Pressable>
           )}
