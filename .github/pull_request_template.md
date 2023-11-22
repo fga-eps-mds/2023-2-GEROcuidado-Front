@@ -17,3 +17,6 @@
  - [ ] Nova feature (alteração que adiciona uma funcionalidade e não altera funcionalidades já existentes);
  - [ ] Alteração disruptiva (Breaking change) (Correção ou funcionalidade que causa alteração nas funcionalidades existentes);
  - [ ] Documentação
+ - [ ] Experiência do usuário (UX)
+ - [ ] Melhoria de desempenho
+
