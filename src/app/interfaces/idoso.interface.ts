@@ -1,3 +1,6 @@
+import { IUser } from "./user.interface";
+const { id }: IUser = require("./user.interface");
+
 export enum ETipoSanguineo {
   A_POSITIVO = "A+",
   A_NEGATIVO = "A-",
@@ -32,4 +35,10 @@ export interface IIdosoFilter {
 export interface IOrder {
   column: string;
   dir: "DESC" | "ASC";
+}
+
+export interface IIdosoParams extends IIdosoBody {
+  id: number;
+  usuario?: IUser;
+  idUsuarioReporte: string;
 }

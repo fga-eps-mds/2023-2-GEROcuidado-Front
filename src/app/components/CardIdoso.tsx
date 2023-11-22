@@ -16,10 +16,10 @@ export default function CardIdoso({ item }: IProps) {
   };
 
   const selectIdoso = () => {
-    // TODO selecionar um idoso para a aplicacao
-
+    const params = { ...item, id: item.id };
     router.push({
       pathname: "/private/tabs/rotinas",
+      params: params,
     });
   };
 
