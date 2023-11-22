@@ -152,6 +152,13 @@ export default function CadastrarRotina() {
     }
   };
 
+  const goBack = () => {
+    router.push({
+      pathname: "/private/tabs/rotinas",
+      params: params,
+    });
+};
+
   useEffect(() => getIdUsuario(), []);
   useEffect(() => getIdosoFromParams(), []);
   useEffect(() => handleErrors(), [titulo, data, hora, categoria]);
@@ -159,9 +166,9 @@ export default function CadastrarRotina() {
   return (
     <ScrollView>
       <View style={styles.header}>
-        <Link href="private/tabs/rotinas">
+      <Pressable onPress = {goBack}>
           <Icon name="chevron-left" size={40} color="#fff" />
-        </Link>
+      </Pressable>
         <Text style={styles.tituloheader}>Nova rotina</Text>
       </View>
 
