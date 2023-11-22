@@ -74,7 +74,7 @@ export default function Rotinas() {
     <View style={styles.header}>
         {/* {getFoto(idoso?.foto)} */}
         <Text style={styles.nomeUsuario}>
-          <Text style={styles.negrito}>{idoso?.nome}</Text>!
+          <Text style={styles.negrito}>{idoso?.nome}</Text>
         </Text>
       </View>
     <Pressable

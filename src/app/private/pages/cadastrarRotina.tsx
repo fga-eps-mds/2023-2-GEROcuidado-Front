@@ -25,12 +25,15 @@ import Toast from "react-native-toast-message";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { IUser } from "../../interfaces/user.interface";
 import { IIdoso, IIdosoParams } from "../../interfaces/idoso.interface";
+import ErrorMessage from "../../components/ErrorMessage";
+import { ErrorWithStack } from "@testing-library/react-native/build/helpers/errors";
 
 interface IErrors {
-  nome?: string;
-  dataNascimento?: string;
-  tipoSanguineo?: string;
-  telefoneResponsavel?: string;
+  titulo?: string;
+  data?: string;
+  hora?: string;
+  categoria?: string;
+  // diasRepeticao?: string;
   descricao?: string;
 }
 
@@ -67,6 +70,36 @@ const getIdUsuario = () => {
 
   };
 
+  const handleErrors = () => {
+    const erros: IErrors = {};
+
+    if (!titulo) {
+      erros.titulo = "Campo obrigatório!";}
+    // } else if (titulo.length < 5) {
+    //   erros.titulo = "O nome completo deve ter pelo menos 5 caractéres.";
+    // } else if (titulo.length > 60) {
+    //   erros.titulo = "O nome completo deve ter no máximo 60 caractéres.";
+    // }
+
+    if (!data) {
+      erros.data = "Campo obrigatório";
+    } else if (!/^\d{2}\/\d{2}\/\d{4}$/.test(data)) {
+      erros.data = "Data deve ser no formato dd/mm/yyyy!";
+    }
+
+    if (!hora) {
+      erros.hora = "Campo obrigatório";
+    } else if (!/^\d{2}:\d{2}$/.test(hora)) {
+      erros.hora = "Hora deve ser no formato hh:mm!";
+    }
+
+    if (!categoria){
+      erros.categoria = "Campo obrigatório";
+    }
+
+    setErros(erros);
+  };
+
   const categorias = [
     { key: ECategoriaRotina.GERAL, value: ECategoriaRotina.GERAL },
     { key: ECategoriaRotina.MEDICAMENTO, value: ECategoriaRotina.MEDICAMENTO },
@@ -77,7 +110,7 @@ const getIdUsuario = () => {
   const getDateIsoString = (data: string, hora:string) => {
     const dateArray = data.split("/");
 
-    console.log(`${dateArray[2]}-${dateArray[1]}-${dateArray[0]}T${hora}:00.000Z`);
+    // console.log(`${dateArray[2]}-${dateArray[1]}-${dateArray[0]}T${hora}:00.000Z`);
 
     return `${dateArray[2]}-${dateArray[1]}-${dateArray[0]}T${hora}:00.000Z`;
   };
@@ -91,9 +124,9 @@ const getIdUsuario = () => {
     const body = {
       idPaciente: idPaciente as number,
       titulo,
-      // dataNascimento: getDateIsoString(dataNascimento),
       dataHora:  getDateIsoString(data, hora),
-      categoria,
+      categoria: categoria as ECategoriaRotina,
+      // diasRepeticao: [1, 2, 3, 4, 5, 6, 7],
       descricao,
     };
 
@@ -105,7 +138,10 @@ const getIdUsuario = () => {
         text1: "Sucesso!",
         text2: response.message as string,
       });
-      router.replace("private/tabs/rotinas");
+      router.replace({
+        pathname:"private/tabs/rotinas",
+        params:params
+      });
     } catch (err) {
       const error = err as { message: string };
       Toast.show({
@@ -120,6 +156,7 @@ const getIdUsuario = () => {
 
   useEffect(() => getIdUsuario(), []);
   useEffect(() => getIdosoFromParams(), []);
+  useEffect(() => handleErrors(), [titulo, data, hora, categoria]);
 
   return (
     <ScrollView>
@@ -140,6 +177,9 @@ const getIdUsuario = () => {
             style={styles.inputTitulo}
           />
         </View>
+        <View style={styles.erroTitulo}>
+          <ErrorMessage show={showErrors} text={erros.titulo} />
+        </View>
         <View style={styles.dataHora}>
           <Calendar style={styles.iconDataHora} name="calendar" size={20} />
           <MaskInput
@@ -149,6 +189,9 @@ const getIdUsuario = () => {
               mask={Masks.DATE_DDMMYYYY}
               placeholder="Data da rotina"
             />
+        </View>
+        <View style={styles.erro}>
+          <ErrorMessage show={showErrors} text={erros.data} />
         </View>
 
         <View style={styles.dataHora}>
@@ -165,10 +208,17 @@ const getIdUsuario = () => {
             inputMaskChange={(hora) => setHora(hora)}
           />
         </View>
+        <View style={styles.erro}>
+          <ErrorMessage show={showErrors} text={erros.hora} />
+        </View>
 
         <View>
           <View style={styles.categoria}>
-            <Icon style={styles.iconCategoria} name="view-grid-outline" />
+            {!categoria || categoria === ECategoriaRotina.GERAL && (<Icon style={styles.iconCategoria} name="view-grid-outline" />)}
+            {categoria === ECategoriaRotina.ALIMENTACAO && (<Icon style={styles.iconCategoria} name="food-apple-outline" />)}
+            {categoria === ECategoriaRotina.MEDICAMENTO && (<Icon style={styles.iconCategoria} name="medical-bag" />)}
+            {categoria === ECategoriaRotina.EXERCICIOS && (<Icon style={styles.iconCategoria} name="medical-bag" />)}
+            {/* <Icon style={styles.iconCategoria} name="view-grid-outline" /> */}
             <SelectList
               boxStyles={styles.dropdown}
               inputStyles={styles.categoriaSelecionada}
@@ -178,7 +228,7 @@ const getIdUsuario = () => {
               search={false}
             />
           </View>
-          {/* <ErrorMessage show={showErrors} text={erros.categoria} /> */}
+          <ErrorMessage show={showErrors} text={erros.categoria} />
         </View>
 
         <View style={styles.repete}>
@@ -247,37 +297,29 @@ const styles = StyleSheet.create({
     borderBottomWidth: 1,
     borderBottomColor: "#333333",
     paddingBottom: 5,
-    // width: 220,
-    // alignSelf: "center",
-    marginBottom: 40,
+    marginBottom: 1,
   },
   inputTitulo: {
-    // width: "100%",
-    // paddingLeft: 10,
     color: "#05375a",
     fontSize: 17,
     textAlign: "center",
   },
   dataHora: {
     flexDirection: "row",
-    // marginTop: 10,
     borderBottomWidth: 1,
     borderBottomColor: "black",
     paddingBottom: 5,
     width: 300,
-    // height: 30,
-    marginBottom: 25,
+    marginBottom: 1,
   },
   iconDataHora: {
     fontSize: 25,
   },
   textInput: {
-    // width: "90%",
     paddingLeft: 10,
     color: "#05375a",
     fontSize: 17,
     width:280,
-    // textAlign: "center",
   },
   categoria:{
     flexDirection: "row",
@@ -287,27 +329,20 @@ const styles = StyleSheet.create({
     paddingBottom:5,
   },
   iconCategoria: {
-    // width: "15%",
     fontSize: 25,
-    // marginTop: 9,
   },
   dropdown: {
     borderWidth: 0,
     paddingLeft: 10,
-    // color: "#05375A",
     width:280,
     fontSize: 17,
   },
   categoriaSelecionada: {
-    // paddingLeft: 10,
-    // color: "#05375a",
     fontSize: 17,
-    // width: 230,
   },
   repete: {
     alignSelf: "flex-start",
     marginTop: 30,
-    // marginLeft: 10,
     fontSize: 17,
     color: "#616161",
   },
@@ -322,17 +357,21 @@ const styles = StyleSheet.create({
   },
   descricao: {
     flexDirection: "row",
-    // marginTop: 30,
     borderBottomWidth: 1,
     borderBottomColor: "black",
     paddingBottom: 5,
     width: 300,
-    // height: 30,
-    // marginBottom: 25,
   },
   linkButton: {
     marginTop: 60,
     marginBottom: 40,
     alignItems: "center",
+  },
+  erroTitulo:{
+    marginBottom:35,
+  },
+  erro:{
+    marginBottom:15,
+    alignSelf:"flex-start",
   },
 });
