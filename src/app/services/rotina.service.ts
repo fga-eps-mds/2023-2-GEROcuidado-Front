@@ -30,9 +30,9 @@ export const postRotina = async (
 };
 
 export const getAllRotina = async (
-  idIdoso : number | undefined,
+  idIdoso : number,
   ) : Promise<IResponse<IRotina[] | null>> => {
-  const params = `limit=20&offset=0&filter=${JSON.stringify({idIdoso})}`;
+  const params = `limit=20&offset=0&filter=${JSON.stringify({ idIdoso })}`;
 
   const response = await fetch(`${BASE_URL}?${params}`, {
     method: "GET",

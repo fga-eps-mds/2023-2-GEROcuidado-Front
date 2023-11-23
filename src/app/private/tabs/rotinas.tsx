@@ -11,7 +11,6 @@ import {
   Switch,
   Text,
   View,
-  Image,
   FlatList,
   ScrollView,
 } from "react-native";
@@ -22,6 +21,10 @@ import { IRotina } from "../../interfaces/rotina.interface";
 import CardRotina from "../../components/CardRotina";
 import { getAllRotina } from "../../services/rotina.service";
 import Toast from "react-native-toast-message";
+import { getImageUri, noImage } from "../../shared/helpers/image.helper";
+import { Image } from "expo-image";
+
+
 
 export default function Rotinas() {
   const params = useLocalSearchParams() as unknown as IIdosoParams;
@@ -29,6 +32,7 @@ export default function Rotinas() {
   const [idoso, setIdoso] = useState<IIdoso | undefined>(undefined);
   const [rotinas, setRotinas] = useState<IRotina[]>([]);
   const [loading, setLoading] = useState(true);
+  //const [idIdoso, setIdIdoso] = useState<number>(idoso?.id);
 
   const getIdosoFromParams = () => {
     const payload: IIdoso = {
@@ -75,11 +79,11 @@ export default function Rotinas() {
   };
 
   const getRotinas = () => {
-    setLoading(true);
-    
-    console.log(idoso?.id)
+    if (!idoso) return;
 
-    getAllRotina(idoso?.id)
+    setLoading(true);
+
+    getAllRotina(idoso.id)
       .then((response) => {
         const newRotinas = response.data as IRotina[];
         setRotinas(newRotinas);
@@ -104,9 +108,20 @@ export default function Rotinas() {
   return !user?.id ? (
     <NaoAutenticado />
   ) : (
-    <View>
+    <View style={styles.screen}>
       <View style={styles.header}>
-        {/* {getFoto(idoso?.foto)} */}
+
+        {/* {idoso && (
+          <View>
+            <Image
+              source={{ uri: getImageUri(idoso.foto) }}
+              style={styles.imagem}
+              placeholder={{ uri: noImage }}
+              transition={500}
+            />    Não funciona
+          </View>
+        )} */}
+
         <Text style={styles.nomeUsuario}>
           <Text style={styles.negrito}>{idoso?.nome}</Text>
         </Text>
@@ -116,27 +131,33 @@ export default function Rotinas() {
         <Text style={styles.textoBotaoCriarRotina}>Nova Rotina</Text>
       </Pressable>
 
-      <View style={styles.cardIdoso}>
-        <FlatList
-          // style={{ marginBottom: 150 }}
-          showsVerticalScrollIndicator={false}
-          numColumns={1}
-          data={rotinas}
-          renderItem={({ item }) => (
-            <Pressable>
-              <CardRotina item={item} />
-            </Pressable>
-          )}
-        />
-      </View>
+      {!loading && (
+        <View style={styles.cardRotina}>
+          <FlatList
+            scrollToOverflowEnabled={true}
+            showsVerticalScrollIndicator={true}
+            data={rotinas}
+            renderItem={({ item }) => (
+              <Pressable>
+                <CardRotina item={item} />
+              </Pressable>
+            )}
+          />
+        </View>
+      )}
+
     </View>
   );
 }
 
 const styles = StyleSheet.create({
+  screen: {
+    height: "100%",
+  },
   header: {
     backgroundColor: "#2CCDB5",
     width: "100%",
+    height: "8%",
     padding: 10,
     flexDirection: "row",
     alignItems: "center",
@@ -182,9 +203,14 @@ const styles = StyleSheet.create({
     fontSize: 14,
     marginLeft: 5,
   },
-  cardIdoso: {
+  cardRotina: {
     alignItems: "center",
-    justifyContent: "space-between",
-    marginBottom: 250,
+    flexDirection: "column",
+    overflow: "scroll",
+  },
+  imagem: {
+    marginLeft: 16,
+    marginRight: 16,
+    marginBottom: 32,
   },
 });

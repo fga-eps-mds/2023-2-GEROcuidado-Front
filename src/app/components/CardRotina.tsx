@@ -66,10 +66,11 @@ export default function CardRotina({ item }: IProps) {
   //useEffect(() => handleCheck());
 
   return (
-    <View style={styles.shadow}>
+    <View style={styles.card}>
+     {/*  <Text>{item.dataHora as string}</Text> */}
       <View style={[styles.container, { backgroundColor: backgroundColor }]}>
         <View style={styles.icon}>
-          <Icon size={40} name={nameIcon}></Icon>
+          <Icon size={35} name={nameIcon}></Icon>
         </View>
         <View style={styles.texts}>
           <Text style={styles.title}>{getTitulo(item.titulo)}</Text>
@@ -84,21 +85,21 @@ export default function CardRotina({ item }: IProps) {
 }
 
 const styles = StyleSheet.create({
-  shadow: {
-    width: 310,
+  card:{
+    marginTop: 30,
   },
   container: {
     flexDirection: "row",
     alignItems: "center",
-    marginTop: 30,
+    marginTop: 0,
     width: 298,
     height: 90,
-    /* shadowColor: "#000",
-    shadowOffset: { width: 2, height: 4 },
-    shadowOpacity: 0.3,
-    shadowRadius: 8, */
     borderRadius: 8,
     padding: 10,
+    borderBottomWidth: 4,
+    borderBottomColor: "#d3d3d3",
+    borderRightWidth: 3,
+    borderRightColor: "#d3d3d3",
   },
   texts: {
     flexDirection: "column",
@@ -111,13 +112,16 @@ const styles = StyleSheet.create({
   title: {
     fontWeight: "500",
     fontSize: 18,
-
+    paddingTop: 10,
   },
   description: {
     color: "#767676",
     marginTop: 10,
   },
-  icon: {},
+  icon: {
+    alignContent: "center",
+    padding: 0,
+  },
   checkBox: {
     height: 30,
     width: 30,
@@ -126,5 +130,7 @@ const styles = StyleSheet.create({
     marginRight: 10,
     justifyContent: "center",
     alignItems: "center",
+    borderColor: "#d3d3d3",
+    borderWidth: 1,
   },
 });
