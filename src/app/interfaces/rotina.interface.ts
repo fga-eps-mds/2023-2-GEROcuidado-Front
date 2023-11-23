@@ -1,3 +1,4 @@
+import { IIdoso, IIdosoParams } from "./idoso.interface";
 
 export enum ECategoriaRotina {
     MEDICAMENTO = "Medicamentos",
@@ -20,4 +21,7 @@ export interface IRotina extends IRotinaBody {
 
 export interface IRotinaFilter {
     idPaciente?: number;
+}
+
+export interface IRotinaIdoso extends IRotina, IIdosoParams {
 }
