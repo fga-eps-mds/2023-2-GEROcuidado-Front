@@ -24,4 +24,6 @@ export interface IRotinaFilter {
 }
 
 export interface IRotinaIdoso extends IRotina, IIdosoParams {
+    dataHoraIdoso: string;
+    descricaoIdoso: string;
 }
