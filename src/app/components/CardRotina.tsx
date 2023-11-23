@@ -73,9 +73,9 @@ export default function CardRotina({ item }: IProps) {
           <Text style={styles.title}>{item.titulo}</Text>
           <Text style={styles.description}>{item.descricao}</Text>
         </View>
-        <TouchableOpacity onPress={handleCheck} style={styles.checkBox}>
+        <Pressable onPress={handleCheck} style={styles.checkBox}>
           {check && <Icon name="check" size={30}></Icon>}
-        </TouchableOpacity>
+        </Pressable>
       </View>
     </View>
   );
@@ -84,12 +84,13 @@ export default function CardRotina({ item }: IProps) {
 const styles = StyleSheet.create({
   shadow: {
     width: 310,
+    marginBottom: 20,
   },
   container: {
     flexDirection: "row",
     alignItems: "center",
     // backgroundColor: "#FFC6C6",
-    marginTop: 30,
+    marginTop: 10,
     width: 298,
     height: 90,
     shadowColor: "#000",
