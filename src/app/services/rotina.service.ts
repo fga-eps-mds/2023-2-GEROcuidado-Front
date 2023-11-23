@@ -1,5 +1,5 @@
 import { IOrder } from "../interfaces/forum.interface";
-import { IRotina, IRotinaBody } from "../interfaces/rotina.interface";
+import { IRotina, IRotinaBody, IRotinaFilter } from "../interfaces/rotina.interface";
 import { IResponse } from "../interfaces/response.interface";
 
 const API_URL = process.env.EXPO_PUBLIC_API_URL;
@@ -29,10 +29,13 @@ export const postRotina = async (
   return json;
 };
 
-export const getAllRotina = async () // order: IOrder,
-: Promise<IResponse<IRotina[] | null>> => {
-  const params = `limit=20&offset=0`;
-
+export const getAllRotina = async (
+  filter: IRotinaFilter,
+) // order: IOrder,
+  : Promise<IResponse<IRotina[] | null>> => {
+  const params = `limit=20&offset=0&filter=${JSON.stringify(
+    filter,
+  )}`;
   const response = await fetch(`${BASE_URL}?${params}`, {
     method: "GET",
     headers: {
