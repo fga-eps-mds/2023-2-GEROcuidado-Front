@@ -44,6 +44,7 @@ export default function TabsLayout() {
             },
           }}
         />
+        
         <Tabs.Screen
           name="registros"
           options={{
@@ -59,6 +60,7 @@ export default function TabsLayout() {
           options={{
             title: "Forum",
             headerShown: false,
+            tabBarHideOnKeyboard: true,
             tabBarIcon: ({ size, focused }) => {
               return iconComponent(focused, size, "message");
             },
