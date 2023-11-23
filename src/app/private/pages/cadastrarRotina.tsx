@@ -6,7 +6,6 @@ import {
   Text,
   View,
   TextInput,
-  TouchableOpacity,
 } from "react-native";
 import React, { useEffect, useState } from "react";
 import { ScrollView } from "react-native-gesture-handler";
@@ -75,11 +74,11 @@ export default function CadastrarRotina() {
     if (!titulo) {
       erros.titulo = "Campo obrigatório!";
     }
+    else if (titulo.length > 100) {
+      erros.titulo = "O título deve ter no máximo 100 caracteres.";
+    }
     // } else if (titulo.length < 5) {
     //   erros.titulo = "O nome completo deve ter pelo menos 5 caractéres.";
-    // } else if (titulo.length > 60) {
-    //   erros.titulo = "O nome completo deve ter no máximo 60 caractéres.";
-    // }
 
     if (!data) {
       erros.data = "Campo obrigatório";
@@ -95,6 +94,10 @@ export default function CadastrarRotina() {
 
     if (!categoria) {
       erros.categoria = "Campo obrigatório";
+    }
+
+    if (descricao?.length > 300){
+      erros.descricao = "A descrição deve ter no máximo 300 caracteres.";
     }
 
     setErros(erros);
@@ -161,7 +164,7 @@ export default function CadastrarRotina() {
 
   useEffect(() => getIdUsuario(), []);
   useEffect(() => getIdosoFromParams(), []);
-  useEffect(() => handleErrors(), [titulo, data, hora, categoria]);
+  useEffect(() => handleErrors(), [titulo, data, hora, categoria, descricao]);
 
   return (
     <ScrollView>
@@ -218,10 +221,9 @@ export default function CadastrarRotina() {
 
         <View>
           <View style={styles.categoria}>
-            {!categoria ||
-              (categoria === ECategoriaRotina.GERAL && (
+            {(!categoria || categoria == ECategoriaRotina.GERAL) && (
                 <Icon style={styles.iconCategoria} name="view-grid-outline" />
-              ))}
+              )}
             {categoria === ECategoriaRotina.ALIMENTACAO && (
               <Icon style={styles.iconCategoria} name="food-apple-outline" />
             )}
@@ -266,6 +268,9 @@ export default function CadastrarRotina() {
             placeholder="Descrição"
             style={styles.textInput}
           />
+        </View>
+        <View style={styles.erro}>
+          <ErrorMessage show={showErrors} text={erros.descricao} />
         </View>
 
         <View style={styles.linkButton}>
