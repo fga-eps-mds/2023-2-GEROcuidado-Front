@@ -32,9 +32,10 @@ export default function MaskInput({
 
     return (
         <TextInput
-            onChangeText={text => handlechange(text)}
-            {...textInput}
+          onChangeText={(text) => handlechange(text)}
+          {...textInput}
+          testID="mask-input"
         />
-    );
+      );
 }
 
