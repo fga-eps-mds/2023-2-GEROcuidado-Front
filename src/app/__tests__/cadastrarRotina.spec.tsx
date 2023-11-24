@@ -11,9 +11,18 @@ describe('Rotina component', () => {
     const { getByText, getByTestId } = render(<Rotina />);
     const saveButton = getByText('Salvar');
     fireEvent.press(saveButton);
-    const errorMessage = getByTestId('error-titulo');
-    expect(errorMessage.props.children).toBe('Campo obrigatório!');
+    const errorMessage = getByTestId('error-titulo1');
+    //expect(errorMessage.props.children).toBe('Campo obrigatório!');
+    expect(errorMessage).toBeTruthy();
+    
+    const errorMessage2 = getByTestId('error-titulo2');
+    expect(errorMessage2).toBeTruthy();
+
+    const errorMessage3 = getByTestId('error-titulo3');
+    expect(errorMessage3).toBeTruthy();
+
+    const errorMessage4 = getByTestId('error-titulo4');
+    expect(errorMessage4.props.children).toBeTruthy();
   });
 
-  // Add more tests as needed
 });

@@ -73,7 +73,7 @@ export default function Rotina() {
     const erros: IErrors = {};
 
     if (!titulo) {
-      erros.titulo = "Campo obrigatório!";
+      erros.titulo = "Campo obrigatório";
     }
     // } else if (titulo.length < 5) {
     //   erros.titulo = "O nome completo deve ter pelo menos 5 caractéres.";
@@ -176,7 +176,7 @@ export default function Rotina() {
             style={styles.inputTitulo}
           />
         </View>
-        <View style={styles.erroTitulo}>
+        <View style={styles.erroTitulo} testID="error-titulo1">
           <ErrorMessage show={showErrors} text={erros.titulo} />
         </View>
         <View style={styles.dataHora}>
@@ -189,7 +189,7 @@ export default function Rotina() {
             placeholder="Data da rotina"
           />
         </View>
-        <View style={styles.erro}>
+        <View style={styles.erro} testID="error-titulo2">
           <ErrorMessage show={showErrors} text={erros.data} />
         </View>
 
@@ -207,7 +207,7 @@ export default function Rotina() {
             inputMaskChange={(hora) => setHora(hora)}
           />
         </View>
-        <View style={styles.erro}>
+        <View style={styles.erro} testID="error-titulo3">
           <ErrorMessage show={showErrors} text={erros.hora} />
         </View>
 
@@ -236,7 +236,9 @@ export default function Rotina() {
               search={false}
             />
           </View>
+          <View testID="error-titulo4">
           <ErrorMessage show={showErrors} text={erros.categoria} />
+          </View>
         </View>
 
         <View style={styles.repete}>
