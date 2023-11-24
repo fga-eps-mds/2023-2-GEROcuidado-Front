@@ -13,7 +13,7 @@ import {
   import Icon from "react-native-vector-icons/MaterialCommunityIcons";
   import { Link, router, useLocalSearchParams } from "expo-router";
   import { SelectList } from "react-native-dropdown-select-list";
-  import { ECategoriaRotina, IRotina } from "../../interfaces/rotina.interface";
+  import { ECategoriaRotina, IRotina, IRotinaIdoso } from "../../interfaces/rotina.interface";
   import WeekDays from "../../components/weekDay";
   import Calendar from "react-native-vector-icons/Feather";
   import { Fontisto } from "@expo/vector-icons";
@@ -38,10 +38,7 @@ import {
   }
   
   export default function EditarRotina() {
-    //const params = useLocalSearchParams() as unknown as IIdosoParams;
-    // const [rotina, setRotina] = useState<IRotina | null>(null);
-    //const params: {rotina: IRotina, idoso:IIdoso} =  useLocalSearchParams() as unknown as {rotina: IRotina, idoso:IIdoso};
-    const params = useLocalSearchParams() as unknown as IRotina & IIdoso;
+    const params = useLocalSearchParams() as unknown as IRotinaIdoso;
     const [idPaciente, setIdPaciente] = useState<number | null>(Number(params.idPaciente));
     const [titulo, setTitulo] = useState(params.titulo);
     const [descricao, setDescricao] = useState(params.descricao);
@@ -63,53 +60,57 @@ import {
         setToken(response as string);
       });
     };
- 
+    
     const separaDataHora = () =>{
-        //const value = params.dataHora as string;
-        const value = params.dataHora as string;
-        const valueFinal = value.split("T");
-        const separaData = valueFinal[0].split("-");
-        setData(`${separaData[2]}/${separaData[1]}/${separaData[0]}`);
-        const separaHora = valueFinal[1].split(":");
-        setHora(`${separaHora[0]}:${separaHora[1]}`);
+      //const value = params.dataHora as string;
+      const value = params.dataHora as string;
+      const valueFinal = value.split("T");
+      const separaData = valueFinal[0].split("-");
+      setData(`${separaData[2]}/${separaData[1]}/${separaData[0]}`);
+      const separaHora = valueFinal[1].split(":");
+      setHora(`${separaHora[0]}:${separaHora[1]}`);
     };
   
     // const getRotinaFromParams = () => {
     //   const payload: IRotina = {
-    //     ...params,
-    //     id: params.id,
-    //   };
+      //     ...params,
+      //     id: params.id,
+      //   };
     //   setRotina((payload));
   
     // };
-  
+    
     const handleErrors = () => {
       const erros: IErrors = {};
-  
+      
       if (!titulo) {
         erros.titulo = "Campo obrigatório!";}
+      else if (titulo.length > 100) {
+        erros.titulo = "O título deve ter no máximo 100 caractéres.";
+      }
       // } else if (titulo.length < 5) {
-      //   erros.titulo = "O nome completo deve ter pelo menos 5 caractéres.";
-      // } else if (titulo.length > 60) {
-      //   erros.titulo = "O nome completo deve ter no máximo 60 caractéres.";
-      // }
-  
+        //   erros.titulo = "O nome completo deve ter pelo menos 5 caractéres.";
+      
       if (!data) {
         erros.data = "Campo obrigatório";
       } else if (!/^\d{2}\/\d{2}\/\d{4}$/.test(data)) {
         erros.data = "Data deve ser no formato dd/mm/yyyy!";
       }
-  
+      
       if (!hora) {
         erros.hora = "Campo obrigatório";
       } else if (!/^\d{2}:\d{2}$/.test(hora)) {
         erros.hora = "Hora deve ser no formato hh:mm!";
       }
-  
+      
       if (!categoria){
         erros.categoria = "Campo obrigatório";
       }
-  
+
+      if (descricao && descricao?.length > 300){
+      erros.descricao = "A descrição deve ter no máximo 300 caracteres.";
+    }
+      
       setErros(erros);
     };
   
@@ -119,12 +120,24 @@ import {
       { key: ECategoriaRotina.ALIMENTACAO, value: ECategoriaRotina.ALIMENTACAO },
       { key: ECategoriaRotina.EXERCICIOS, value: ECategoriaRotina.EXERCICIOS },
     ];
-  
+    
     const getDateIsoString = (data: string, hora:string) => {
       const dateArray = data.split("/");  
       return `${dateArray[2]}-${dateArray[1]}-${dateArray[0]}T${hora}:00.000Z`;
     };
-  
+    
+    const idoso : IIdoso = {
+        nome: params.nome, 
+        dataNascimento: params.dataNascimento, 
+        dataHora: params.dataHora,
+        telefoneResponsavel: params.telefoneResponsavel,
+        id: params.idPaciente,
+        idUsuario: params.idUsuario,
+        foto: params.foto,
+        tipoSanguineo: params.tipoSanguineo,
+        descricao: params.descricaoIdoso
+      };
+
     const salvar = async () => {
       if (Object.keys(erros).length > 0) {
         setShowErrors(true);
@@ -150,7 +163,7 @@ import {
         });
         router.replace({
           pathname:"private/tabs/rotinas",
-          params:params
+          params:idoso
         });
       } catch (err) {
         const error = err as { message: string };
@@ -166,13 +179,16 @@ import {
   
     useEffect(() => getIdUsuario(), []);
     //useEffect(() => getIdosoFromParams(), []);
-    useEffect(() => handleErrors(), [titulo, data, hora, categoria]);
+    useEffect(() => handleErrors(), [titulo, data, hora, categoria, descricao]);
     useEffect(() => separaDataHora(), []);
 
+
     const goBack = () => {
+      // const idoso = params as IIdosoParams;
+      // const idoso = params.idoso;
       router.push({
         pathname: "/private/tabs/rotinas",
-        params: params,
+        params: idoso,
       });
     };
 
@@ -272,6 +288,9 @@ import {
               placeholder="Descrição"
               style={styles.textInput}
             />
+          </View>
+          <View style={styles.erro}>
+            <ErrorMessage show={showErrors} text={erros.descricao} />
           </View>
   
           <View style={styles.linkButton}>
