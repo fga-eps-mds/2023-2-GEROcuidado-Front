@@ -151,6 +151,7 @@ export default function CadastrarIdoso() {
               placeholder="Nome"
               style={styles.textInput}
             />
+            <Icon style={styles.requiredIcon} name="asterisk" size={10} color="red" />
           </View>
           <ErrorMessage show={showErrors} text={erros.nome} />
         </View>
@@ -169,6 +170,7 @@ export default function CadastrarIdoso() {
               mask={Masks.DATE_DDMMYYYY}
               placeholder="Data de Nascimento"
             />
+            <Icon style={styles.requiredIcon} name="asterisk" size={10} color="red" />
           </View>
           <ErrorMessage show={showErrors} text={erros.dataNascimento} />
         </View>
@@ -186,6 +188,7 @@ export default function CadastrarIdoso() {
               mask={Masks.BRL_PHONE}
               placeholder="Telefone Responsável"
             />
+            <Icon style={styles.requiredIcon} name="asterisk" size={10} color="red" />
           </View>
           <ErrorMessage show={showErrors} text={erros.telefoneResponsavel} />
         </View>
@@ -322,5 +325,9 @@ const styles = StyleSheet.create({
     paddingLeft: 10,
     color: "#05375A",
     fontSize: 17,
+  },
+
+  requiredIcon: {
+    marginLeft: 5,
   },
 });
