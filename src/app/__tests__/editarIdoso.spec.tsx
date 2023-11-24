@@ -24,4 +24,12 @@ describe('EditarIdoso', () => {
     
     // Você pode continuar a escrever o teste de renderização aqui
   });
+
+  it('renders component correctly', () => {
+    const { getByText, getByPlaceholderText } = render(<EditarIdoso />);
+
+    expect(getByText('Salvar')).toBeTruthy();
+    expect(getByPlaceholderText('Nome')).toBeTruthy();
+  });
+
 });
