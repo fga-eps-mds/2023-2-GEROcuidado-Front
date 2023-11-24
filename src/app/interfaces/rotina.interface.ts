@@ -13,6 +13,7 @@ export interface IRotinaBody {
     categoria?: ECategoriaRotina | null;
     descricao?: string;
     dataHora: Date | string;
+    dias: number[];
 }
 
 export interface IRotina extends IRotinaBody {

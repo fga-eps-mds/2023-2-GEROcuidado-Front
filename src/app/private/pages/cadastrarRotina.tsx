@@ -49,6 +49,7 @@ export default function CadastrarRotina() {
   const [showErrors, setShowErrors] = useState(false);
   const [token, setToken] = useState<string>("");
   const [idUsuario, setIdUsuario] = useState<number | null>(null);
+  const [dias, setDias] = useState<number[]>([]);
 
   const getIdUsuario = () => {
     AsyncStorage.getItem("usuario").then((response) => {
@@ -126,7 +127,7 @@ export default function CadastrarRotina() {
       titulo,
       dataHora: getDateIsoString(data, hora),
       categoria: categoria as ECategoriaRotina,
-      // diasRepeticao: [1, 2, 3, 4, 5, 6, 7],
+      dias: dias,
       descricao,
     };
 
@@ -161,13 +162,8 @@ export default function CadastrarRotina() {
     });
   };
 
-  const handleDias = (dias: number[]) => {
-    console.log(dias);
-  };
-
-  const debounceDias = (newDias: number[]) => {
-    const temp = setTimeout(() => handleDias(newDias), 1000);
-
+  const handleDias = (newDias: number[]) => {
+    setDias(newDias);
   };
 
   useEffect(() => getIdUsuario(), []);
@@ -262,7 +258,7 @@ export default function CadastrarRotina() {
         </View>
 
         <View style={styles.weekDays}>
-          <WeekDays callbackFn={debounceDias}/>
+          <WeekDays callbackFn={handleDias} dias={[]}/>
         </View>
 
         <View style={styles.descricao}>

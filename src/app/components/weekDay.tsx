@@ -2,20 +2,23 @@ import React, { useState } from "react";
 import { TouchableOpacity, StyleSheet, Text, View, Pressable } from "react-native";
 
 interface IProps {
+  dias?: number[];
   callbackFn: (days: number[]) => unknown;
 }
 
-export default function WeekDays({ callbackFn }: IProps) {
-  const [days,setDays] = useState<number[]>([]);  
-
+export default function WeekDays({ dias, callbackFn }: IProps) {
+  const [days,setDays] = useState<number[]>(dias as number[]); 
+  
   const handlePress = (dia: number) => {
+    // dias.split(",").map((item) => Number(item));
     if(days.includes(dia)){
-     
       const novoArray = days.filter((elemento) => elemento !== dia);
       setDays(novoArray);
+      callbackFn(novoArray);
     }
     else{
       setDays([...days,dia]);
+      callbackFn([...days, dia]);
     }
   };
   
