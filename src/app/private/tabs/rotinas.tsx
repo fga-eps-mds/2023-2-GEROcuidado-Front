@@ -18,7 +18,7 @@ import {
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
 import { router, useLocalSearchParams } from "expo-router";
 import { IIdoso, IIdosoParams } from "../../interfaces/idoso.interface";
-import { IRotina } from "../../interfaces/rotina.interface";
+import { IRotina, IRotinaFilter, IRotinaIdoso } from "../../interfaces/rotina.interface";
 import CardRotina from "../../components/CardRotina";
 import { getAllRotina } from "../../services/rotina.service";
 import Toast from "react-native-toast-message";
@@ -26,22 +26,26 @@ import Toast from "react-native-toast-message";
 export default function Rotinas() {
   const params = useLocalSearchParams() as unknown as IIdosoParams;
   const [user, setUser] = useState<IUser | undefined>(undefined);
-  const [idoso, setIdoso] = useState<IIdoso | undefined>(undefined);
+  // const [idoso, setIdoso] = useState<IIdoso | undefined>(undefined);
   const [rotinas, setRotinas] = useState<IRotina[]>([]);
   const [loading, setLoading] = useState(true);
 
-  const getIdosoFromParams = () => {
-    const payload: IIdoso = {
-      ...params,
-      id: params.id,
-    };
-    setIdoso(payload);
-  };
-
-
+  // const getIdosoFromParams = () => {
+  //   const payload: IIdoso = {
+  //     ...params,
+  //     id: params.id,
+  //   };
+  //   setIdoso(payload);
+  // };
 
   const editarRotina = (item: IRotina) => {
-    const rotina = {...item, id: item.id};
+    const rotina : IRotinaIdoso = {
+      ...params, 
+      ...item, 
+      dataHoraIdoso: params.dataHora as string, 
+      descricaoIdoso: params.descricao as string
+    };
+    // const rotina : IRotinaIdoso = {...item, idoso: params}
   
     router.push({
       pathname: "/private/pages/editarRotina",
@@ -72,7 +76,7 @@ export default function Rotinas() {
   // };
 
   const novaRotina = () => {
-    const params = { ...idoso, id: idoso?.id };
+    // const params = { ...idoso, id: idoso?.id };
     router.push({
       pathname: "private/pages/cadastrarRotina",
       params: params,
@@ -89,7 +93,11 @@ export default function Rotinas() {
   const getRotinas = () => {
     setLoading(true);
 
-    getAllRotina()
+    const rotinaFilter: IRotinaFilter = {
+      idPaciente: Number(params.id),
+    };
+
+    getAllRotina(rotinaFilter)
       .then((response) => {
         const newRotinas = response.data as IRotina[];
         setRotinas(newRotinas);
@@ -109,37 +117,38 @@ export default function Rotinas() {
 
   useEffect(() => handleUser(), []);
   useEffect(() => getRotinas(), []);
-  useEffect(() => getIdosoFromParams(), []);
+  // useEffect(() => getIdosoFromParams(), []);
 
   return !user?.id ? (
     <NaoAutenticado />
   ) : (
+      <ScrollView>
     <View>
       <View style={styles.header}>
-        {/* {getFoto(idoso?.foto)} */}
+        {/* {getFoto(params?.foto)} */}
         <Text style={styles.nomeUsuario}>
-          <Text style={styles.negrito}>{idoso?.nome}</Text>
+          <Text style={styles.negrito}>{params?.nome}</Text>
         </Text>
       </View>
       <Pressable style={styles.botaoCriarRotina} onPress={novaRotina}>
         <Icon name="plus" color={"white"} size={20}></Icon>
         <Text style={styles.textoBotaoCriarRotina}>Nova Rotina</Text>
       </Pressable>
-
-      <View style={styles.cardIdoso}>
-        <FlatList
-          // style={{ marginBottom: 150 }}
-          showsVerticalScrollIndicator={false}
-          numColumns={1}
-          data={rotinas}
-          renderItem={({ item }) => (
-            <Pressable onPress={() => editarRotina(item)}>
-              <CardRotina item={item} />
-            </Pressable>
-          )}
-        />
-      </View>
+        <View style={styles.cardIdoso}>
+          <FlatList
+            // style={{ marginBottom: 150 }}
+            showsVerticalScrollIndicator={false}
+            numColumns={1}
+            data={rotinas}
+            renderItem={({ item }) => (
+              <Pressable onPress={() => editarRotina(item)}>
+                <CardRotina item={item} />
+              </Pressable>
+            )}
+          />
+        </View>
     </View>
+    </ScrollView>
   );
 }
 
@@ -194,7 +203,5 @@ const styles = StyleSheet.create({
   },
   cardIdoso: {
     alignItems: "center",
-    justifyContent: "space-between",
-    marginBottom: 250,
   },
 });
