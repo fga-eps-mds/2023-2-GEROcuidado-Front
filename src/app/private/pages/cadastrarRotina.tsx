@@ -161,6 +161,15 @@ export default function CadastrarRotina() {
     });
   };
 
+  const handleDias = (dias: number[]) => {
+    console.log(dias);
+  };
+
+  const debounceDias = (newDias: number[]) => {
+    const temp = setTimeout(() => handleDias(newDias), 1000);
+
+  };
+
   useEffect(() => getIdUsuario(), []);
   useEffect(() => getIdosoFromParams(), []);
   useEffect(() => handleErrors(), [titulo, data, hora, categoria, descricao]);
@@ -253,13 +262,7 @@ export default function CadastrarRotina() {
         </View>
 
         <View style={styles.weekDays}>
-          <WeekDays day={"D"} />
-          <WeekDays day={"S"} />
-          <WeekDays day={"T"} />
-          <WeekDays day={"Q"} />
-          <WeekDays day={"Q"} />
-          <WeekDays day={"S"} />
-          <WeekDays day={"S"} />
+          <WeekDays callbackFn={debounceDias}/>
         </View>
 
         <View style={styles.descricao}>
