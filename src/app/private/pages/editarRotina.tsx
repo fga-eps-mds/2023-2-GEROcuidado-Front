@@ -20,13 +20,14 @@ import {
   import CustomButton from "../../components/CustomButton";
   import MaskInput, { Masks } from "react-native-mask-input";
   import MaskHour from "../../components/MaskHour";
-  import { postRotina, updateRotina } from "../../services/rotina.service";
+  import { deleteRotina, postRotina, updateRotina } from "../../services/rotina.service";
   import Toast from "react-native-toast-message";
   import AsyncStorage from "@react-native-async-storage/async-storage";
   import { IUser } from "../../interfaces/user.interface";
   import { IIdoso, IIdosoParams } from "../../interfaces/idoso.interface";
   import ErrorMessage from "../../components/ErrorMessage";
   import { ErrorWithStack } from "@testing-library/react-native/build/helpers/errors";
+import ModalConfirmation from "../../components/ModalConfirmation";
   
   interface IErrors {
     titulo?: string;
@@ -50,6 +51,8 @@ import {
     const [data, setData] = useState("");
     const [hora, setHora] = useState("");
     const [idUsuario, setIdUsuario] = useState<number | null>(null);
+    const [showLoadingApagar, setShowLoadingApagar] = useState(false);
+    const [modalVisible, setModalVisible] = useState(false);
 
     const getIdUsuario = () => {
       AsyncStorage.getItem("usuario").then((response) => {
@@ -176,6 +179,28 @@ import {
         setShowLoading(false);
       }
     };
+
+    const apagarRotina = async () => {
+      setModalVisible(false);
+      setShowLoadingApagar(true);
+  
+      try {
+        await deleteRotina(params.id, token);
+        router.replace({
+          pathname:"private/tabs/rotinas",
+          params:idoso
+        });
+      } catch (err) {
+        const error = err as { message: string };
+        Toast.show({
+          type: "error",
+          text1: "Erro!",
+          text2: error.message,
+        });
+      } finally {
+        setShowLoadingApagar(false);
+      }
+    };
   
     useEffect(() => getIdUsuario(), []);
     //useEffect(() => getIdosoFromParams(), []);
@@ -190,6 +215,14 @@ import {
         pathname: "/private/tabs/rotinas",
         params: idoso,
       });
+    };
+
+    const confirmation = () => {
+      setModalVisible(!modalVisible);
+    };
+
+    const closeModal = () => {
+      setModalVisible(false);
     };
 
     return (
@@ -299,6 +332,24 @@ import {
               callbackFn={salvar}
               showLoading={showLoading}
             />
+          </View>
+
+          <View>
+            <Pressable onPress={confirmation}>
+            {showLoadingApagar ? (
+              <ActivityIndicator size="small" color="#FF7F7F" />
+            ) : (
+              <Text style={styles.apagar}>Apagar Rotina</Text>
+            )}
+          </Pressable>
+
+          <ModalConfirmation
+            visible={modalVisible}
+            callbackFn={apagarRotina}
+            closeModal={closeModal}
+            message={`Apagar rotina ?`}
+            messageButton="Apagar"
+          />
           </View>
           
         </View>
@@ -411,5 +462,14 @@ import {
     erro:{
       marginBottom:15,
       alignSelf:"flex-start",
+    },
+
+    apagar: {
+      color: "#FF7F7F",
+      alignSelf: "center",
+      fontSize: 18,
+      fontWeight: "600",
+      marginBottom: 60,
+      alignItems: "center",
     },
   });
