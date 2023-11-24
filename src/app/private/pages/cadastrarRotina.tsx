@@ -73,8 +73,7 @@ export default function CadastrarRotina() {
 
     if (!titulo) {
       erros.titulo = "Campo obrigatório!";
-    }
-    else if (titulo.length > 100) {
+    } else if (titulo.length > 100) {
       erros.titulo = "O título deve ter no máximo 100 caracteres.";
     }
     // } else if (titulo.length < 5) {
@@ -96,7 +95,7 @@ export default function CadastrarRotina() {
       erros.categoria = "Campo obrigatório";
     }
 
-    if (descricao?.length > 300){
+    if (descricao?.length > 300) {
       erros.descricao = "A descrição deve ter no máximo 300 caracteres.";
     }
 
@@ -160,7 +159,7 @@ export default function CadastrarRotina() {
       pathname: "/private/tabs/rotinas",
       params: params,
     });
-};
+  };
 
   useEffect(() => getIdUsuario(), []);
   useEffect(() => getIdosoFromParams(), []);
@@ -169,9 +168,9 @@ export default function CadastrarRotina() {
   return (
     <ScrollView>
       <View style={styles.header}>
-      <Pressable onPress = {goBack}>
+        <Pressable onPress={goBack}>
           <Icon name="chevron-left" size={40} color="#fff" />
-      </Pressable>
+        </Pressable>
         <Text style={styles.tituloheader}>Nova rotina</Text>
       </View>
 
@@ -181,6 +180,7 @@ export default function CadastrarRotina() {
             value={titulo}
             onChangeText={(titulo) => setTitulo(titulo)}
             placeholder="Adicionar título"
+            placeholderTextColor={"#3D3D3D"}
             style={styles.inputTitulo}
           />
         </View>
@@ -195,6 +195,7 @@ export default function CadastrarRotina() {
             onChangeText={setData}
             mask={Masks.DATE_DDMMYYYY}
             placeholder="Data da rotina"
+            placeholderTextColor={"#3D3D3D"}
           />
         </View>
         <View style={styles.erro}>
@@ -210,6 +211,7 @@ export default function CadastrarRotina() {
           <MaskHour
             style={styles.textInput}
             placeholder="Horário de início"
+            placeholderTextColor={"#3D3D3D"}
             value={hora}
             maxLength={5}
             inputMaskChange={(hora) => setHora(hora)}
@@ -222,8 +224,8 @@ export default function CadastrarRotina() {
         <View>
           <View style={styles.categoria}>
             {(!categoria || categoria == ECategoriaRotina.GERAL) && (
-                <Icon style={styles.iconCategoria} name="view-grid-outline" />
-              )}
+              <Icon style={styles.iconCategoria} name="view-grid-outline" />
+            )}
             {categoria === ECategoriaRotina.ALIMENTACAO && (
               <Icon style={styles.iconCategoria} name="food-apple-outline" />
             )}
@@ -261,12 +263,14 @@ export default function CadastrarRotina() {
         </View>
 
         <View style={styles.descricao}>
-          <Fontisto style={styles.iconDesciption} name="left-align" size={15} />
           <TextInput
             onChangeText={setDescricao}
             value={descricao}
             placeholder="Descrição"
-            style={styles.textInput}
+            multiline={true}
+            numberOfLines={4}
+            placeholderTextColor={"#3D3D3D"}
+            style={styles.textInputDescription}
           />
         </View>
         <View style={styles.erro}>
@@ -331,6 +335,7 @@ const styles = StyleSheet.create({
   },
   iconDataHora: {
     fontSize: 25,
+    opacity: 0.8,
   },
   textInput: {
     paddingLeft: 10,
@@ -347,6 +352,7 @@ const styles = StyleSheet.create({
   },
   iconCategoria: {
     fontSize: 25,
+    opacity: 0.8,
   },
   dropdown: {
     borderWidth: 0,
@@ -359,7 +365,7 @@ const styles = StyleSheet.create({
   },
   repete: {
     alignSelf: "flex-start",
-    marginTop: 30,
+    marginTop: 10,
     fontSize: 17,
     color: "#616161",
   },
@@ -368,21 +374,25 @@ const styles = StyleSheet.create({
     marginTop: 15,
     marginBottom: 30,
   },
-  iconDesciption: {
-    width: "10%",
-    fontSize: 18,
-  },
   descricao: {
     flexDirection: "row",
-    borderBottomWidth: 1,
-    borderBottomColor: "black",
     paddingBottom: 5,
     width: 300,
+    backgroundColor: "#F1F1F1",
+    borderRadius: 10,
+  },
+  textInputDescription: {
+    borderRadius: 10,
+    backgroundColor: "#F1F1F1",
+    fontSize: 17,
+    width: 300,
+    padding: 12,
   },
   linkButton: {
-    marginTop: 60,
+    marginTop: 30,
     marginBottom: 40,
     alignItems: "center",
+    width: 250,
   },
   erroTitulo: {
     marginBottom: 35,
