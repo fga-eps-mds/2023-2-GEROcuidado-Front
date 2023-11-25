@@ -1,9 +1,9 @@
-import 'react-native-gesture-handler/jestSetup';
+import "react-native-gesture-handler/jestSetup";
 
 module.exports = {
-  moduleDirectories: ['node_modules', 'src'],
+  moduleDirectories: ["node_modules", "src"],
   moduleNameMapper: {
-    '^expo-image$': './__mocks__/expo-image.js',
+    "^expo-image$": "./__mocks__/expo-image.js",
   },
 };
 

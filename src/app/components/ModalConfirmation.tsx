@@ -17,31 +17,29 @@ export default function ModalConfirmation({
   messageButton,
 }: Readonly<IProps>) {
   return (
-    <View style={styles.centeredView}>
-      <Modal animationType="fade" transparent={true} visible={visible}>
-        <View style={styles.centeredView}>
-          <View style={styles.modalView}>
-            <Text style={styles.modalText}>{message}</Text>
-            <View style={styles.buttonContainer}>
-              <Pressable
-                testID="cancelarBtn"
-                style={[styles.button, styles.buttonCancel]}
-                onPress={() => closeModal()}
-              >
-                <Text style={styles.textStyle}>Cancelar</Text>
-              </Pressable>
-              <Pressable
-                testID="callbackBtn"
-                style={[styles.button, styles.buttonClose]}
-                onPress={() => callbackFn()}
-              >
-                <Text style={styles.textStyle}>{messageButton}</Text>
-              </Pressable>
-            </View>
+    <Modal animationType="fade" transparent={true} visible={visible}>
+      <View style={styles.centeredView}>
+        <View style={styles.modalView}>
+          <Text style={styles.modalText}>{message}</Text>
+          <View style={styles.buttonContainer}>
+            <Pressable
+              testID="cancelarBtn"
+              style={[styles.button, styles.buttonCancel]}
+              onPress={() => closeModal()}
+            >
+              <Text style={styles.textStyle}>Cancelar</Text>
+            </Pressable>
+            <Pressable
+              testID="callbackBtn"
+              style={[styles.button, styles.buttonClose]}
+              onPress={() => callbackFn()}
+            >
+              <Text style={styles.textStyle}>{messageButton}</Text>
+            </Pressable>
           </View>
         </View>
-      </Modal>
-    </View>
+      </View>
+    </Modal>
   );
 }
 

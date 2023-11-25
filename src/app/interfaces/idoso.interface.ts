@@ -1,5 +1,4 @@
 import { IUser } from "./user.interface";
-const { id }: IUser = require("./user.interface");
 
 export enum ETipoSanguineo {
   A_POSITIVO = "A+",

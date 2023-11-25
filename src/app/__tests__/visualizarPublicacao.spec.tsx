@@ -1,12 +1,12 @@
-import React from 'react';
-import { render } from '@testing-library/react-native';
-import VisualizarPublicacao from '../private/pages/visualizarPublicacao';
+import React from "react";
+import { render } from "@testing-library/react-native";
+import VisualizarPublicacao from "../private/pages/visualizarPublicacao";
 
-describe('Visualizar publicacao', () => {
-  it('Rendeziza sem quebrar', () => {
+describe("Visualizar publicacao", () => {
+  it("Rendeziza sem quebrar", () => {
     render(<VisualizarPublicacao />);
   });
-  it('displays actions correctly for admin', () => {
+  it("displays actions correctly for admin", () => {
     const { getByText } = render(<VisualizarPublicacao />, {
       initialState: {
         usuario: {
@@ -16,6 +16,6 @@ describe('Visualizar publicacao', () => {
       },
     });
 
-    expect(getByText('Apagar')).toBeTruthy();
+    expect(getByText("Apagar")).toBeTruthy();
   });
-})
+});

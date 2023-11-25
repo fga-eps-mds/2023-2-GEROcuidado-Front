@@ -116,7 +116,9 @@ export default function VisualizarPublicacao() {
 
     const publicacaoLoaded = publicacao as IPublicacaoUsuario;
 
-    const idRemovido = publicacaoLoaded.idUsuarioReporte.filter(id => id !== Number(idUsuario));
+    const idRemovido = publicacaoLoaded.idUsuarioReporte.filter(
+      (id) => id !== Number(idUsuario),
+    );
 
     const body = {
       idUsuarioReporte: idRemovido,
@@ -125,7 +127,10 @@ export default function VisualizarPublicacao() {
     updateReporte(publicacaoLoaded, body);
   };
 
-  const updateReporte =async (publicacaoLoaded: IPublicacaoUsuario, body: Partial<IPublicacao>) => {
+  const updateReporte = async (
+    publicacaoLoaded: IPublicacaoUsuario,
+    body: Partial<IPublicacao>,
+  ) => {
     try {
       const response = await updatePublicacao(publicacaoLoaded.id, body, token);
       setPublicacao({
@@ -176,30 +181,31 @@ export default function VisualizarPublicacao() {
             </Pressable>
           )}
 
-            {idUsuario &&
-            publicacao?.idUsuario != idUsuario && (
-              <Pressable
-                onPress={() => setModalVisibleReportar(true)}
-                style={[styles.actionButton, styles.reportButton]}
-              >
-                {showLoadingReportar && (
-                  <ActivityIndicator size="small" color="#FFF" />
-                )}
+          {idUsuario && publicacao?.idUsuario != idUsuario && (
+            <Pressable
+              onPress={() => setModalVisibleReportar(true)}
+              style={[styles.actionButton, styles.reportButton]}
+            >
+              {showLoadingReportar && (
+                <ActivityIndicator size="small" color="#FFF" />
+              )}
 
-                {!showLoadingReportar && publicacao?.idUsuarioReporte.includes(idUsuario) && (
+              {!showLoadingReportar &&
+                publicacao?.idUsuarioReporte.includes(idUsuario) && (
                   <>
                     <Text style={styles.actionButtonText}>Desfazer</Text>
                     <Icon name="undo" size={18} color="white" />
                   </>
                 )}
-                {!showLoadingReportar && !publicacao?.idUsuarioReporte.includes(idUsuario) && (
+              {!showLoadingReportar &&
+                !publicacao?.idUsuarioReporte.includes(idUsuario) && (
                   <>
                     <Text style={styles.actionButtonText}>Reportar</Text>
                     <AntDesing name="warning" size={18} color="white" />
                   </>
                 )}
-              </Pressable>
-            )}
+            </Pressable>
+          )}
 
           {idUsuario && publicacao?.idUsuario == idUsuario && (
             <Pressable
@@ -225,10 +231,22 @@ export default function VisualizarPublicacao() {
 
       <ModalConfirmation
         visible={modalVisibleReportar}
-        callbackFn={publicacao?.idUsuarioReporte.includes(Number(idUsuario))? cancelarReporte : reportarPublicacao}
+        callbackFn={
+          publicacao?.idUsuarioReporte.includes(Number(idUsuario))
+            ? cancelarReporte
+            : reportarPublicacao
+        }
         closeModal={() => setModalVisibleReportar(false)}
-        message= {publicacao?.idUsuarioReporte.includes(Number(idUsuario))? "Desfazer reporte?" : "Reportar publicação?"}
-        messageButton={publicacao?.idUsuarioReporte.includes(Number(idUsuario))? "Desfazer" : "Reportar"}
+        message={
+          publicacao?.idUsuarioReporte.includes(Number(idUsuario))
+            ? "Desfazer reporte?"
+            : "Reportar publicação?"
+        }
+        messageButton={
+          publicacao?.idUsuarioReporte.includes(Number(idUsuario))
+            ? "Desfazer"
+            : "Reportar"
+        }
       />
     </View>
   );

@@ -30,7 +30,7 @@ describe("CardIdoso", () => {
     const pencilIcon = screen.getByTestId("pencil-icon");
     fireEvent.press(pencilIcon);
 
-    
+    // eslint-disable-next-line @typescript-eslint/no-var-requires
     expect(require("expo-router").router.push).toHaveBeenCalledWith({
       pathname: "/private/pages/editarIdoso",
       params: {
@@ -50,7 +50,7 @@ describe("CardIdoso", () => {
     const cardIdosoPressable = screen.getByTestId("cardIdosoPressable");
     fireEvent.press(cardIdosoPressable);
 
-    
+    // eslint-disable-next-line @typescript-eslint/no-var-requires
     expect(require("expo-router").router.push).toHaveBeenCalledWith({
       pathname: "/private/tabs/rotinas",
     });
