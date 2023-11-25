@@ -2,73 +2,66 @@ import {
   ActivityIndicator,
   Pressable,
   StyleSheet,
-  Switch,
   Text,
   View,
   TextInput,
-  TouchableOpacity,
 } from "react-native";
 import React, { useEffect, useState } from "react";
 import { ScrollView } from "react-native-gesture-handler";
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
-import { Link, router, useLocalSearchParams } from "expo-router";
+import { router, useLocalSearchParams } from "expo-router";
 import { SelectList } from "react-native-dropdown-select-list";
-import {
-  ECategoriaRotina,
-  IRotina,
-  IRotinaIdoso,
-} from "../../interfaces/rotina.interface";
+import { ECategoriaRotina, IRotina } from "../../interfaces/rotina.interface";
 import WeekDays from "../../components/weekDay";
 import Calendar from "react-native-vector-icons/Feather";
-import { Fontisto } from "@expo/vector-icons";
 import CustomButton from "../../components/CustomButton";
 import MaskInput, { Masks } from "react-native-mask-input";
 import MaskHour from "../../components/MaskHour";
-import {
-  deleteRotina,
-  postRotina,
-  updateRotina,
-} from "../../services/rotina.service";
+import { deleteRotina, updateRotina } from "../../services/rotina.service";
 import Toast from "react-native-toast-message";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { IUser } from "../../interfaces/user.interface";
-import { IIdoso, IIdosoParams } from "../../interfaces/idoso.interface";
 import ErrorMessage from "../../components/ErrorMessage";
-import { ErrorWithStack } from "@testing-library/react-native/build/helpers/errors";
 import ModalConfirmation from "../../components/ModalConfirmation";
+import { IIdoso } from "../../interfaces/idoso.interface";
 
 interface IErrors {
   titulo?: string;
   data?: string;
   hora?: string;
   categoria?: string;
-  // diasRepeticao?: string;
   descricao?: string;
 }
 
 export default function EditarRotina() {
-  const params = useLocalSearchParams() as unknown as IRotinaIdoso;
-  const [idPaciente, setIdPaciente] = useState<number | null>(
-    Number(params.idPaciente),
-  );
+  const params = useLocalSearchParams() as unknown as IRotina & {
+    dias: string;
+  };
+  const [idoso, setIdoso] = useState<IIdoso>();
   const [titulo, setTitulo] = useState(params.titulo);
   const [descricao, setDescricao] = useState(params.descricao);
   const [categoria, setCategoria] = useState(params.categoria);
+  const [dias, setDias] = useState(
+    params.dias.split(",").map((dia) => Number(dia)),
+  );
   const [showLoading, setShowLoading] = useState(false);
   const [erros, setErros] = useState<IErrors>({});
   const [showErrors, setShowErrors] = useState(false);
   const [token, setToken] = useState<string>("");
   const [data, setData] = useState("");
   const [hora, setHora] = useState("");
-  const [idUsuario, setIdUsuario] = useState<number | null>(null);
   const [showLoadingApagar, setShowLoadingApagar] = useState(false);
   const [modalVisible, setModalVisible] = useState(false);
 
-  const getIdUsuario = () => {
-    AsyncStorage.getItem("usuario").then((response) => {
-      const usuario = JSON.parse(response as string) as IUser;
-      setIdUsuario(usuario.id);
+  const getIdoso = () => {
+    AsyncStorage.getItem("idoso").then((idosoString) => {
+      if (idosoString) {
+        const idosoPayload = JSON.parse(idosoString) as IIdoso;
+        setIdoso(idosoPayload);
+      }
     });
+  };
+
+  const getToken = () => {
     AsyncStorage.getItem("token").then((response) => {
       setToken(response as string);
     });
@@ -83,15 +76,6 @@ export default function EditarRotina() {
     const separaHora = valueFinal[1].split(":");
     setHora(`${separaHora[0]}:${separaHora[1]}`);
   };
-
-  // const getRotinaFromParams = () => {
-  //   const payload: IRotina = {
-  //     ...params,
-  //     id: params.id,
-  //   };
-  //   setRotina((payload));
-
-  // };
 
   const handleErrors = () => {
     const erros: IErrors = {};
@@ -139,18 +123,6 @@ export default function EditarRotina() {
     return `${dateArray[2]}-${dateArray[1]}-${dateArray[0]}T${hora}:00.000Z`;
   };
 
-  const idoso: IIdoso = {
-    nome: params.nome,
-    dataNascimento: params.dataNascimento,
-    dataHora: params.dataHora,
-    telefoneResponsavel: params.telefoneResponsavel,
-    id: params.idPaciente,
-    idUsuario: params.idUsuario,
-    foto: params.foto,
-    tipoSanguineo: params.tipoSanguineo,
-    descricao: params.descricaoIdoso,
-  };
-
   const salvar = async () => {
     if (Object.keys(erros).length > 0) {
       setShowErrors(true);
@@ -158,11 +130,11 @@ export default function EditarRotina() {
     }
 
     const body = {
-      idPaciente: idPaciente as number,
+      idIdoso: Number(idoso?.id),
       titulo,
       dataHora: getDateIsoString(data, hora),
       categoria: categoria as ECategoriaRotina,
-      // diasRepeticao: [1, 2, 3, 4, 5, 6, 7],
+      dias,
       descricao,
     };
 
@@ -196,10 +168,7 @@ export default function EditarRotina() {
 
     try {
       await deleteRotina(params.id, token);
-      router.replace({
-        pathname: "private/tabs/rotinas",
-        params: idoso,
-      });
+      router.replace("private/tabs/rotina");
     } catch (err) {
       const error = err as { message: string };
       Toast.show({
@@ -212,19 +181,10 @@ export default function EditarRotina() {
     }
   };
 
-  useEffect(() => getIdUsuario(), []);
-  //useEffect(() => getIdosoFromParams(), []);
+  useEffect(() => getIdoso(), []);
+  useEffect(() => getToken(), []);
   useEffect(() => handleErrors(), [titulo, data, hora, categoria, descricao]);
   useEffect(() => separaDataHora(), []);
-
-  const goBack = () => {
-    // const idoso = params as IIdosoParams;
-    // const idoso = params.idoso;
-    router.push({
-      pathname: "/private/tabs/rotinas",
-      params: idoso,
-    });
-  };
 
   const confirmation = () => {
     setModalVisible(!modalVisible);
@@ -237,7 +197,7 @@ export default function EditarRotina() {
   return (
     <ScrollView>
       <View style={styles.header}>
-        <Pressable onPress={goBack}>
+        <Pressable onPress={() => router.back()}>
           <Icon name="chevron-left" size={40} color="#fff" />
         </Pressable>
         <Text style={styles.tituloheader}>Detalhes da rotina</Text>
@@ -324,13 +284,7 @@ export default function EditarRotina() {
         </View>
 
         <View style={styles.weekDays}>
-          <WeekDays day={"D"} />
-          <WeekDays day={"S"} />
-          <WeekDays day={"T"} />
-          <WeekDays day={"Q"} />
-          <WeekDays day={"Q"} />
-          <WeekDays day={"S"} />
-          <WeekDays day={"S"} />
+          <WeekDays dias={dias} callbackFn={setDias} />
         </View>
 
         <View style={styles.descricao}>
