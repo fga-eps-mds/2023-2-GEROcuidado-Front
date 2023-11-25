@@ -1,44 +1,38 @@
 import {
-  ActivityIndicator,
   Pressable,
   StyleSheet,
-  Switch,
   Text,
   View,
   TextInput,
+  Platform,
 } from "react-native";
 import React, { useEffect, useState } from "react";
 import { ScrollView } from "react-native-gesture-handler";
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
-import { Link, router, useLocalSearchParams } from "expo-router";
+import { router } from "expo-router";
 import { SelectList } from "react-native-dropdown-select-list";
 import { ECategoriaRotina } from "../../interfaces/rotina.interface";
 import WeekDays from "../../components/weekDay";
 import Calendar from "react-native-vector-icons/Feather";
-import { Fontisto } from "@expo/vector-icons";
 import CustomButton from "../../components/CustomButton";
 import MaskInput, { Masks } from "react-native-mask-input";
 import MaskHour from "../../components/MaskHour";
 import { postRotina } from "../../services/rotina.service";
 import Toast from "react-native-toast-message";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { IUser } from "../../interfaces/user.interface";
-import { IIdoso, IIdosoParams } from "../../interfaces/idoso.interface";
+import { IIdoso } from "../../interfaces/idoso.interface";
 import ErrorMessage from "../../components/ErrorMessage";
-import { ErrorWithStack } from "@testing-library/react-native/build/helpers/errors";
 
 interface IErrors {
   titulo?: string;
   data?: string;
   hora?: string;
   categoria?: string;
-  // diasRepeticao?: string;
   descricao?: string;
 }
 
 export default function CadastrarRotina() {
-  const params = useLocalSearchParams() as unknown as IIdosoParams;
-  const [idPaciente, setIdPaciente] = useState<number | null>(null);
+  const [idoso, setIdoso] = useState<IIdoso>();
   const [titulo, setTitulo] = useState("");
   const [data, setData] = useState("");
   const [hora, setHora] = useState("");
@@ -48,25 +42,21 @@ export default function CadastrarRotina() {
   const [erros, setErros] = useState<IErrors>({});
   const [showErrors, setShowErrors] = useState(false);
   const [token, setToken] = useState<string>("");
-  const [idUsuario, setIdUsuario] = useState<number | null>(null);
   const [dias, setDias] = useState<number[]>([]);
 
-  const getIdUsuario = () => {
-    AsyncStorage.getItem("usuario").then((response) => {
-      const usuario = JSON.parse(response as string) as IUser;
-      setIdUsuario(usuario.id);
-    });
+  const getToken = () => {
     AsyncStorage.getItem("token").then((response) => {
       setToken(response as string);
     });
   };
 
-  const getIdosoFromParams = () => {
-    const payload: IIdoso = {
-      ...params,
-      id: params.id,
-    };
-    setIdPaciente(Number(payload.id));
+  const getIdoso = () => {
+    AsyncStorage.getItem("idoso").then((idosoString) => {
+      if (idosoString) {
+        const idosoPayload = JSON.parse(idosoString) as IIdoso;
+        setIdoso(idosoPayload);
+      }
+    });
   };
 
   const handleErrors = () => {
@@ -123,7 +113,7 @@ export default function CadastrarRotina() {
     }
 
     const body = {
-      idPaciente: idPaciente as number,
+      idIdoso: Number(idoso?.id),
       titulo,
       dataHora: getDateIsoString(data, hora),
       categoria: categoria as ECategoriaRotina,
@@ -141,7 +131,6 @@ export default function CadastrarRotina() {
       });
       router.replace({
         pathname: "private/tabs/rotinas",
-        params: params,
       });
     } catch (err) {
       const error = err as { message: string };
@@ -158,16 +147,40 @@ export default function CadastrarRotina() {
   const goBack = () => {
     router.push({
       pathname: "/private/tabs/rotinas",
-      params: params,
     });
   };
 
-  const handleDias = (newDias: number[]) => {
-    setDias(newDias);
+  const getInitialDateTime = () => {
+    const today = new Date();
+    const formattedDate = today.toLocaleDateString("pt-BR", {
+      hour: "2-digit",
+      minute: "2-digit",
+    });
+    const formattedDateArray = formattedDate.split(" ");
+    setData(formattedDateArray[0]);
+    setHora(formattedDateArray[1]);
   };
 
-  useEffect(() => getIdUsuario(), []);
-  useEffect(() => getIdosoFromParams(), []);
+  const setSuggestedTitle = () => {
+    switch (categoria) {
+      case ECategoriaRotina.ALIMENTACAO:
+        setTitulo("Se Alimentar");
+        break;
+      case ECategoriaRotina.MEDICAMENTO:
+        setTitulo("Tomar Medicamento");
+        break;
+      case ECategoriaRotina.EXERCICIOS:
+        setTitulo("Fazer Exercício");
+        break;
+      default:
+        break;
+    }
+  };
+
+  useEffect(() => getIdoso(), []);
+  useEffect(() => getToken(), []);
+  useEffect(() => getInitialDateTime(), []);
+  useEffect(() => setSuggestedTitle(), [categoria]);
   useEffect(() => handleErrors(), [titulo, data, hora, categoria, descricao]);
 
   return (
@@ -258,7 +271,7 @@ export default function CadastrarRotina() {
         </View>
 
         <View style={styles.weekDays}>
-          <WeekDays callbackFn={handleDias} dias={[]}/>
+          <WeekDays callbackFn={setDias} dias={[]} />
         </View>
 
         <View style={styles.descricao}>
@@ -267,9 +280,12 @@ export default function CadastrarRotina() {
             value={descricao}
             placeholder="Descrição"
             multiline={true}
-            numberOfLines={4}
+            numberOfLines={Platform.OS === "ios" ? undefined : 6}
+            style={[
+              styles.textInputDescription,
+              { minHeight: Platform.OS === "ios" && 6 ? 20 * 6 : null },
+            ]}
             placeholderTextColor={"#3D3D3D"}
-            style={styles.textInputDescription}
           />
         </View>
         <View style={styles.erro}>
@@ -301,6 +317,7 @@ const styles = StyleSheet.create({
     fontSize: 20,
   },
   rotina: {
+    flexDirection: "column",
     borderRadius: 15,
     backgroundColor: "white",
     margin: 15,
@@ -310,6 +327,7 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.3,
     shadowRadius: 6,
     alignItems: "center",
+    justifyContent: "center",
   },
   titulo: {
     flexDirection: "row",
@@ -376,16 +394,16 @@ const styles = StyleSheet.create({
   descricao: {
     flexDirection: "row",
     paddingBottom: 5,
-    width: 300,
     backgroundColor: "#F1F1F1",
     borderRadius: 10,
   },
   textInputDescription: {
+    width: "100%",
     borderRadius: 10,
     backgroundColor: "#F1F1F1",
     fontSize: 17,
-    width: 300,
     padding: 12,
+    paddingTop: 10,
   },
   linkButton: {
     marginTop: 30,
