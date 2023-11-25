@@ -1,21 +1,28 @@
 import React, { useEffect, useState } from "react";
-import { View, Text, StyleSheet, Pressable, Touchable } from "react-native";
+import { View, Text, StyleSheet, Pressable, Dimensions } from "react-native";
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
-import { IIdoso } from "../interfaces/idoso.interface";
 import { router } from "expo-router";
-import { getImageUri, noImage } from "../shared/helpers/image.helper";
-import { Image } from "expo-image";
 import { ECategoriaRotina, IRotina } from "../interfaces/rotina.interface";
-import { TouchableOpacity } from "react-native-gesture-handler";
+import { updateRotina } from "../services/rotina.service";
+import Toast from "react-native-toast-message";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 interface IProps {
   item: IRotina;
+  index: number;
 }
 
-export default function CardRotina({ item }: IProps) {
+export default function CardRotina({ item, index }: IProps) {
   const [nameIcon, setnameIcon] = useState("view-grid-outline");
-  const [backgroundColor, setBackgroundColor] = useState("#FFC6C6");
-  const [check, setCheck] = useState(false);
+  const [check, setCheck] = useState(item.concluido);
+  const [token, setToken] = useState<string>("");
+  const [timer, setTimer] = useState<NodeJS.Timeout | null>(null);
+
+  const getToken = () => {
+    AsyncStorage.getItem("token").then((response) => {
+      setToken(response as string);
+    });
+  };
 
   const handleIcon = () => {
     if (item.categoria == ECategoriaRotina.ALIMENTACAO)
@@ -26,31 +33,27 @@ export default function CardRotina({ item }: IProps) {
       setnameIcon("medical-bag");
   };
 
-  const handleCheck = () => {
-    setCheck(!check);
+  const debounceConcluido = (concluido: boolean) => {
+    setCheck(concluido);
+    if (timer) clearTimeout(timer);
+    const temp = setTimeout(() => updateRotinaConcluido(concluido), 1000);
+    setTimer(temp);
   };
 
-  const handleBackgroundColor = () => {
-    if (
-      item.categoria == ECategoriaRotina.EXERCICIOS ||
-      item.categoria == ECategoriaRotina.GERAL
-    )
-      setBackgroundColor("#B4FFE8");
+  const updateRotinaConcluido = async (concluido: boolean) => {
+    try {
+      await updateRotina(item.id, { concluido }, token);
+    } catch (err) {
+      const error = err as { message: string };
+      Toast.show({
+        type: "error",
+        text1: "Erro!",
+        text2: error.message,
+      });
+    }
   };
 
-  const getTitulo = (nome: string): string => {
-    return nome.length < 15 ? nome : nome.slice(0, 15) + "...";
-  };
-
-  const selectIdoso = () => {
-    const params = { ...item, id: item.id };
-    router.push({
-      pathname: "/private/tabs/rotinas",
-      params: params,
-    });
-  };
-
-  const navigate = () => {
+  const editar = () => {
     const params = { ...item, id: item.id };
 
     router.push({
@@ -60,45 +63,47 @@ export default function CardRotina({ item }: IProps) {
   };
 
   useEffect(() => handleIcon());
-  useEffect(() => handleBackgroundColor());
-  //useEffect(() => handleCheck());
+  useEffect(() => getToken());
 
   return (
-    <View style={styles.shadow}>
-      <View style={[styles.container, { backgroundColor: backgroundColor }]}>
-        <View style={styles.icon}>
-          <Icon size={40} name={nameIcon}></Icon>
-        </View>
-        <View style={styles.texts}>
-          <Text style={styles.title}>{item.titulo}</Text>
-          <Text style={styles.description}>{item.descricao}</Text>
-        </View>
-        <Pressable onPress={handleCheck} style={styles.checkBox}>
-          {check && <Icon name="check" size={30}></Icon>}
-        </Pressable>
+    <Pressable
+      onPress={editar}
+      style={[
+        styles.container,
+        { backgroundColor: index % 2 == 0 ? "#B4FFE8" : "#FFC6C6" },
+      ]}
+    >
+      <View style={styles.icon}>
+        <Icon size={30} name={nameIcon}></Icon>
       </View>
-    </View>
+      <View style={styles.texts}>
+        <Text style={styles.title}>{item.titulo}</Text>
+        <Text style={styles.description}>{item.descricao}</Text>
+      </View>
+      <Pressable
+        onPress={() => debounceConcluido(!check)}
+        style={styles.checkBox}
+      >
+        {check && <Icon name="check" size={30}></Icon>}
+      </Pressable>
+    </Pressable>
   );
 }
 
 const styles = StyleSheet.create({
-  shadow: {
-    width: 310,
-    marginBottom: 20,
-  },
   container: {
     flexDirection: "row",
     alignItems: "center",
-    // backgroundColor: "#FFC6C6",
-    marginTop: 10,
-    width: 298,
-    height: 90,
+    width: Dimensions.get("window").width - 40,
+    marginHorizontal: 20,
+    marginVertical: 10,
     shadowColor: "#000",
-    shadowOffset: { width: 2, height: 4 },
-    shadowOpacity: 0.3,
-    shadowRadius: 8,
-    borderRadius: 8,
-    padding: 5,
+    shadowOffset: { width: 3, height: 3 },
+    shadowOpacity: 0.2,
+    shadowRadius: 4,
+    borderRadius: 4,
+    padding: 10,
+    paddingVertical: 5,
   },
   texts: {
     flexDirection: "column",
