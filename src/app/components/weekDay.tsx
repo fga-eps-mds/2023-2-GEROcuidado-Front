@@ -1,5 +1,6 @@
 import React, { useState } from "react";
-import { TouchableOpacity, StyleSheet, Text, View, Pressable } from "react-native";
+import { StyleSheet, Text, View, Pressable } from "react-native";
+import { EDiasSemana } from "../interfaces/rotina.interface";
 
 interface IProps {
   dias?: number[];
@@ -7,106 +8,38 @@ interface IProps {
 }
 
 export default function WeekDays({ dias, callbackFn }: IProps) {
-  const [days,setDays] = useState<number[]>(dias as number[]); 
-  
+  const [days, setDays] = useState<number[]>(dias || []);
+  const rawDays = Object.values(EDiasSemana);
+
+  const daysValues = rawDays.slice(rawDays.length / 2) as EDiasSemana[];
+  const daysName = rawDays.slice(0, rawDays.length / 2) as string[];
+
   const handlePress = (dia: number) => {
-    // dias.split(",").map((item) => Number(item));
-    if(days.includes(dia)){
+    if (days.includes(dia)) {
       const novoArray = days.filter((elemento) => elemento !== dia);
       setDays(novoArray);
       callbackFn(novoArray);
-    }
-    else{
-      setDays([...days,dia]);
+    } else {
+      setDays([...days, dia]);
       callbackFn([...days, dia]);
     }
   };
-  
+
   return (
-    <View style = {styles.weekDays}>
-      <Pressable
-        onPress={() => handlePress(0)}
-        style={[
-          styles.circle,
-          { backgroundColor: days.includes(0) ? "#2CCDB5" : "White" },
-        ]}
-      >
-        <Text style={[styles.textDay, { color: days.includes(0) ? "white" : "black" }]}>
-          D
-        </Text>
-      </Pressable>
-
-      <Pressable
-        onPress={() => handlePress(1)}
-        style={[
-          styles.circle,
-          { backgroundColor: days.includes(1) ? "#2CCDB5" : "White" },
-        ]}
-      >
-        <Text style={[styles.textDay, { color: days.includes(1) ? "white" : "black" }]}>
-          S
-        </Text>
-      </Pressable>
-
-      <Pressable
-       onPress={() => handlePress(2)}
-        style={[
-          styles.circle,
-          { backgroundColor: days.includes(2) ? "#2CCDB5" : "White" },
-        ]}
-      >
-        <Text style={[styles.textDay, { color: days.includes(2) ? "white" : "black" }]}>
-          T
-        </Text>
-      </Pressable>
-
-      <Pressable
-        onPress={() => handlePress(3)}
-        style={[
-          styles.circle,
-          { backgroundColor: days.includes(3) ? "#2CCDB5" : "White" },
-        ]}
-      >
-        <Text style={[styles.textDay, { color: days.includes(3) ? "white" : "black" }]}>
-          Q
-        </Text>
-      </Pressable>
-
-      <Pressable
-        onPress={() => handlePress(4)}
-        style={[
-          styles.circle,
-          { backgroundColor: days.includes(4) ? "#2CCDB5" : "White" },
-        ]}
-      >
-        <Text style={[styles.textDay, { color: days.includes(4) ? "white" : "black" }]}>
-         Q
-        </Text>
-      </Pressable>
-
-      <Pressable
-        onPress={() => handlePress(5)}
-        style={[
-          styles.circle,
-          { backgroundColor: days.includes(5) ? "#2CCDB5" : "White" },
-        ]}
-      >
-        <Text style={[styles.textDay, { color: days.includes(5) ? "white" : "black" }]}>
-         S
-        </Text>
-      </Pressable>
-
-      <Pressable
-        onPress={() => handlePress(6)}
-        style={[
-          styles.circle,
-          { backgroundColor: days.includes(6) ? "#2CCDB5" : "White" },
-        ]}
-      >
-        <Text style={[styles.textDay, { color: days.includes(6) ? "white" : "black" }]}>
-          S
-        </Text>
-      </Pressable>
+    <View style={styles.weekDays}>
+      {daysValues.map((day, index) => (
+        <Pressable
+          key={day}
+          onPress={() => handlePress(day)}
+          style={[styles.circle, days?.includes(day) && styles.active]}
+        >
+          <Text
+            style={[styles.textDay, days?.includes(day) && styles.activeText]}
+          >
+            {daysName[index].charAt(0)}
+          </Text>
+        </Pressable>
+      ))}
     </View>
   );
 }
@@ -114,6 +47,7 @@ export default function WeekDays({ dias, callbackFn }: IProps) {
 const styles = StyleSheet.create({
   textDay: {
     fontSize: 22,
+    color: "black",
   },
 
   weekDays: {
@@ -130,7 +64,13 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
     margin: 5,
+    backgroundColor: "white",
   },
-
-  
+  active: {
+    backgroundColor: "#2CCDB5",
+    borderColor: "#2CCDB5",
+  },
+  activeText: {
+    color: "white",
+  },
 });
