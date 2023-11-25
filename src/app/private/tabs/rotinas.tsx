@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { IUser } from "../../interfaces/user.interface";
 import NaoAutenticado from "../../components/NaoAutenticado";
+import IdosoNaoSelecionado from "../../components/IdosoNaoSelecionado";
 
 import {
   Pressable,
@@ -104,7 +105,7 @@ export default function Rotinas() {
       {!user?.id && <NaoAutenticado />}
 
       {/* TODO fazer componente de idoso não selecionado que direcione pra listagem de idosos */}
-      {user?.id && !idoso?.id && <Text>Nao tem idoso</Text>}
+      {user?.id && !idoso?.id && <IdosoNaoSelecionado />}
 
       {user?.id && idoso?.id && (
         <View>
