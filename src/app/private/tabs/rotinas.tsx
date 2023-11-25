@@ -2,84 +2,64 @@ import React, { useEffect, useState } from "react";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { IUser } from "../../interfaces/user.interface";
 import NaoAutenticado from "../../components/NaoAutenticado";
-import EmConstrucao from "../../components/EmConstrucao";
 
 import {
-  ActivityIndicator,
   Pressable,
   StyleSheet,
-  Switch,
   Text,
   View,
-  Image,
-  FlatList,
-  ScrollView,
+  Dimensions,
+  ActivityIndicator,
 } from "react-native";
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
-import { router, useLocalSearchParams } from "expo-router";
-import { IIdoso, IIdosoParams } from "../../interfaces/idoso.interface";
-import { IRotina, IRotinaFilter, IRotinaIdoso } from "../../interfaces/rotina.interface";
+import { router } from "expo-router";
+import { IRotina, IRotinaFilter } from "../../interfaces/rotina.interface";
 import CardRotina from "../../components/CardRotina";
 import { getAllRotina } from "../../services/rotina.service";
 import Toast from "react-native-toast-message";
+import { FlashList } from "@shopify/flash-list";
+import { Image } from "expo-image";
+import { IIdoso } from "../../interfaces/idoso.interface";
 
 export default function Rotinas() {
-  const params = useLocalSearchParams() as unknown as IIdosoParams;
-  const [user, setUser] = useState<IUser | undefined>(undefined);
-  // const [idoso, setIdoso] = useState<IIdoso | undefined>(undefined);
+  const [idoso, setIdoso] = useState<IIdoso>();
+  const [user, setUser] = useState<IUser>();
   const [rotinas, setRotinas] = useState<IRotina[]>([]);
   const [loading, setLoading] = useState(true);
 
-  // const getIdosoFromParams = () => {
-  //   const payload: IIdoso = {
-  //     ...params,
-  //     id: params.id,
-  //   };
-  //   setIdoso(payload);
-  // };
-
-  const editarRotina = (item: IRotina) => {
-    const rotina : IRotinaIdoso = {
-      ...params, 
-      ...item, 
-      dataHoraIdoso: params.dataHora as string, 
-      descricaoIdoso: params.descricao as string
-    };
-    // const rotina : IRotinaIdoso = {...item, idoso: params}
-  
-    router.push({
-      pathname: "/private/pages/editarRotina",
-      params: rotina,
-
+  const getIdoso = () => {
+    AsyncStorage.getItem("idoso").then((idosoString) => {
+      if (idosoString) {
+        const idosoPayload = JSON.parse(idosoString) as IIdoso;
+        setIdoso(idosoPayload);
+      }
     });
   };
 
-  // const hasFoto = (foto: string | null | undefined) => {
-  //   if (!foto) return false;
+  const hasFoto = (foto: string | null | undefined) => {
+    if (!foto) return false;
 
-  //   const raw = foto.split("data:image/png;base64,")[1];
-  //   return raw.length > 0;
-  // };
+    const raw = foto.split("data:image/png;base64,")[1];
+    return raw.length > 0;
+  };
 
-  // const getFoto = (foto: string | null | undefined) => {
-  //   if (hasFoto(foto)) {
-  //     return (
-  //       <Image source={{ uri: foto as string }} style={styles.fotoPerfil} />
-  //     );
-  //   }
+  const getFoto = (foto: string | null | undefined) => {
+    if (hasFoto(foto)) {
+      return (
+        <Image source={{ uri: foto as string }} style={styles.fotoPerfil} />
+      );
+    }
 
-  //   return (
-  //     <View style={[styles.semFoto, styles.fotoPerfil]}>
-  //       <Icon style={styles.semFotoIcon} name="image-outline" size={15} />
-  //     </View>
-  //   );
-  // };
+    return (
+      <View style={[styles.semFoto, styles.fotoPerfil]}>
+        <Icon style={styles.semFotoIcon} name="image-outline" size={15} />
+      </View>
+    );
+  };
 
   const novaRotina = () => {
-    // const params = { ...idoso, id: idoso?.id };
     router.push({
       pathname: "private/pages/cadastrarRotina",
-      params: params,
     });
   };
 
@@ -94,7 +74,7 @@ export default function Rotinas() {
     setLoading(true);
 
     const rotinaFilter: IRotinaFilter = {
-      idPaciente: Number(params.id),
+      idIdoso: Number(idoso?.id),
     };
 
     getAllRotina(rotinaFilter)
@@ -116,39 +96,53 @@ export default function Rotinas() {
   };
 
   useEffect(() => handleUser(), []);
-  useEffect(() => getRotinas(), []);
-  // useEffect(() => getIdosoFromParams(), []);
+  useEffect(() => getIdoso(), []);
+  useEffect(() => getRotinas(), [idoso]);
 
-  return !user?.id ? (
-    <NaoAutenticado />
-  ) : (
-      <ScrollView>
-    <View>
-      <View style={styles.header}>
-        {/* {getFoto(params?.foto)} */}
-        <Text style={styles.nomeUsuario}>
-          <Text style={styles.negrito}>{params?.nome}</Text>
-        </Text>
-      </View>
-      <Pressable style={styles.botaoCriarRotina} onPress={novaRotina}>
-        <Icon name="plus" color={"white"} size={20}></Icon>
-        <Text style={styles.textoBotaoCriarRotina}>Nova Rotina</Text>
-      </Pressable>
-        <View style={styles.cardIdoso}>
-          <FlatList
-            // style={{ marginBottom: 150 }}
-            showsVerticalScrollIndicator={false}
-            numColumns={1}
-            data={rotinas}
-            renderItem={({ item }) => (
-              <Pressable onPress={() => editarRotina(item)}>
-                <CardRotina item={item} />
-              </Pressable>
-            )}
-          />
+  return (
+    <>
+      {!user?.id && <NaoAutenticado />}
+
+      {/* TODO fazer componente de idoso não selecionado que direcione pra listagem de idosos */}
+      {user?.id && !idoso?.id && <Text>Nao tem idoso</Text>}
+
+      {user?.id && idoso?.id && (
+        <View>
+          <View style={styles.header}>
+            {getFoto(idoso?.foto)}
+            <Text style={styles.nomeUsuario}>
+              <Text style={styles.negrito}>{idoso?.nome}</Text>
+            </Text>
+          </View>
+
+          <Pressable style={styles.botaoCriarRotina} onPress={novaRotina}>
+            <Icon name="plus" color={"white"} size={20}></Icon>
+            <Text style={styles.textoBotaoCriarRotina}>Nova Rotina</Text>
+          </Pressable>
+
+          {loading && (
+            <ActivityIndicator
+              size="large"
+              color="#2CCDB5"
+              testID="loading-indicator"
+              style={{ marginTop: 100 }}
+            />
+          )}
+
+          {!loading && (
+            <View style={styles.rotinas}>
+              <FlashList
+                data={rotinas}
+                renderItem={({ item, index }) => (
+                  <CardRotina item={item} index={index} />
+                )}
+                estimatedItemSize={50}
+              />
+            </View>
+          )}
         </View>
-    </View>
-    </ScrollView>
+      )}
+    </>
   );
 }
 
@@ -201,7 +195,8 @@ const styles = StyleSheet.create({
     fontSize: 14,
     marginLeft: 5,
   },
-  cardIdoso: {
-    alignItems: "center",
+  rotinas: {
+    width: Dimensions.get("window").width,
+    height: Dimensions.get("window").height - 200,
   },
 });
