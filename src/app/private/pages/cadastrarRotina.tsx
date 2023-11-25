@@ -32,10 +32,20 @@ interface IErrors {
 }
 
 export default function CadastrarRotina() {
+  const getInitialDateTime = (isData = true) => {
+    const today = new Date();
+    const formattedDate = today.toLocaleDateString("pt-BR", {
+      hour: "2-digit",
+      minute: "2-digit",
+    });
+    const formattedDateArray = formattedDate.split(" ");
+    return isData ? formattedDateArray[0] : formattedDateArray[1];
+  };
+
   const [idoso, setIdoso] = useState<IIdoso>();
   const [titulo, setTitulo] = useState("");
-  const [data, setData] = useState("");
-  const [hora, setHora] = useState("");
+  const [data, setData] = useState(getInitialDateTime());
+  const [hora, setHora] = useState(getInitialDateTime(false));
   const [descricao, setDescricao] = useState("");
   const [categoria, setCategoria] = useState<ECategoriaRotina | null>(null);
   const [showLoading, setShowLoading] = useState(false);
@@ -150,17 +160,6 @@ export default function CadastrarRotina() {
     });
   };
 
-  const getInitialDateTime = () => {
-    const today = new Date();
-    const formattedDate = today.toLocaleDateString("pt-BR", {
-      hour: "2-digit",
-      minute: "2-digit",
-    });
-    const formattedDateArray = formattedDate.split(" ");
-    setData(formattedDateArray[0]);
-    setHora(formattedDateArray[1]);
-  };
-
   const setSuggestedTitle = () => {
     switch (categoria) {
       case ECategoriaRotina.ALIMENTACAO:
@@ -179,7 +178,6 @@ export default function CadastrarRotina() {
 
   useEffect(() => getIdoso(), []);
   useEffect(() => getToken(), []);
-  useEffect(() => getInitialDateTime(), []);
   useEffect(() => setSuggestedTitle(), [categoria]);
   useEffect(() => handleErrors(), [titulo, data, hora, categoria, descricao]);
 
