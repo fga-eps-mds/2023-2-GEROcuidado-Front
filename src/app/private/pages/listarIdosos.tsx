@@ -17,6 +17,7 @@ import Toast from "react-native-toast-message";
 import { SelectList } from "react-native-dropdown-select-list";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { IUser } from "../../interfaces/user.interface";
+import { getImageUri } from "../../shared/helpers/image.helper";
 
 interface IOrderOption {
   key: IOrder;
@@ -57,7 +58,6 @@ const data: IOrderOption[] = [
 export default function ListarIdosos() {
   const [idosos, setIdosos] = useState<IIdoso[]>([]);
   const [loading, setLoading] = useState(true);
-  const [selecionado, setSelecionado] = useState(false);
   const [orderOption, setOrderOption] = useState<IOrder>(data[0].key);
   const [idUsuario, setIdUsuario] = useState<number | null>(null);
 
@@ -76,7 +76,12 @@ export default function ListarIdosos() {
     getAllIdoso(idUsuario, orderOption)
       .then((response) => {
         const newIdosos = response.data as IIdoso[];
-        setIdosos(newIdosos);
+        const mappedIdoso = newIdosos.map((item) => ({
+          ...item,
+          foto: getImageUri(item.foto),
+        }));
+
+        setIdosos(mappedIdoso);
       })
       .catch((err) => {
         const error = err as { message: string };
@@ -89,10 +94,6 @@ export default function ListarIdosos() {
       .finally(() => {
         setLoading(false);
       });
-  };
-
-  const selecionar = () => {
-    setSelecionado(!selecionado);
   };
 
   const navigateCadastrar = () => {
@@ -133,15 +134,10 @@ export default function ListarIdosos() {
       {!loading && (
         <View style={styles.cardIdoso}>
           <FlatList
-            // style={{ marginBottom: 150 }}
             showsVerticalScrollIndicator={false}
             numColumns={2}
             data={idosos}
-            renderItem={({ item }) => (
-              <Pressable onPress={selecionar}>
-                <CardIdoso item={item} />
-              </Pressable>
-            )}
+            renderItem={({ item }) => <CardIdoso item={item} />}
           />
         </View>
       )}
