@@ -22,6 +22,7 @@ import Toast from "react-native-toast-message";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import ErrorMessage from "../../components/ErrorMessage";
 import ModalConfirmation from "../../components/ModalConfirmation";
+import ToggleButton from "../../components/ToggleButtonNotification";
 import { IIdoso } from "../../interfaces/idoso.interface";
 
 interface IErrors {
@@ -33,6 +34,7 @@ interface IErrors {
 }
 
 export default function EditarRotina() {
+  const [isToggleActive, setIsToggleActive] = useState(false);
   const params = useLocalSearchParams() as unknown as IRotina & {
     dias: string;
   };
@@ -277,6 +279,10 @@ export default function EditarRotina() {
             />
           </View>
           <ErrorMessage show={showErrors} text={erros.categoria} />
+          
+          <View style={styles.toggleButtonContainer}>
+                <ToggleButton onPress={() => setIsToggleActive(!isToggleActive)} active={isToggleActive} />
+          </View>
         </View>
 
         <View style={styles.repete}>
@@ -456,5 +462,11 @@ const styles = StyleSheet.create({
     fontWeight: "600",
     marginBottom: 25,
     alignItems: "center",
+  },
+  toggleButtonContainer: {
+    flexDirection: 'row',
+    justifyContent: 'flex-start', 
+    marginTop: 10,
+    marginLeft: 20, 
   },
 });
