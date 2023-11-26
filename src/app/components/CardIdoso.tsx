@@ -5,6 +5,7 @@ import { IIdoso } from "../interfaces/idoso.interface";
 import { router } from "expo-router";
 import { getImageUri, noImage } from "../shared/helpers/image.helper";
 import { Image } from "expo-image";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 interface IProps {
   item: IIdoso;
@@ -15,12 +16,9 @@ export default function CardIdoso({ item }: IProps) {
     return nome.length < 15 ? nome : nome.slice(0, 15) + "...";
   };
 
-  const selectIdoso = () => {
-    // TODO selecionar um idoso para a aplicacao
-
-    router.push({
-      pathname: "/private/tabs/rotinas",
-    });
+  const selectIdoso = async () => {
+    await AsyncStorage.setItem("idoso", JSON.stringify(item));
+    router.replace("private/tabs/rotinas");
   };
 
   const navigate = () => {
@@ -41,14 +39,18 @@ export default function CardIdoso({ item }: IProps) {
       >
         <View>
           <Image
-            source={{ uri: getImageUri(item.foto) }}
+            source={{ uri: item.foto }}
             style={styles.imagem}
             placeholder={{ uri: noImage }}
             transition={500}
           />
         </View>
         <Text style={styles.texto}>{getNome(item.nome)}</Text>
-        <Pressable style={styles.pencil} onPress={navigate} testID="pencil-icon">
+        <Pressable
+          style={styles.pencil}
+          onPress={navigate}
+          testID="pencil-icon"
+        >
           <Icon
             style={styles.pencilIcon}
             name="pencil-outline"

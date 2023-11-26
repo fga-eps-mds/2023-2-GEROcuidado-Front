@@ -6,16 +6,14 @@ import UploadImageV2 from "../components/UploadImageV2";
 jest.mock("expo-image-picker");
 import * as ImagePicker from "expo-image-picker";
 
-const launchImageLibraryAsyncMock = jest
-  .fn()
-  .mockResolvedValueOnce({
-    assets: [
-      {
-        uri: "fakeImageUri",
-        base64: "fakeBase64",
-      },
-    ],
-  });
+const launchImageLibraryAsyncMock = jest.fn().mockResolvedValueOnce({
+  assets: [
+    {
+      uri: "fakeImageUri",
+      base64: "fakeBase64",
+    },
+  ],
+});
 
 ImagePicker.launchImageLibraryAsync = launchImageLibraryAsyncMock;
 
@@ -23,7 +21,10 @@ describe("UploadImageV2", () => {
   it("deve renderizar corretamente e chamar a função de callback ao selecionar uma imagem", async () => {
     const setPhotoCallbackMock = jest.fn();
     const { getByTestId } = render(
-      <UploadImageV2 setPhotoCallback={setPhotoCallbackMock} base64="fakeBase64" />
+      <UploadImageV2
+        setPhotoCallback={setPhotoCallbackMock}
+        base64="fakeBase64"
+      />,
     );
 
     fireEvent.press(getByTestId("uploadImageButton"));

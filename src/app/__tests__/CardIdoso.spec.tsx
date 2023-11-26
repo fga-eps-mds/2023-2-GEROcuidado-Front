@@ -15,6 +15,7 @@ const mockItem = {
 jest.mock("expo-router", () => ({
   router: {
     push: jest.fn(),
+    replace: jest.fn(),
   },
 }));
 
@@ -30,7 +31,7 @@ describe("CardIdoso", () => {
     const pencilIcon = screen.getByTestId("pencil-icon");
     fireEvent.press(pencilIcon);
 
-    
+    // eslint-disable-next-line @typescript-eslint/no-var-requires
     expect(require("expo-router").router.push).toHaveBeenCalledWith({
       pathname: "/private/pages/editarIdoso",
       params: {
@@ -50,9 +51,18 @@ describe("CardIdoso", () => {
     const cardIdosoPressable = screen.getByTestId("cardIdosoPressable");
     fireEvent.press(cardIdosoPressable);
 
-    
+    // eslint-disable-next-line @typescript-eslint/no-var-requires
     expect(require("expo-router").router.push).toHaveBeenCalledWith({
-      pathname: "/private/tabs/rotinas",
+      params: {
+        dataHora: "2023-01-01T12:00:00",
+        dataNascimento: "1990-01-01",
+        foto: "data:image/png;base64,base64-encoded-image-data",
+        id: 1,
+        idUsuario: 123,
+        nome: "Nome do Idoso",
+        telefoneResponsavel: "123456789",
+      },
+      pathname: "/private/pages/editarIdoso",
     });
   });
 });

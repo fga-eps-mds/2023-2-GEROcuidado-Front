@@ -1,7 +1,6 @@
 import React from "react";
 import { render, fireEvent, act } from "@testing-library/react-native";
 import Login from "../public/login";
-import { router } from "expo-router";
 
 // Mock do AsyncStorage
 jest.mock("@react-native-async-storage/async-storage", () => ({
@@ -16,7 +15,6 @@ jest.mock("expo-router", () => ({
 }));
 // Mock da função de login
 // eslint-disable-next-line @typescript-eslint/no-var-requires
-const userService = require("../services/user.service");
 jest.mock("../services/user.service");
 
 describe("Login Component - Sucesso", () => {

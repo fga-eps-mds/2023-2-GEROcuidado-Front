@@ -1,30 +1,30 @@
-import { ETipoSanguineo, IOrder } from "../interfaces/idoso.interface";
 import {
-  postIdoso,
-  getAllIdoso,
-  updateIdoso,
-  deleteIdoso,
-} from "../services/idoso.service";
+  postRotina,
+  getAllRotina,
+  updateRotina,
+  deleteRotina,
+} from "../services/rotina.service";
+
+import { ECategoriaRotina } from "../interfaces/rotina.interface";
 
 global.fetch = jest.fn();
 
 const token =
   "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6OSwiZW1haWwiOiJ0ZXNzc3RlQGdtYWlsLmNvbSIsIm5vbWUiOiJQZWRybyIsImFkbWluIjpmYWxzZSwiaWF0IjoxNjk5Mjk4NTY5LCJleHAiOjE2OTkzNDE3Njl9.U7i3VL8fdTH2xmYDrXCxrbp_5EeDXPdf3vAlgvcdNyY";
 
-describe("postIdoso", () => {
+describe("postRotina", () => {
   it("deve fazer uma chamada de API bem-sucedida", async () => {
     // Mock para simular uma resposta de sucesso
     global.fetch = jest.fn().mockResolvedValue({
       json: async () => ({
         data: {
-          nome: "Teste",
-          dataNascimento: "21/21/2023",
-          idUsuario: 1,
-          foto: "",
-          tipoSanguineo: ETipoSanguineo.A_POSITIVO,
-          telefoneResponsavel: "11111111111",
-          descricao: "Descrição de Exemplo",
+          titulo: "Titulo",
+          idIdoso: 1,
+          categoria: ECategoriaRotina.GERAL,
+          descricao: "Descrição",
+          concluido: false,
           dataHora: "2023-11-06T12:00:00",
+          dias: [0, 1],
         },
         message: null,
         status: 201,
@@ -33,17 +33,16 @@ describe("postIdoso", () => {
     });
 
     const body = {
-      nome: "Teste",
-      dataNascimento: "21/21/2023",
-      idUsuario: 1,
-      foto: "",
-      tipoSanguineo: ETipoSanguineo.A_POSITIVO,
-      telefoneResponsavel: "11111111111",
-      descricao: "Descrição de Exemplo",
+      titulo: "Titulo",
+      idIdoso: 1,
+      categoria: ECategoriaRotina.GERAL,
+      descricao: "Descrição",
+      concluido: false,
       dataHora: "2023-11-06T12:00:00",
+      dias: [0, 1],
     };
 
-    const result = await postIdoso(body, token);
+    const result = await postRotina(body, token);
 
     expect(result.message).toBeNull();
   });
@@ -60,18 +59,17 @@ describe("postIdoso", () => {
     });
 
     const body = {
-      nome: "Teste",
-      dataNascimento: "21/21/2023",
-      idUsuario: 1,
-      foto: "",
-      tipoSanguineo: ETipoSanguineo.A_POSITIVO,
-      telefoneResponsavel: "11111111111",
-      descricao: "Descrição de Exemplo",
+      titulo: "Titulo",
+      idIdoso: 1,
+      categoria: ECategoriaRotina.GERAL,
+      descricao: "Descrição",
+      concluido: false,
       dataHora: "2023-11-06T12:00:00",
+      dias: [0, 1],
     };
 
     try {
-      await postIdoso(body, token);
+      await postRotina(body, token);
     } catch (error) {
       if (error instanceof Error) {
         expect(error.message).toBe("Mensagem de erro");
@@ -80,20 +78,19 @@ describe("postIdoso", () => {
   });
 });
 
-describe("updateIdoso", () => {
+describe("updateRotina", () => {
   it("deve fazer uma chamada de API bem-sucedida", async () => {
     // Mock para simular uma resposta de sucesso
     global.fetch = jest.fn().mockResolvedValue({
       json: async () => ({
         data: {
-          nome: "Teste",
-          dataNascimento: "21/21/2023",
-          idUsuario: 1,
-          foto: "",
-          tipoSanguineo: ETipoSanguineo.A_POSITIVO,
-          telefoneResponsavel: "11111111111",
-          descricao: "Descrição de Exemplo",
+          titulo: "Titulo",
+          idIdoso: 1,
+          categoria: ECategoriaRotina.GERAL,
+          descricao: "Descrição",
+          concluido: false,
           dataHora: "2023-11-06T12:00:00",
+          dias: [0, 1],
         },
         message: null,
         status: 200,
@@ -103,17 +100,16 @@ describe("updateIdoso", () => {
 
     const id = 1; // Defina o ID do usuário que deseja atualizar
     const userDataToUpdate = {
-      nome: "Teste",
-      dataNascimento: "21/21/2023",
-      idUsuario: 1,
-      foto: "",
-      tipoSanguineo: ETipoSanguineo.A_POSITIVO,
-      telefoneResponsavel: "11111111111",
-      descricao: "Descrição de Exemplo",
+      titulo: "Titulo",
+      idIdoso: 1,
+      categoria: ECategoriaRotina.ALIMENTACAO,
+      descricao: "Descrição Update",
+      concluido: false,
       dataHora: "2023-11-06T12:00:00",
+      dias: [0, 1],
     };
 
-    const result = await updateIdoso(id, userDataToUpdate, token);
+    const result = await updateRotina(id, userDataToUpdate, token);
 
     expect(result.message).toBeNull();
   });
@@ -131,18 +127,17 @@ describe("updateIdoso", () => {
 
     const id = 1; // Defina o ID do usuário que deseja atualizar
     const userDataToUpdate = {
-      nome: "Teste",
-      dataNascimento: "21/21/2023",
-      idUsuario: 1,
-      foto: "",
-      tipoSanguineo: ETipoSanguineo.A_POSITIVO,
-      telefoneResponsavel: "11111111111",
-      descricao: "Descrição de Exemplo",
+      titulo: "Titulo",
+      idIdoso: 1,
+      categoria: ECategoriaRotina.ALIMENTACAO,
+      descricao: "Descrição Update",
+      concluido: false,
       dataHora: "2023-11-06T12:00:00",
+      dias: [0, 1],
     };
 
     try {
-      await updateIdoso(id, userDataToUpdate, token);
+      await updateRotina(id, userDataToUpdate, token);
     } catch (error) {
       if (error instanceof Error) {
         expect(error.message).toBe("Mensagem de erro");
@@ -151,26 +146,19 @@ describe("updateIdoso", () => {
   });
 });
 
-describe("getAllIdoso", () => {
+describe("getAllRotina", () => {
   it("Get: deve fazer uma chamada de API bem-sucedida", async () => {
     // Mock para simular uma resposta de sucesso
     global.fetch = jest.fn().mockResolvedValue({
       json: async () => ({
-        data: [
-          /* seus dados de publicação aqui */
-        ],
+        data: null,
         message: null,
         status: 200,
       }),
       status: 200,
     });
 
-    const order: IOrder = {
-      column: "descricao",
-      dir: "DESC",
-    };
-
-    const result = await getAllIdoso(order);
+    const result = await getAllRotina();
 
     expect(result.message).toBeNull();
   });
@@ -188,7 +176,7 @@ describe("getAllIdoso", () => {
     const id = 1; // Defina o ID da publicação que você deseja excluir
 
     try {
-      await deleteIdoso(id, token);
+      await deleteRotina(id, token);
     } catch (error) {
       if (error instanceof Error) {
         expect(error.message).toBe("Mensagem de erro");
@@ -197,7 +185,7 @@ describe("getAllIdoso", () => {
   });
 });
 
-describe("deleteIdoso", () => {
+describe("deleteRotina", () => {
   it("deve fazer uma chamada de API bem-sucedida", async () => {
     // Mock para simular uma resposta de sucesso
     global.fetch = jest.fn().mockResolvedValue({
@@ -211,7 +199,7 @@ describe("deleteIdoso", () => {
 
     const id = 1; // Defina o ID do usuário que deseja excluir
 
-    const result = await deleteIdoso(id, token);
+    const result = await deleteRotina(id, token);
 
     expect(result.message).toBeNull();
     expect(result.data).toBeNull(); // Verifica se os dados retornados são nulos após a exclusão bem-sucedida
@@ -231,7 +219,7 @@ describe("deleteIdoso", () => {
     const id = 1; // Defina o ID do usuário que deseja excluir
 
     try {
-      await deleteIdoso(id, token);
+      await deleteRotina(id, token);
     } catch (error) {
       if (error instanceof Error) {
         expect(error.message).toBe("Mensagem de erro");

@@ -1,14 +1,14 @@
-import '@testing-library/jest-native/extend-expect';
-import { render, fireEvent, waitFor, act } from '@testing-library/react-native';
-import AsyncStorage from '@react-native-async-storage/async-storage';
-import EditarIdoso from '../private/pages/editarIdoso';
+import "@testing-library/jest-native/extend-expect";
+import { render } from "@testing-library/react-native";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import EditarIdoso from "../private/pages/editarIdoso";
 
 // Mock AsyncStorage para retornar valores específicos durante o teste
-jest.mock('@react-native-async-storage/async-storage', () => ({
+jest.mock("@react-native-async-storage/async-storage", () => ({
   getItem: jest.fn(),
 }));
 
-describe('EditarIdoso', () => {
+describe("EditarIdoso", () => {
   const mockUsuario = {
     id: 123,
     // outras propriedades do usuário, se necessário
@@ -19,9 +19,9 @@ describe('EditarIdoso', () => {
     AsyncStorage.getItem.mockResolvedValue(JSON.stringify(mockUsuario));
   });
 
-  it('renderiza corretamente', () => {
+  it("renderiza corretamente", () => {
     render(<EditarIdoso />);
-    
+
     // Você pode continuar a escrever o teste de renderização aqui
   });
 });
