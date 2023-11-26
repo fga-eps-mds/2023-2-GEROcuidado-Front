@@ -21,6 +21,8 @@ import Toast from "react-native-toast-message";
 import { FlashList } from "@shopify/flash-list";
 import { Image } from "expo-image";
 import { IIdoso } from "../../interfaces/idoso.interface";
+import {CalendarList} from 'react-native-calendars';
+import Agenda from "../pages/agenda";
 
 export default function Rotinas() {
   const [idoso, setIdoso] = useState<IIdoso>();
@@ -120,7 +122,9 @@ export default function Rotinas() {
             <Icon name="plus" color={"white"} size={20}></Icon>
             <Text style={styles.textoBotaoCriarRotina}>Nova Rotina</Text>
           </Pressable>
-
+          <View>
+            <Agenda />
+          </View>
           {loading && (
             <ActivityIndicator
               size="large"
