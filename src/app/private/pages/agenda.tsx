@@ -6,14 +6,18 @@ const CalendarAgenda: React.FC = () => {
   const [items, setItems] = useState({});
 
   const loadItems = (day: any) => {
-    // Simule o carregamento de eventos para o dia específico.
-    // Substitua esta lógica com chamadas à API do seu backend, se necessário.
+
     setItems({
       [day.dateString]: [
         { name: 'Passear com o idoso', time: '10:00 AM' },
         { name: 'Dar remédio ao idoso', time: '02:30 PM' },
         { name: 'Banhar o idoso', time: '02:30 PM' },
-
+        { name: 'Banhar o idoso', time: '02:30 PM' },
+        { name: 'Banhar o idoso', time: '02:30 PM' },
+        { name: 'Banhar o idoso', time: '02:30 PM' },
+        { name: 'Dormir', time: '02:30 PM' },
+        { name: 'Dormir', time: '02:30 PM' },
+        { name: 'Levantar', time: '02:30 PM' },
       ],
     });
   };
@@ -27,10 +31,11 @@ const CalendarAgenda: React.FC = () => {
 
   return (
     <Agenda
-      items={items}
-      loadItemsForMonth={loadItems}
-      renderItem={renderItem}
-    />
+    items={items}
+    loadItemsForMonth={loadItems}
+    renderItem={renderItem}
+    style={{ height: '100%' }} 
+  />
   );
 };
 

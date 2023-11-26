@@ -23,6 +23,8 @@ import { Image } from "expo-image";
 import { IIdoso } from "../../interfaces/idoso.interface";
 import {CalendarList} from 'react-native-calendars';
 import Agenda from "../pages/agenda";
+import { ScrollView } from 'react-native';
+
 
 export default function Rotinas() {
   const [idoso, setIdoso] = useState<IIdoso>();
@@ -122,9 +124,10 @@ export default function Rotinas() {
             <Icon name="plus" color={"white"} size={20}></Icon>
             <Text style={styles.textoBotaoCriarRotina}>Nova Rotina</Text>
           </Pressable>
-          <View>
-            <Agenda />
-          </View>
+          <Agenda />
+
+
+
           {loading && (
             <ActivityIndicator
               size="large"
@@ -147,6 +150,8 @@ export default function Rotinas() {
           )}
         </View>
       )}
+
+    <Agenda />
     </>
   );
 }
