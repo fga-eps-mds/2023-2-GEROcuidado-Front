@@ -3,6 +3,7 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import { IUser } from "../../interfaces/user.interface";
 import NaoAutenticado from "../../components/NaoAutenticado";
 import IdosoNaoSelecionado from "../../components/IdosoNaoSelecionado";
+import CalendarStrip from 'react-native-calendar-strip';
 
 import {
   Pressable,
@@ -11,6 +12,7 @@ import {
   View,
   Dimensions,
   ActivityIndicator,
+  TouchableOpacity
 } from "react-native";
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
 import { router } from "expo-router";
@@ -21,16 +23,26 @@ import Toast from "react-native-toast-message";
 import { FlashList } from "@shopify/flash-list";
 import { Image } from "expo-image";
 import { IIdoso } from "../../interfaces/idoso.interface";
-import {CalendarList} from 'react-native-calendars';
-import Agenda from "../pages/agenda";
-import { ScrollView } from 'react-native';
+import moment from 'moment';
+import 'moment/locale/pt-br'; 
 
 
 export default function Rotinas() {
+  moment.locale('pt-br');
   const [idoso, setIdoso] = useState<IIdoso>();
   const [user, setUser] = useState<IUser>();
   const [rotinas, setRotinas] = useState<IRotina[]>([]);
   const [loading, setLoading] = useState(true);
+
+  const datesWhitelist = [{
+    start: moment(),
+    end: moment().add(10, 'y')  
+  }];
+  
+
+  const langMomment = moment.locale('pt');
+  const fetchedDates = ["2022-06-15", "2022-06-17", "2022-06-22", "2022-06-27"];
+  const markedDatesArray: any[] | ((date: moment.Moment) => void) | undefined = [];
 
   const getIdoso = () => {
     AsyncStorage.getItem("idoso").then((idosoString) => {
@@ -41,6 +53,7 @@ export default function Rotinas() {
     });
   };
 
+    
   const hasFoto = (foto: string | null | undefined) => {
     if (!foto) return false;
 
@@ -99,6 +112,7 @@ export default function Rotinas() {
         setLoading(false);
       });
   };
+  
 
   useEffect(() => handleUser(), []);
   useEffect(() => getIdoso(), []);
@@ -119,12 +133,27 @@ export default function Rotinas() {
               <Text style={styles.negrito}>{idoso?.nome}</Text>
             </Text>
           </View>
+      
+        <View>
+            <CalendarStrip
+              scrollerPaging={true}
+              scrollable={true}
+              style={styles.Calendar}
+              calendarColor={'#EDF0FA'}
+              calendarHeaderStyle={{color: 'black'}}
+              dateNumberStyle={{color: 'black'}}
+              dateNameStyle={{color: 'black'}}
+              iconContainer={{flex: 0.1}}
+              showMonth={true}
+              markedDates={markedDatesArray}
+              datesWhitelist={datesWhitelist}
+            />
+          </View>
 
           <Pressable style={styles.botaoCriarRotina} onPress={novaRotina}>
             <Icon name="plus" color={"white"} size={20}></Icon>
             <Text style={styles.textoBotaoCriarRotina}>Nova Rotina</Text>
           </Pressable>
-          <Agenda />
 
 
 
@@ -150,8 +179,6 @@ export default function Rotinas() {
           )}
         </View>
       )}
-
-    <Agenda />
     </>
   );
 }
@@ -169,6 +196,11 @@ const styles = StyleSheet.create({
     aspectRatio: 1,
     borderRadius: 100,
   },
+  Calendar: {
+    height: 80,
+    margin: 0,
+    backgroundColor: "#2CCDB5"
+},
   semFoto: { position: "relative", backgroundColor: "#EFEFF0" },
   semFotoIcon: {
     position: "absolute",
