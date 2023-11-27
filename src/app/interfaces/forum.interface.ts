@@ -19,6 +19,7 @@ export interface IPublicacao extends IPublicacaoBody {
   id: number;
   usuario?: IUser;
   idUsuarioReporte: number[];
+  categoria: ECategoriaPublicacao;
 }
 
 export interface IPublicacaoParams extends IPublicacaoBody, IUser {

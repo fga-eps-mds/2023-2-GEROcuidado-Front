@@ -1,12 +1,12 @@
 // FiltroDropdown.tsx
 import React from "react";
 import { View, Text, StyleSheet } from "react-native";
-import DropDownPicker from "react-native-dropdown-picker";
+import DropDownPicker, { DropDownPickerProps } from "react-native-dropdown-picker";
 
 interface FiltroDropdownProps {
-  filtro: string | null;
-  setFiltro: (filtro: string | null) => void;
-}
+    filtro: string | null;
+    setFiltro: (filtro: string | null) => void;
+  }
 
 const FiltroDropdown: React.FC<FiltroDropdownProps> = ({ filtro, setFiltro }) => {
   return (
@@ -16,7 +16,7 @@ const FiltroDropdown: React.FC<FiltroDropdownProps> = ({ filtro, setFiltro }) =>
         { label: "Atividade Física", value: "atividadeFisica" },
         { label: "Medicamento", value: "medicamento" },
       ]}
-      defaultValue={filtro}
+      defaultValue={filtro}  
       containerStyle={styles.container}
       style={styles.dropdown}
       itemStyle={{
