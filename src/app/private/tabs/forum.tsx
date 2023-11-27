@@ -18,6 +18,7 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import { IUser } from "../../interfaces/user.interface";
 import BarraPesquisa from "../../components/BarraPesquisa";
 import { ScrollView } from "react-native-gesture-handler";
+import FiltroDropdown from "../../components/FiltroDropdown";
 
 export default function Forum() {
   const [publicacoes, setPublicacoes] = useState<IPublicacao[]>([]);
@@ -29,6 +30,7 @@ export default function Forum() {
   const [titulo, setTitulo] = useState("");
   const [timer, setTimer] = useState<NodeJS.Timeout | null>(null);
   const [isReported, setIsReported] = useState(false);
+  const [filtro, setFiltro] = useState<string | null>(null);
   const order: IOrder = {
     column: "dataHora",
     dir: "DESC",
@@ -119,6 +121,9 @@ export default function Forum() {
       </View>
 
       <View style={styles.botoes}>
+        
+        <FiltroDropdown filtro={filtro} setFiltro={setFiltro} />
+        
         {usuario?.id && usuario?.admin && (
           <View style={styles.reportadas}>
             <Switch
