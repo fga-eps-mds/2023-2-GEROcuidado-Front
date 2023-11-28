@@ -35,7 +35,7 @@ export default function Registros() {
     <View style={styles.header}>
 
           <Image
-          source={require("../../../assets/Idoso.png")}
+          source={require("../../../../assets/Idoso.png")}
           style={styles.imagem}
           resizeMode="contain"
           />
