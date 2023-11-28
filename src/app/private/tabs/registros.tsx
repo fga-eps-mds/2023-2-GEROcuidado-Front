@@ -1,5 +1,5 @@
-import React, { useEffect, useState } from 'react';
-import { View, StyleSheet, ScrollView, Text, Image, TouchableOpacity } from 'react-native';
+import React, { useEffect, useState} from 'react';
+import { View, StyleSheet, ScrollView, Text, Image, TouchableOpacity} from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import MetricCard from '../../components/CardMetricas';
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -24,11 +24,10 @@ export default function Registros() {
   ) : (
     <ScrollView contentContainerStyle={styles.container}>
       {
-
       }
       <View style={styles.header}>
         <Image
-          source={require('../../assets/Idoso.png')}
+          source={require('../../../../assets/Idoso.png')}
           style={styles.imagem}
           resizeMode="contain"
         />
@@ -36,7 +35,6 @@ export default function Registros() {
       </View>
 
       {
-
       }
       <View>
         <TouchableOpacity style={styles.botaoCriarMetricas} onPress={() => console.log('Button pressed')}>
@@ -46,7 +44,6 @@ export default function Registros() {
       </View>
 
       {
-
       }
       <View style={styles.metricsContainer}>
         <MetricCard
@@ -125,4 +122,5 @@ const styles = StyleSheet.create({
     flexWrap: 'wrap',
     padding: 10,
   },
+
 });
