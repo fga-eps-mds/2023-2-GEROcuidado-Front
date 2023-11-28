@@ -18,7 +18,7 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import { IUser } from "../../interfaces/user.interface";
 import BarraPesquisa from "../../components/BarraPesquisa";
 import { ScrollView } from "react-native-gesture-handler";
-//import FiltroDropdown from "../../components/FiltroDropdown";
+import FiltroDropdown from "../../components/FiltroDropdown";
 
 export default function Forum() {
   const [publicacoes, setPublicacoes] = useState<IPublicacao[]>([]);
@@ -122,9 +122,8 @@ export default function Forum() {
 
       <View style={styles.botoes}>
         
-        {/*<FiltroDropdown filtro={filtro} setFiltro={setFiltro} />
-        Ao chamar este componente e importá-lo lá em cima, ele gera automaticamente erro nas propriedades lá do FiltroDropdown
-        */}
+        <FiltroDropdown filtro={filtro} setFiltro={setFiltro} />
+        
         
         {usuario?.id && usuario?.admin && (
           <View style={styles.reportadas}>
