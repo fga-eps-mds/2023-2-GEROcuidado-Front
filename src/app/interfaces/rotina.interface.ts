@@ -10,7 +10,7 @@ export interface IRotinaBody {
   idIdoso: number;
   categoria?: ECategoriaRotina | null;
   descricao?: string;
-  concluido?: boolean;
+  dataHoraConcluidos: string[];
   dataHora: Date | string;
   dias: EDiasSemana[];
 }
@@ -21,6 +21,7 @@ export interface IRotina extends IRotinaBody {
 
 export interface IRotinaFilter {
   idIdoso?: number;
+  dataHora?: string;
 }
 
 export enum EDiasSemana {

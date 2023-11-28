@@ -10,11 +10,17 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 interface IProps {
   item: IRotina;
   index: number;
+  date: Date;
 }
 
-export default function CardRotina({ item, index }: IProps) {
+export default function CardRotina({ item, index, date }: IProps) {
+  date.setHours(date.getHours() - 3);
+  const dateString = date.toISOString().split("T")[0];
+
   const [nameIcon, setnameIcon] = useState("view-grid-outline");
-  const [check, setCheck] = useState(item.concluido);
+  const [check, setCheck] = useState(
+    item.dataHoraConcluidos.includes(dateString),
+  );
   const [token, setToken] = useState<string>("");
   const [timer, setTimer] = useState<NodeJS.Timeout | null>(null);
 
@@ -41,8 +47,18 @@ export default function CardRotina({ item, index }: IProps) {
   };
 
   const updateRotinaConcluido = async (concluido: boolean) => {
+    let dataHoraConcluidos = [];
+
+    if (concluido) {
+      dataHoraConcluidos = [...item.dataHoraConcluidos, dateString];
+    } else {
+      dataHoraConcluidos = item.dataHoraConcluidos.filter((item) => {
+        return item !== dateString;
+      });
+    }
+
     try {
-      await updateRotina(item.id, { concluido }, token);
+      await updateRotina(item.id, { dataHoraConcluidos }, token);
     } catch (err) {
       const error = err as { message: string };
       Toast.show({
