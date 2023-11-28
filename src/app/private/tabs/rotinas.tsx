@@ -115,6 +115,13 @@ export default function Rotinas() {
       });
   };
 
+  const markedDates = [
+    {
+      date: moment(),
+      dots: [{ color: "#fff" }],
+    },
+  ];
+
   useEffect(() => handleUser(), []);
   useEffect(() => getIdoso(), []);
   useEffect(() => getRotinas(), [idoso, selectedDate]);
@@ -150,6 +157,7 @@ export default function Rotinas() {
               datesWhitelist={datesWhitelist}
               onDateSelected={setSelectedDate}
               selectedDate={selectedDate}
+              markedDates={markedDates}
             />
           </View>
 
