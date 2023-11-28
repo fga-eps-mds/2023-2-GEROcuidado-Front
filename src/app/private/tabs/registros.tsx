@@ -23,17 +23,21 @@ export default function Registros() {
     <NaoAutenticado />
   ) : (
     <ScrollView contentContainerStyle={styles.container}>
-      {/* Header */}
+      {
+
+      }
       <View style={styles.header}>
         <Image
-          source={require('../../../assets/Idoso.png')}
+          source={require('../../assets/Idoso.png')}
           style={styles.imagem}
           resizeMode="contain"
         />
         <Text style={styles.name}>Nome do idoso</Text>
       </View>
 
-      {/* Button to create a new metric (simplified) */}
+      {
+
+      }
       <View>
         <TouchableOpacity style={styles.botaoCriarMetricas} onPress={() => console.log('Button pressed')}>
           <Icon name="plus" color={'white'} size={20} />
@@ -41,7 +45,9 @@ export default function Registros() {
         </TouchableOpacity>
       </View>
 
-      {/* Display metric cards in two columns */}
+      {
+
+      }
       <View style={styles.metricsContainer}>
         <MetricCard
           title="Frequência Cardíaca"
