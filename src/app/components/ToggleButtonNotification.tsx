@@ -11,7 +11,7 @@ const ToggleButton: React.FC<ToggleButtonProps> = ({ onPress, active }) => {
     <View style={styles.toggleButtonContainer}>
       <Switch
         trackColor={{ false: "#CCCCCC", true: "#2CCDB5" }}
-        thumbColor={active ? "#ffffff" : "#ffffff"}
+        thumbColor="#ffffff"
         ios_backgroundColor="#CCCCCC"
         onValueChange={onPress}
         value={active}
