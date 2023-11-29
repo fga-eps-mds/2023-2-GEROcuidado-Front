@@ -41,7 +41,7 @@ export default function EditarRotina() {
   const [descricao, setDescricao] = useState(params.descricao);
   const [categoria, setCategoria] = useState(params.categoria);
   const [dias, setDias] = useState(
-    params.dias.split(",").map((dia) => Number(dia)),
+    params.dias !== "" ? params.dias.split(",").map((dia) => Number(dia)) : [],
   );
   const [showLoading, setShowLoading] = useState(false);
   const [erros, setErros] = useState<IErrors>({});
