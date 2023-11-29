@@ -1,6 +1,7 @@
 <testExecutions version="1">
 <file path="src/app/__tests__/cadastrarIdoso.spec.tsx">
-<testCase name="CadastrarIdoso component renders correctly" duration="99" />
-<testCase name="CadastrarIdoso component should set error message when &quot;nome&quot; is empty" duration="40" />
+<testCase name="CadastrarIdoso component renders correctly" duration="82" />
+<testCase name="CadastrarIdoso component should set error message when &quot;nome&quot; is empty" duration="42" />
+<testCase name="CadastrarIdoso component should set error message when &quot;nome&quot; is empty" duration="36" />
 </file>
 </testExecutions>

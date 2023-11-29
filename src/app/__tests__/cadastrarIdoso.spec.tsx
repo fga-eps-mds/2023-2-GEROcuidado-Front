@@ -51,6 +51,32 @@ describe("CadastrarIdoso component", () => {
     
   });
 
+  test('should set error message when "nome" is empty', () => {
+    (AsyncStorage.getItem as jest.Mock).mockImplementation((key) => {
+      if (key === "usuario") {
+        return Promise.resolve(JSON.stringify({ id: 1 }));
+      } else if (key === "token") {
+        return Promise.resolve("mockedToken");
+      }
+      return Promise.resolve(null);
+    });
+    
+    const { getByText, getByPlaceholderText } = render(<CadastrarIdoso />);
+    const nome = getByPlaceholderText("Nome");
+    const cadastrarButton = getByText("Cadastrar");
+
+    act(() => {
+      fireEvent.changeText(nome,"Leokkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkk");
+      fireEvent.press(cadastrarButton);
+    });
+
+
+    const erroNome = getByText("O nome completo deve ter no máximo 60 caractéres.");
+
+    expect(erroNome).toBeDefined;
+    
+  });
+
   // it('shows validation errors when submitting empty form', async () => {
   //   const { getByText } = render(<CadastrarIdoso />);
   //   const cadastrarButton = getByText('Cadastrar');
