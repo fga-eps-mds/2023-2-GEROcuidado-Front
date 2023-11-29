@@ -1,26 +1,33 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { View, Text, StyleSheet, TouchableOpacity, Modal, FlatList } from "react-native";
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
+import SelectList from "react-native-dropdown-select-list"; // Importe o componente SelectList, ou use o componente desejado
 
 interface FiltroDropdownProps {
   filtro: string | null;
   setFiltro: (filtro: string | null) => void;
 }
 
+interface IOrderOption {
+  column: string;
+  dir: string;
+  value: string;
+}
+
 const FiltroDropdown: React.FC<FiltroDropdownProps> = ({ filtro, setFiltro }) => {
   const [modalVisible, setModalVisible] = useState(false);
   const [modalPosition, setModalPosition] = useState({ top: 0, left: 0 });
-  const [selectedOption, setSelectedOption] = useState(filtro);
+  const [selectedOption, setSelectedOption] = useState<string | null>(filtro);
 
   useEffect(() => {
     setSelectedOption(filtro);
   }, [filtro]);
 
-  const options = [
-    { label: "Alimentação", value: "alimentacao" },
-    { label: "Atividade Física", value: "atividadeFisica" },
-    { label: "Medicamento", value: "medicamento" },
-    { label: "testeScroll", value: "teste" },
+  const options: IOrderOption[] = [
+    { column: "alimentacao", dir: "ASC", value: "Alimentação" },
+    { column: "exercicios", dir: "ASC", value: "Exercícios" },
+    { column: "medicamentos", dir: "ASC", value: "Medicamentos" },
+    { column: "geral", dir: "ASC", value: "Geral" },
   ];
 
   const measureButton = () => {
@@ -31,24 +38,7 @@ const FiltroDropdown: React.FC<FiltroDropdownProps> = ({ filtro, setFiltro }) =>
     }
   };
 
-  const buttonRef = React.createRef<TouchableOpacity>();
-
-  const renderItem = ({ item }: { item: { label: string; value: string } }) => (
-    <TouchableOpacity
-      style={[
-        styles.option,
-        { backgroundColor: selectedOption === item.value ? "#2CCDB5" : "#fff" },
-      ]}
-      onPress={() => {
-        setFiltro(item.value);
-        setModalVisible(false);
-      }}
-    >
-      <Text style={[styles.optionText, { color: selectedOption === item.value ? "#fff" : "#333" }]}>
-        {item.label}
-      </Text>
-    </TouchableOpacity>
-  );
+  const buttonRef = useRef<TouchableOpacity>(null);
 
   return (
     <View style={styles.container}>
@@ -73,7 +63,27 @@ const FiltroDropdown: React.FC<FiltroDropdownProps> = ({ filtro, setFiltro }) =>
         <View style={[styles.modalContainer, { top: modalPosition.top, left: modalPosition.left }]}>
           <FlatList
             data={options}
-            renderItem={renderItem}
+            renderItem={({ item }) => (
+              <TouchableOpacity
+                style={[
+                  styles.option,
+                  { backgroundColor: selectedOption === item.value ? "#2CCDB5" : "#fff" },
+                ]}
+                onPress={() => {
+                  setFiltro(item.value);
+                  setModalVisible(false);
+                }}
+              >
+                <Text
+                  style={[
+                    styles.optionText,
+                    { color: selectedOption === item.value ? "#fff" : "#333" },
+                  ]}
+                >
+                  {item.value}
+                </Text>
+              </TouchableOpacity>
+            )}
             keyExtractor={(item) => item.value}
           />
         </View>
@@ -109,7 +119,7 @@ const styles = StyleSheet.create({
   },
   chevronIcon: {
     marginLeft: 5,
-    color:"black",
+    color: "black",
   },
   modalContainer: {
     position: "absolute",
