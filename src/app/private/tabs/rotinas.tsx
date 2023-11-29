@@ -36,8 +36,8 @@ export default function Rotinas() {
 
   const datesWhitelist = [
     {
-      start: moment(),
-      end: moment().add(10, "y"),
+      start: moment().clone().subtract(1, "y"),
+      end: moment().add(1, "y"),
     },
   ];
 
