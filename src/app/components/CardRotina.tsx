@@ -99,6 +99,7 @@ export default function CardRotina({ item, index, date }: IProps) {
       <Pressable
         onPress={() => debounceConcluido(!check)}
         style={styles.checkBox}
+        testID="checkbox"
       >
         {check && <Icon name="check" size={30}></Icon>}
       </Pressable>

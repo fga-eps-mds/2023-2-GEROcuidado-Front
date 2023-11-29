@@ -168,7 +168,7 @@ export default function EditarRotina() {
 
     try {
       await deleteRotina(params.id, token);
-      router.replace("private/tabs/rotina");
+      router.replace("private/tabs/rotinas");
     } catch (err) {
       const error = err as { message: string };
       Toast.show({
