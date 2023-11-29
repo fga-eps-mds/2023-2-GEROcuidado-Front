@@ -25,7 +25,7 @@ describe("CadastrarIdoso component", () => {
     const cadastrarButton = getByText("Cadastrar");
     expect(cadastrarButton).toBeTruthy();
   });
-  test('should set error message when "nome" is empty', () => {
+  test('lidar com nome vazio ', () => {
     (AsyncStorage.getItem as jest.Mock).mockImplementation((key) => {
       if (key === "usuario") {
         return Promise.resolve(JSON.stringify({ id: 1 }));
@@ -51,7 +51,7 @@ describe("CadastrarIdoso component", () => {
     
   });
 
-  test('should set error message when "nome" is empty', () => {
+  test('lidar com nome com caracteres em excesso', () => {
     (AsyncStorage.getItem as jest.Mock).mockImplementation((key) => {
       if (key === "usuario") {
         return Promise.resolve(JSON.stringify({ id: 1 }));
@@ -77,7 +77,7 @@ describe("CadastrarIdoso component", () => {
     
   });
 
-  test('should set error message when "nome" is empty', () => {
+  test('lidar com data de nascimento invalido no cadastro', () => {
     (AsyncStorage.getItem as jest.Mock).mockImplementation((key) => {
       if (key === "usuario") {
         return Promise.resolve(JSON.stringify({ id: 1 }));
