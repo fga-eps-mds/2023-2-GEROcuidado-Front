@@ -77,6 +77,35 @@ describe("CadastrarIdoso component", () => {
     
   });
 
+  test('should set error message when "nome" is empty', () => {
+    (AsyncStorage.getItem as jest.Mock).mockImplementation((key) => {
+      if (key === "usuario") {
+        return Promise.resolve(JSON.stringify({ id: 1 }));
+      } else if (key === "token") {
+        return Promise.resolve("mockedToken");
+      }
+      return Promise.resolve(null);
+    });
+    
+    const { getByText, getByPlaceholderText } = render(<CadastrarIdoso />);
+    const nome = getByPlaceholderText("Nome");
+    const dataNascimento = getByPlaceholderText("Data de Nascimento");
+    const cadastrarButton = getByText("Cadastrar");
+
+    act(() => {
+      fireEvent.changeText(nome,"Leonardo");
+      fireEvent.changeText(dataNascimento,"2022/11/12");
+      fireEvent.press(cadastrarButton);
+    });
+
+
+    const erroData = getByText("Data deve ser no formato dd/mm/yyyy!")
+
+
+    expect(erroData).toBeDefined;
+    
+  });
+
   // it('shows validation errors when submitting empty form', async () => {
   //   const { getByText } = render(<CadastrarIdoso />);
   //   const cadastrarButton = getByText('Cadastrar');
