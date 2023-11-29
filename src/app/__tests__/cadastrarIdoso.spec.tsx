@@ -106,6 +106,37 @@ describe("CadastrarIdoso component", () => {
     
   });
 
+  test('lidar com telefone responsavel invalido', () => {
+    (AsyncStorage.getItem as jest.Mock).mockImplementation((key) => {
+      if (key === "usuario") {
+        return Promise.resolve(JSON.stringify({ id: 1 }));
+      } else if (key === "token") {
+        return Promise.resolve("mockedToken");
+      }
+      return Promise.resolve(null);
+    });
+    
+    const { getByText, getByPlaceholderText } = render(<CadastrarIdoso />);
+    const nome = getByPlaceholderText("Nome");
+    const dataNascimento = getByPlaceholderText("Data de Nascimento");
+    const telefone = getByPlaceholderText("Telefone Responsável");
+    const cadastrarButton = getByText("Cadastrar");
+
+    act(() => {
+      fireEvent.changeText(nome,"Leonardo");
+      fireEvent.changeText(dataNascimento,"2022/11/12");
+      fireEvent.changeText(telefone,"(619)999");
+      fireEvent.press(cadastrarButton);
+    });
+
+
+    const erroTelefone = getByText("Deve estar no formato (XX)XXXXX-XXXX")
+
+
+    expect(erroTelefone).toBeDefined;
+    
+  });
+
   // it('shows validation errors when submitting empty form', async () => {
   //   const { getByText } = render(<CadastrarIdoso />);
   //   const cadastrarButton = getByText('Cadastrar');
