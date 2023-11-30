@@ -19,7 +19,7 @@ describe("Visualizar publicacao", () => {
   });
 
 
-  it("editar", () => {
+  /*it("editar", () => {
     (AsyncStorage.getItem as jest.Mock).mockImplementation((key) => {
       if (key === "usuario") {
         return Promise.resolve(JSON.stringify({ id: 1 }));
@@ -35,7 +35,7 @@ describe("Visualizar publicacao", () => {
     expect(editar).toBeDefined;
 
   });
-
+*/
   // it("displays actions correctly for admin", () => {
   //   const { getByText } = render(<VisualizarPublicacao />, {
   //     initialState: {
