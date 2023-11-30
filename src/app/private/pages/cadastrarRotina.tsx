@@ -214,7 +214,7 @@ export default function CadastrarRotina() {
             placeholderTextColor={"#3D3D3D"}
           />
         </View>
-        <View style={styles.erro}>
+        <View style={styles.erro} testID="Erro-data">
           <ErrorMessage show={showErrors} text={erros.data} />
         </View>
 
@@ -233,7 +233,7 @@ export default function CadastrarRotina() {
             inputMaskChange={(hora) => setHora(hora)}
           />
         </View>
-        <View style={styles.erro}>
+        <View style={styles.erro} testID="Erro-hora">
           <ErrorMessage show={showErrors} text={erros.hora} />
         </View>
 

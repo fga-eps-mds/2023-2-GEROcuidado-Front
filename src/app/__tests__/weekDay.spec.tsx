@@ -15,4 +15,20 @@ describe("Testes para WeekDays", () => {
     fireEvent.press(getByText("D"));
     expect(mockCallbackFn).toHaveBeenCalledWith([EDiasSemana.Domingo]);
   });
+
+  test('handlePress funciona corretamente', () => {
+  const mockCallbackFn = jest.fn();
+  const { getByText } = render(<WeekDays dias={[1, 3, 5]} callbackFn={mockCallbackFn} />);
+
+  const circle1 = getByText('D').parent; 
+  expect(circle1).toBeDefined();
+
+  fireEvent.press(circle1);
+
+  expect(mockCallbackFn).toHaveBeenCalledWith(expect.arrayContaining([3, 5]));
+
+  fireEvent.press(circle1);
+
+  expect(mockCallbackFn).toHaveBeenCalledWith(expect.arrayContaining([3, 5, 1]));
+});
 });
