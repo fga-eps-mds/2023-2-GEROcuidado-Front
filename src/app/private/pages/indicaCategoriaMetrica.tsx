@@ -1,9 +1,23 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import NaoAutenticado from '../../components/NaoAutenticado';
 import { View, StyleSheet, Text, Image, TouchableOpacity, ScrollView } from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome';
+import { IUser } from '../../interfaces/user.interface'; 
 
 export default function criarMetrica() {
-  const user = undefined;
+  const [user, setUser] = useState<IUser | undefined>(undefined);
+
+  const handleUser = () => {
+    AsyncStorage.getItem('usuario').then((response) => {
+      const usuario = JSON.parse(response as string);
+      setUser(usuario);
+    });
+  };
+
+  useEffect(() => {
+    handleUser();
+  }, []);
 
   const handleMetricSelection = (metricType: string) => {
     console.log(`Selecionado: ${metricType}`);
@@ -26,7 +40,9 @@ export default function criarMetrica() {
     </TouchableOpacity>
   );
 
-  return (
+  return !user?.id ? (
+    <NaoAutenticado />
+  ) : (
     <ScrollView contentContainerStyle={styles.container}>
       <View style={styles.header}>
         <Image
