@@ -83,4 +83,29 @@ describe("CadastrarIdoso component", () => {
         queryByText("O nome completo deve ter no máximo 60 caractéres.")).toBeTruthy();
     });
   });
+  
+  test("Exibe menagem de erro ao tentar cadastrar uma data nao valida", async () => {
+    const { getByText, getByPlaceholderText, queryByText } = render(
+      <CadastrarIdoso />,
+    );
+    const nameInput = getByPlaceholderText("Nome");
+    fireEvent.changeText(
+      nameInput,
+      "extrapolando a quantidade de erros para consguir ultrapassar o numero de 60 caracacteres",
+    );
+
+    const nameInput1 = getByPlaceholderText("Data de Nascimento");
+    fireEvent.changeText(nameInput1, "10");
+
+    const nameInput2 = getByPlaceholderText("Telefone Responsável");
+    fireEvent.changeText(nameInput2, "55111111111");
+
+    const saveButton = getByText("Cadastrar");
+    fireEvent.press(saveButton);
+
+    await waitFor(() => {
+      expect(
+        queryByText("Data deve ser no formato dd/mm/yyyy!")).toBeTruthy();
+    });
+  });
 });
