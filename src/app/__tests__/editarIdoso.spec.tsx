@@ -136,5 +136,119 @@ describe("EditarIdoso", () => {
       expect(errorMessage).toBeTruthy();
     });
   });
+
+  test("Exibe mensagem de erro ao tentar salvar numero de telefone errado", async () => {
+    const { getByText, getByPlaceholderText, findByText } = render(
+      <EditarIdoso />,
+    );
+    const nameInput = getByPlaceholderText("Nome");
+    fireEvent.changeText(nameInput, "batata");
+
+
+    const nameInput1 = getByPlaceholderText("Data de Nascimento");
+    fireEvent.changeText(nameInput1, "23102001");
+
+    const nameInput2 = getByPlaceholderText("Telefone Responsável");
+    fireEvent.changeText(nameInput2, "12345678");
+
+    const saveButton = getByText("Salvar");
+    fireEvent.press(saveButton);
+
+    await act(async () => {
+      const errorMessage = await findByText(
+        "Deve estar no formato (XX)XXXXX-XXXX",
+      );
+      expect(errorMessage).toBeTruthy();
+    });
+  });
+
+
+  /*
+  test("Exibe mensagem de erro ao tentar salvar com nome muito curto", async () => {
+    const { getByText, getByPlaceholderText, findByText } = render(
+      <EditarIdoso />,
+    );
+    const nameInput = getByPlaceholderText("Nome");
+    fireEvent.changeText(nameInput, "batata");
+
+
+    const nameInput1 = getByPlaceholderText("Data de Nascimento");
+    fireEvent.changeText(nameInput1, "23102001");
+
+    const nameInput2 = getByPlaceholderText("Telefone Responsável");
+    fireEvent.changeText(nameInput2, "12345678");
+
+    const saveButton = getByText("Salvar");
+    fireEvent.press(saveButton);
+
+    await act(async () => {
+      const errorMessage = await findByText(
+        "Deve estar no formato (XX)XXXXX-XXXX",
+      );
+      expect(errorMessage).toBeTruthy();
+    });
+  });
+
+
+  test("Exibe mensagem de erro ao tentar salvar com data vazia", async () => {
+    const { getByText, getByPlaceholderText, queryByText } = render(
+      <EditarIdoso />,
+    );
+    const nameInput = getByPlaceholderText("Nome");
+    fireEvent.changeText(nameInput, "batata");
+
+    const nameInput1 = getByPlaceholderText("Data de Nascimento");
+    fireEvent.changeText(nameInput1, "");
+
+    const nameInput2 = getByPlaceholderText("Telefone Responsável");
+    fireEvent.changeText(nameInput2, "55111111111");
+
+    const saveButton = getByText("Salvar");
+    fireEvent.press(saveButton);
+
+    await waitFor(() => {
+      expect(getByText("Campo obrigatório")).toBeTruthy();
+    });
+
+    // Certifique-se de que a mensagem de erro específica não está presente quando não deve ser exibida
+    await waitFor(() => {
+      expect(
+        queryByText("Data deve ser no formato dd/mm/yyyy!"),
+      ).toBeNull();
+    });
+  });
+
+  
+  test('validação de nome - comprimento mínimo', async () => {
+    const { getByPlaceholderText, getByText } = render(<EditarIdoso />);
+  
+    // Encontrar o campo de nome e definir seu valor com menos de 5 caracteres
+    const nomeInput = getByPlaceholderText('Nome');
+    fireEvent.changeText(nomeInput, 'abc');
+  
+    // Encontrar o botão de salvar e clicar nele
+    const salvarButton = getByText('Salvar');
+    fireEvent.press(salvarButton);
+  
+    // Verificar se a mensagem de erro é exibida
+    const errorMessage = getByText('O nome completo deve ter pelo menos 5 caractéres.');
+    expect(errorMessage).toBeDefined();
+  });
+  
+  test('validação de nome - comprimento máximo', async () => {
+    const { getByPlaceholderText, getByText } = render(<EditarIdoso />);
+  
+    // Encontrar o campo de nome e definir seu valor com mais de 60 caracteres
+    const nomeInput = getByPlaceholderText('Nome');
+    fireEvent.changeText(nomeInput, 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.');
+  
+    // Encontrar o botão de salvar e clicar nele
+    const salvarButton = getByText('Salvar');
+    fireEvent.press(salvarButton);
+  
+    // Verificar se a mensagem de erro é exibida
+    const errorMessage = getByText('O nome completo deve ter no máximo 60 caractéres.');
+    expect(errorMessage).toBeDefined();
+  });*/
 });
 
