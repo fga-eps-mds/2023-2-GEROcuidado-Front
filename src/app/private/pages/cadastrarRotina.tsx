@@ -53,6 +53,7 @@ export default function CadastrarRotina() {
   const [showErrors, setShowErrors] = useState(false);
   const [token, setToken] = useState<string>("");
   const [dias, setDias] = useState<number[]>([]);
+  const [dataHoraConcluidos, setDataHoraConcluidos] = useState<string[]>([]);
 
   const getToken = () => {
     AsyncStorage.getItem("token").then((response) => {
@@ -129,6 +130,7 @@ export default function CadastrarRotina() {
       categoria: categoria as ECategoriaRotina,
       dias: dias,
       descricao,
+      dataHoraConcluidos,
     };
 
     try {

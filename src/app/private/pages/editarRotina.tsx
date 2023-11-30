@@ -68,7 +68,6 @@ export default function EditarRotina() {
   };
 
   const separaDataHora = () => {
-    //const value = params.dataHora as string;
     const value = params.dataHora as string;
     const valueFinal = value.split("T");
     const separaData = valueFinal[0].split("-");
@@ -168,7 +167,10 @@ export default function EditarRotina() {
 
     try {
       await deleteRotina(params.id, token);
-      router.replace("private/tabs/rotinas");
+      router.replace({
+        pathname: "private/tabs/rotinas",
+        params: idoso,
+      });
     } catch (err) {
       const error = err as { message: string };
       Toast.show({
