@@ -108,4 +108,29 @@ describe("CadastrarIdoso component", () => {
         queryByText("Data deve ser no formato dd/mm/yyyy!")).toBeTruthy();
     });
   });
+  
+  test("Exibe menagem de erro ao tentar cadastrar um telefone nao valida", async () => {
+    const { getByText, getByPlaceholderText, queryByText } = render(
+      <CadastrarIdoso />,
+    );
+    const nameInput = getByPlaceholderText("Nome");
+    fireEvent.changeText(
+      nameInput,
+      "extrapolando a quantidade de erros para consguir ultrapassar o numero de 60 caracacteres",
+    );
+
+    const nameInput1 = getByPlaceholderText("Data de Nascimento");
+    fireEvent.changeText(nameInput1, "30112023");
+
+    const nameInput2 = getByPlaceholderText("Telefone Responsável");
+    fireEvent.changeText(nameInput2, "55 61");
+
+    const saveButton = getByText("Cadastrar");
+    fireEvent.press(saveButton);
+
+    await waitFor(() => {
+      expect(
+        queryByText("Deve estar no formato (XX)XXXXX-XXXX")).toBeTruthy();
+    });
+  });
 });
