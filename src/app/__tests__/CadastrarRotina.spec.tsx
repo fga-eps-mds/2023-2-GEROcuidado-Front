@@ -1,5 +1,5 @@
 import React from "react";
-import { act, fireEvent, render, waitFor } from "@testing-library/react-native";
+import { act, fireEvent, render, waitFor, screen } from "@testing-library/react-native";
 import Rotina from "../private/pages/cadastrarRotina";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import CadastrarRotina from "../private/pages/cadastrarRotina";
@@ -109,7 +109,7 @@ describe("Cadastrar Rotina component", () => {
         expect(erroHora).toBeDefined;
 
       });
-      test("Não exibe mensagem de erro ao salvar sem selecionar categoria", async () => {
+      test("Exibe mensagem de erro ao salvar sem selecionar categoria", async () => {
         const { getByText, getByPlaceholderText, queryByText } = render(
           <CadastrarRotina />,
         );
@@ -117,7 +117,7 @@ describe("Cadastrar Rotina component", () => {
         fireEvent.changeText(nameInput, "batata");
     
         const nameInput1 = getByPlaceholderText("Data da rotina");
-        fireEvent.changeText(nameInput1, "");
+        fireEvent.changeText(nameInput1, "30112023");
     
         const nameInput2 = getByPlaceholderText("Horário de início");
         fireEvent.changeText(nameInput2, "1350");
@@ -126,7 +126,38 @@ describe("Cadastrar Rotina component", () => {
         fireEvent.press(saveButton);
 
         await waitFor(() => {
-          expect(getByText("OCampo obrigatório")).toBeTruthy();
+          expect(getByText("Campo obrigatório")).toBeTruthy();
         });
       });
+      /*
+      it("Exibe mensagem de erro ao salvar sem hora", () => {
+        (AsyncStorage.getItem as jest.Mock).mockImplementation((key) => {
+          if (key === "idoso") {
+            return Promise.resolve(JSON.stringify({ id: 1 }));
+          } else if (key === "token") {
+            return Promise.resolve("mockedToken");
+          }
+          return Promise.resolve(null);
+        });
+
+        const { getByText, getByPlaceholderText } = render(<CadastrarRotina />);
+        const titulo = getByPlaceholderText("Adicionar título");
+        const salvar = getByText("Salvar");
+        const dataRotina = getByPlaceholderText("Data da rotina");
+        const horaRotina = getByPlaceholderText("Horário de início");
+        const descricaoRotina = getByPlaceholderText("Descrição");
+        
+        act(() => {
+          fireEvent.changeText(titulo,"Comer comida");
+          fireEvent.changeText(dataRotina,"30/11/2023");
+          fireEvent.changeText(horaRotina,"");
+          fireEvent.changeText(descricaoRotina,"comer");
+          fireEvent.press(salvar);
+        });
+        
+        const erroHora = getByText("Campo obrigatório");
+
+        expect(erroHora).toBeDefined;
+
+      });*/
 });
