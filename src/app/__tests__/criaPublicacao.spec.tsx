@@ -1,25 +1,39 @@
 import React from "react";
-import { render } from "@testing-library/react-native";
+import { act, fireEvent, render } from "@testing-library/react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import CriaPublicacao from "../private/pages/criaPublicacao";
 
-// Mock AsyncStorage
 jest.mock("@react-native-async-storage/async-storage", () => ({
   getItem: jest.fn(),
 }));
 
-describe("CriaPublicacao", () => {
-  test("The component rendered", () => {
-    // Mock the response for AsyncStorage.getItem
-    (AsyncStorage.getItem as jest.Mock).mockImplementation((key) => {
-      if (key === "usuario") {
-        return Promise.resolve(JSON.stringify({ id: 1 }));
-      } else if (key === "token") {
-        return Promise.resolve("mockedToken");
-      }
-      return Promise.resolve(null);
-    });
+// describe("<CriaPublicacao />", () => {
+//   it("renders without crashing", () => {
+//     render(<CriaPublicacao />);
+//   });
+// });
 
-    render(<CriaPublicacao />);
+test('lidar com titulo com caracteres em excesso', () => {
+  (AsyncStorage.getItem as jest.Mock).mockImplementation((key) => {
+    if (key === "usuario") {
+      return Promise.resolve(JSON.stringify({ id: 1 }));
+    } else if (key === "token") {
+      return Promise.resolve("mockedToken");
+    }
+    return Promise.resolve(null);
   });
-});
+  
+  const { getByText, getByPlaceholderText } = render(<CriaPublicacao />);
+  const titulo = getByPlaceholderText("Título");
+  const publicarButton = getByText("Publicar");
+
+  act(() => {
+    fireEvent.changeText(titulo,"Em uma cidade movimentada, as luzes da noite pintam um espetáculo urbano. Carros traçam caminhos, pessoas dançam na rua, e a cidade nunca dorme. ");
+    fireEvent.press(publicarButton);
+  });
+
+    const erroTitulo = getByText("Deve ter no máximo 100 caracteres!");
+
+    expect(erroTitulo).toBeDefined();
+
+  });
