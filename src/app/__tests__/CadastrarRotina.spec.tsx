@@ -110,29 +110,7 @@ describe("Cadastrar Rotina component", () => {
 
       });
       
-      // test("Exibe mensagem de erro ao salvar sem selecionar categoria", async () => {
-      //   const { getByText, getByPlaceholderText, queryByText } = render(
-      //     <CadastrarRotina />,
-      //   );
-      //   const nameInput = getByPlaceholderText("Adicionar título");
-      //   fireEvent.changeText(nameInput, "batata");
-    
-      //   const nameInput1 = getByPlaceholderText("Data da rotina");
-      //   fireEvent.changeText(nameInput1, "30112023");
-    
-      //   const nameInput2 = getByPlaceholderText("Horário de início");
-      //   fireEvent.changeText(nameInput2, "1350");
-              
-      //   const saveButton = getByText("Salvar");
-      //   fireEvent.press(saveButton);
-
-      //   await waitFor(() => {
-      //     expect(getByText("Campo obrigatório")).toBeTruthy();
-      //   });
-      // });
-
-      /*
-      it("Exibe mensagem de erro ao salvar sem hora", () => {
+      it("Salvar sem data", () => {
         (AsyncStorage.getItem as jest.Mock).mockImplementation((key) => {
           if (key === "idoso") {
             return Promise.resolve(JSON.stringify({ id: 1 }));
@@ -142,7 +120,7 @@ describe("Cadastrar Rotina component", () => {
           return Promise.resolve(null);
         });
 
-        const { getByText, getByPlaceholderText } = render(<CadastrarRotina />);
+        const { getByText, getByPlaceholderText, getByTestId} = render(<CadastrarRotina />);
         const titulo = getByPlaceholderText("Adicionar título");
         const salvar = getByText("Salvar");
         const dataRotina = getByPlaceholderText("Data da rotina");
@@ -153,13 +131,11 @@ describe("Cadastrar Rotina component", () => {
           fireEvent.changeText(titulo,"Comer comida");
           fireEvent.changeText(dataRotina,"30/11/2023");
           fireEvent.changeText(horaRotina,"");
-          fireEvent.changeText(descricaoRotina,"comer");
+          fireEvent.changeText(descricaoRotina,"Comer");
           fireEvent.press(salvar);
         });
-        
-        const erroHora = getByText("Campo obrigatório");
-
-        expect(erroHora).toBeDefined;
-
-      });*/
+        screen.debug()
+        const erroHora = getByTestId("Erro-hora");
+        expect(erroHora.props.children.props.text).toBe('Campo obrigatório');
+      });
 });
