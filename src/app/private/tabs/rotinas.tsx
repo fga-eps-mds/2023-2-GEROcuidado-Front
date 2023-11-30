@@ -175,7 +175,7 @@ export default function Rotinas() {
             />
           )}
 
-          {!loading && (
+          {!loading && rotinas.length > 0 && (
             <View style={styles.rotinas}>
               <FlashList
                 data={rotinas}
@@ -189,6 +189,12 @@ export default function Rotinas() {
                 estimatedItemSize={50}
               />
             </View>
+          )}
+          {rotinas.length === 0 && (
+            <View>
+              <Text style={styles.semRotinas}>{`Você ainda não tem nenhuma rotina cadastrada no dia ${moment(selectedDate).format('DD/MM')}`}</Text>
+            </View>
+
           )}
         </View>
       )}
@@ -253,5 +259,11 @@ const styles = StyleSheet.create({
   rotinas: {
     width: Dimensions.get("window").width,
     height: Dimensions.get("window").height - 360,
+  },
+  semRotinas:{
+    fontSize:35,
+    opacity:0.3,
+    textAlign:"center",
+    marginTop:"35%",
   },
 });
