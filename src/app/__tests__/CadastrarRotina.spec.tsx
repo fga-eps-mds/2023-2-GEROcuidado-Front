@@ -109,4 +109,24 @@ describe("Cadastrar Rotina component", () => {
         expect(erroHora).toBeDefined;
 
       });
+      test("Não exibe mensagem de erro ao salvar sem selecionar categoria", async () => {
+        const { getByText, getByPlaceholderText, queryByText } = render(
+          <CadastrarRotina />,
+        );
+        const nameInput = getByPlaceholderText("Adicionar título");
+        fireEvent.changeText(nameInput, "batata");
+    
+        const nameInput1 = getByPlaceholderText("Data da rotina");
+        fireEvent.changeText(nameInput1, "");
+    
+        const nameInput2 = getByPlaceholderText("Horário de início");
+        fireEvent.changeText(nameInput2, "1350");
+              
+        const saveButton = getByText("Salvar");
+        fireEvent.press(saveButton);
+
+        await waitFor(() => {
+          expect(getByText("OCampo obrigatório")).toBeTruthy();
+        });
+      });
 });
