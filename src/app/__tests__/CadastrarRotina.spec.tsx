@@ -110,7 +110,7 @@ describe("Cadastrar Rotina component", () => {
 
       });
       
-      it("Salvar sem data", () => {
+      it("Salvar sem hora", () => {
         (AsyncStorage.getItem as jest.Mock).mockImplementation((key) => {
           if (key === "idoso") {
             return Promise.resolve(JSON.stringify({ id: 1 }));
@@ -134,8 +134,37 @@ describe("Cadastrar Rotina component", () => {
           fireEvent.changeText(descricaoRotina,"Comer");
           fireEvent.press(salvar);
         });
-        screen.debug()
+        //screen.debug()
         const erroHora = getByTestId("Erro-hora");
+        expect(erroHora.props.children.props.text).toBe('Campo obrigatório');
+      });
+
+      it("Salvar sem data", () => {
+        (AsyncStorage.getItem as jest.Mock).mockImplementation((key) => {
+          if (key === "idoso") {
+            return Promise.resolve(JSON.stringify({ id: 1 }));
+          } else if (key === "token") {
+            return Promise.resolve("mockedToken");
+          }
+          return Promise.resolve(null);
+        });
+
+        const { getByText, getByPlaceholderText, getByTestId} = render(<CadastrarRotina />);
+        const titulo = getByPlaceholderText("Adicionar título");
+        const salvar = getByText("Salvar");
+        const dataRotina = getByPlaceholderText("Data da rotina");
+        const horaRotina = getByPlaceholderText("Horário de início");
+        const descricaoRotina = getByPlaceholderText("Descrição");
+        
+        act(() => {
+          fireEvent.changeText(titulo,"Comer comida");
+          fireEvent.changeText(dataRotina,"");
+          fireEvent.changeText(horaRotina,"1145");
+          fireEvent.changeText(descricaoRotina,"Comer");
+          fireEvent.press(salvar);
+        });
+        //screen.debug()
+        const erroHora = getByTestId("Erro-data");
         expect(erroHora.props.children.props.text).toBe('Campo obrigatório');
       });
 });
