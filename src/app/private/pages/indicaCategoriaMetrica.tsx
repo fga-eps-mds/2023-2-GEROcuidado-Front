@@ -28,6 +28,7 @@ export default function criarMetrica() {
       key={metricType}
       style={styles.metricCard}
       onPress={() => handleMetricSelection(metricType)}
+      testID={`${metricType}-card`}
     >
       <View style={styles.metricCardContent}>
         {iconName === 'oxygen' && <Text style={styles.oxygenSymbol}>O2</Text>}
