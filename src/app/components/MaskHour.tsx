@@ -21,7 +21,7 @@ export default function MaskInput({
     if (value[0] > "2") {
       value = "";
     }
-    if (value[1] > "9") {
+    if (value[0] == "2" && value[1] > "3") {
       value = value[0];
     }
     if (value[3] > "5") {
