@@ -5,7 +5,7 @@ import NaoAutenticado from "../../components/NaoAutenticado";
 import { View, StyleSheet, Pressable, Text} from "react-native";
 import Icon from "react-native-vector-icons/FontAwesome";
 
-export default function editarMetrica() {
+export default function EditarvalorMetrica() {
   const [user, setUser] = useState<IUser | undefined>(undefined);
   const handleUser = () => {
     AsyncStorage.getItem("usuario").then((response) => {
