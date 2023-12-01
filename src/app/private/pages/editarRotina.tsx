@@ -119,7 +119,7 @@ export default function EditarRotina() {
 
   const getDateIsoString = (data: string, hora: string) => {
     const dateArray = data.split("/");
-    return `${dateArray[2]}-${dateArray[1]}-${dateArray[0]}T${hora}:00.000Z`;
+    return `${dateArray[2]}-${dateArray[1]}-${dateArray[0]}T${hora}:00.000`;
   };
 
   const salvar = async () => {
