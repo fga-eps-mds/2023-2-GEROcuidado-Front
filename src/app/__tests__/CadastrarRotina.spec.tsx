@@ -94,4 +94,18 @@ describe('CadastrarRotina Component', () => {
         expect(erroHora.props.children.props.text).toBe('Hora deve ser no formato hh:mm!');
     });    
 
+    it('Salvar com descrição muito grande', async () => {
+        const { getByText, getByPlaceholderText, getByTestId } = render(<CadastrarRotina />);
+              
+        const descricao = getByPlaceholderText('Descrição');
+        const salvar = getByText('Salvar');
+
+        act(() => {
+            fireEvent.changeText(descricao, 'Chapeuzinho Vermelho, uma garotinha de capa vermelha, foi mandada pela mãe para levar doces à vovó doente. No caminho, encontrou o lobo, que a enganou perguntando sobre o destino. O lobo, mais rápido, chegou à casa da vovó primeiro, a engoliu e se disfarçou. Quando Chapeuzinho chegou, notou algo estranho na vovó. O lobo tentou enganá-la, mas Chapeuzinho percebeu. O caçador apareceu, salvou-as, cortou a barriga do lobo, libertando vovó e Chapeuzinho. Moral: cuidado com estranhos, até mesmo disfarçados de vovó!');
+            fireEvent.press(salvar);
+        });
+        const erroDescricao = getByTestId('Erro-descricao');
+    
+        expect(erroDescricao.props.children.props.text).toBe('A descrição deve ter no máximo 300 caracteres.');
+    }); 
 });

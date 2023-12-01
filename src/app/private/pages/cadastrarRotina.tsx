@@ -288,7 +288,7 @@ export default function CadastrarRotina() {
             placeholderTextColor={"#3D3D3D"}
           />
         </View>
-        <View style={styles.erro}>
+        <View style={styles.erro} testID="Erro-descricao">
           <ErrorMessage show={showErrors} text={erros.descricao} />
         </View>
 
