@@ -202,7 +202,7 @@ export default function CadastrarRotina() {
             style={styles.inputTitulo}
           />
         </View>
-        <View style={styles.erroTitulo}>
+        <View style={styles.erroTitulo} testID="Erro-titulo">
           <ErrorMessage show={showErrors} text={erros.titulo} />
         </View>
         <View style={styles.dataHora}>
