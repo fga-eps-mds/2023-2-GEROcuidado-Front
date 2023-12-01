@@ -34,4 +34,34 @@ describe('CadastrarRotina Component', () => {
     
         expect(erroHora).toBeTruthy();
     });
+
+    it('Salvar sem data', async () => {
+        const { getByText, getByPlaceholderText, getByTestId } = render(<CadastrarRotina />);
+              
+        const data = getByPlaceholderText('Data da rotina');
+        const salvar = getByText('Salvar');
+
+        act(() => {
+            fireEvent.changeText(data, '');
+            fireEvent.press(salvar);
+        });
+        const erroHora = getByTestId('Erro-data');
+    
+        expect(erroHora.props.children.props.text).toBe('Campo obrigatório');
+    });   
+    
+    it('Salvar data com formato errado', async () => {
+        const { getByText, getByPlaceholderText, getByTestId } = render(<CadastrarRotina />);
+              
+        const data = getByPlaceholderText('Data da rotina');
+        const salvar = getByText('Salvar');
+
+        act(() => {
+            fireEvent.changeText(data, '2010');
+            fireEvent.press(salvar);
+        });
+        const erroHora = getByTestId('Erro-data');
+    
+        expect(erroHora.props.children.props.text).toBe('Data deve ser no formato dd/mm/yyyy!');
+    });    
 });
