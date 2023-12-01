@@ -1,5 +1,6 @@
 import React from 'react';
 import { render } from '@testing-library/react-native';
+import { NavigationContainer } from '@react-navigation/native'; 
 import AsyncStorage, { AsyncStorageStatic } from '@react-native-async-storage/async-storage'; 
 import Registros from '../private/tabs/registros';
 
@@ -20,6 +21,11 @@ describe('Visualizar registros', () => {
       return Promise.resolve(null);
     });
 
-    render(<Registros />);
+    render(
+      // Envolve o componente Registros com NavigationContainer durante o teste
+      <NavigationContainer>
+        <Registros />
+      </NavigationContainer>
+    );
   });
 });
