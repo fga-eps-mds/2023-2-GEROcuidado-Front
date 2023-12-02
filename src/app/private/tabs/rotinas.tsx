@@ -100,7 +100,18 @@ export default function Rotinas() {
     getAllRotina(rotinaFilter)
       .then((response) => {
         const newRotinas = response.data as IRotina[];
-        setRotinas(newRotinas);
+        const filteredRotinas = newRotinas.filter((rotina) => {
+          if (rotina.dias.length > 0) {
+            const date = selectedDate.toDate();
+            const weekday = date.getDay();
+            const dateRotina = new Date(rotina.dataHora);
+
+            return rotina.dias.includes(weekday) && dateRotina < date;
+          } else {
+            return true;
+          }
+        });
+        setRotinas(filteredRotinas);
       })
       .catch((err) => {
         const error = err as { message: string };
