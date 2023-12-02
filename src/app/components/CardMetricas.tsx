@@ -1,5 +1,6 @@
 import React from 'react';
 import { Text, StyleSheet, Pressable } from 'react-native';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useRouter } from 'expo-router';
 
 interface MetricCardProps {
@@ -11,27 +12,27 @@ interface MetricCardProps {
 
 const MetricCard: React.FC<MetricCardProps> = ({ title, content, unit, time }) => {
   const router = useRouter();
-  const background = '#fff'; // Cor de fundo padrão
+  const background = '#fff'; 
 
   const getTitleColor = (title: string): string => {
     if (title.toLowerCase().includes('pressão sanguínea') || title.toLowerCase().includes('frequência cardíaca')) {
-      return '#FF7D7D'; // Vermelho
+      return '#FF7D7D'; 
     } else if (title.toLowerCase().includes('temperatura')) {
-      return '#FFAC7D'; // Laranja
+      return '#FFAC7D'; 
     } else if (title.toLowerCase().includes('hidratação')) {
-      return '#5ABCD8'; // Azul
+      return '#5ABCD8'; 
     } else {
-      return '#000'; // Cor padrão
+      return '#000'; 
     }
   };
+
+  const onPressCard = async () => {
   
-  const onPressCard = () => {
-    router.push({
-      pathname: '/VisualizarValoresMedidos',
-      params: { selectedMetric: title },
-    });
+    await AsyncStorage.setItem('selectedMetric', title);
+
+  
+    router.push('/private/pages/visualizarValoresMedidos');
   };
-  
 
   const titleColor = getTitleColor(title);
 
@@ -53,12 +54,12 @@ const styles = StyleSheet.create({
     borderRadius: 8,
     padding: 16,
     margin: 8,
-    width: '45%', // Ajuste a largura para dois cards em uma linha
+    width: '45%', 
     shadowColor: '#000',
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.2,
     shadowRadius: 4,
-    elevation: 3, // Para a sombra no Android
+    elevation: 3, 
   },
   title: {
     fontWeight: 'bold',
