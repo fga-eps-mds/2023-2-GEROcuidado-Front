@@ -10,6 +10,7 @@ export default function Home() {
       <Text style={styles.titulo}> Seja um GEROcuidador! </Text>
       <LinkButton title="Acessar Fórum" href="/private/tabs/forum" />
       <LinkButton title="Login" href="/public/login" />
+      
       <LinkButton
         title="Cadastre-se"
         backgroundColor="#B47B9D"
