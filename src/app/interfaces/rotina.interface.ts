@@ -33,3 +33,8 @@ export enum EDiasSemana {
   Sexta = 5,
   Sabado = 6,
 }
+
+export interface IOrder {
+  column: string,
+  dir: "ASC",
+}

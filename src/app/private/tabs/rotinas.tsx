@@ -15,7 +15,7 @@ import {
 } from "react-native";
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
 import { router } from "expo-router";
-import { IRotina, IRotinaFilter } from "../../interfaces/rotina.interface";
+import { IOrder, IRotina, IRotinaFilter } from "../../interfaces/rotina.interface";
 import CardRotina from "../../components/CardRotina";
 import { getAllRotina } from "../../services/rotina.service";
 import Toast from "react-native-toast-message";
@@ -33,6 +33,10 @@ export default function Rotinas() {
   const [rotinas, setRotinas] = useState<IRotina[]>([]);
   const [loading, setLoading] = useState(true);
   const [selectedDate, setSelectedDate] = useState(moment());
+  const order: IOrder = {
+    column: "dataHora",
+    dir: "ASC"
+  }
 
   const datesWhitelist = [
     {
@@ -97,7 +101,7 @@ export default function Rotinas() {
       dataHora: dataHora.toISOString(),
     };
 
-    getAllRotina(rotinaFilter)
+    getAllRotina(rotinaFilter,order)
       .then((response) => {
         const newRotinas = response.data as IRotina[];
         const filteredRotinas = newRotinas.filter((rotina) => {
@@ -269,7 +273,7 @@ const styles = StyleSheet.create({
   },
   rotinas: {
     width: Dimensions.get("window").width,
-    height: Dimensions.get("window").height - 360,
+    height: Dimensions.get("window").height - 315,
   },
   semRotinas:{
     fontSize:35,
