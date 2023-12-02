@@ -1,6 +1,6 @@
 import React from 'react';
-import { View, Text, StyleSheet } from 'react-native';
-import Icon from 'react-native-vector-icons/FontAwesome'; // ou qualquer outro ícone disponível
+import { Text, StyleSheet, Pressable } from 'react-native';
+import { useRouter } from 'expo-router';
 
 interface MetricCardProps {
   title: string;
@@ -10,28 +10,40 @@ interface MetricCardProps {
 }
 
 const MetricCard: React.FC<MetricCardProps> = ({ title, content, unit, time }) => {
-  let titleColor = '#000'; // Cor padrão
+  const router = useRouter();
+  const background = '#fff'; // Cor de fundo padrão
 
-  if (title.toLowerCase().includes('pressão sanguínea') || title.toLowerCase().includes('frequência cardíaca')) {
-    titleColor = '#FF7D7D'; // Vermelho
-  } else if (title.toLowerCase().includes('temperatura')) {
-    titleColor = '#FFAC7D'; // Laranja
-  } else if (title.toLowerCase().includes('hidratação')) {
-    titleColor = '#5ABCD8'; // Azul
-  }
+  const getTitleColor = (title: string): string => {
+    if (title.toLowerCase().includes('pressão sanguínea') || title.toLowerCase().includes('frequência cardíaca')) {
+      return '#FF7D7D'; // Vermelho
+    } else if (title.toLowerCase().includes('temperatura')) {
+      return '#FFAC7D'; // Laranja
+    } else if (title.toLowerCase().includes('hidratação')) {
+      return '#5ABCD8'; // Azul
+    } else {
+      return '#000'; // Cor padrão
+    }
+  };
+  
+  const onPressCard = () => {
+    router.push({
+      pathname: '/VisualizarValoresMedidos',
+      params: { selectedMetric: title },
+    });
+  };
+  
 
-  const textColor = '#888'; // Cor do texto do horário e unidades
+  const titleColor = getTitleColor(title);
 
   return (
-    <View style={[styles.card, { borderColor: '#ddd', backgroundColor: '#fff' }]}>
+    <Pressable style={[styles.card, { borderColor: '#ddd', backgroundColor: background }]} onPress={onPressCard}>
       <Text style={[styles.title, { color: titleColor }]}>{title}</Text>
       <Text style={styles.content}>
         <Text style={[styles.number]}>{content}</Text>
-        <Text style={[styles.units, { color: textColor }]}>{unit}</Text>
+        <Text style={[styles.units, { color: '#888' }]}>{unit}</Text>
       </Text>
-      <Text style={[styles.time, { color: textColor }]}>{time}</Text>
-      <Icon name="chevron-right" size={16} color={textColor} style={styles.chevron} />
-    </View>
+      <Text style={[styles.time, { color: '#888' }]}>{time}</Text>
+    </Pressable>
   );
 };
 
@@ -41,12 +53,12 @@ const styles = StyleSheet.create({
     borderRadius: 8,
     padding: 16,
     margin: 8,
-    width: '45%', // Adjust width for two cards in a row
+    width: '45%', // Ajuste a largura para dois cards em uma linha
     shadowColor: '#000',
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.2,
     shadowRadius: 4,
-    elevation: 3, // For Android shadow
+    elevation: 3, // Para a sombra no Android
   },
   title: {
     fontWeight: 'bold',
@@ -59,22 +71,15 @@ const styles = StyleSheet.create({
   },
   number: {
     fontWeight: 'bold',
-    fontSize: 24, // Adjust font size for the content (number)
+    fontSize: 24,
   },
   units: {
-    fontSize: 18, // Adjust font size for units
+    fontSize: 18,
   },
   time: {
-    color: '#888',
     fontSize: 12,
     marginTop: 8,
   },
-  chevron: {
-    position: 'absolute',
-    top: 12,
-    right: 12,
-  },
-
 });
 
 export default MetricCard;
