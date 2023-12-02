@@ -203,14 +203,17 @@ export default function CardRotina({ item, index, date }: IProps) {
 
   useEffect(() => handleIcon());
   useEffect(() => getToken());
-
+  
   return (
+    <>
+    <Text style = {styles.hora}>{new Date(item.dataHora).getHours().toString().padStart(2, "0")}:{new Date(item.dataHora).getMinutes().toString().padStart(2, "0")}</Text>
+    
     <Pressable
-      onPress={editar}
-      style={[
-        styles.container,
-        { backgroundColor: index % 2 == 0 ? "#B4FFE8" : "#FFC6C6" },
-      ]}
+    onPress={editar}
+    style={[
+      styles.container,
+      { backgroundColor: index % 2 == 0 ? "#B4FFE8" : "#FFC6C6" },
+    ]}
     >
       <View style={styles.icon}>
         <Icon size={30} name={nameIcon}></Icon>
@@ -223,20 +226,30 @@ export default function CardRotina({ item, index, date }: IProps) {
         onPress={() => debounceConcluido(!check)}
         style={styles.checkBox}
         testID="checkbox"
-      >
+        >
         {check && <Icon name="check" size={30}></Icon>}
       </Pressable>
     </Pressable>
+    </>
   );
 }
 
 const styles = StyleSheet.create({
+  hora:{
+    fontSize:18,
+    fontWeight:"300",
+    marginLeft:20,
+    marginTop:10,
+  },
+
   container: {
     flexDirection: "row",
     alignItems: "center",
     width: Dimensions.get("window").width - 40,
-    marginHorizontal: 20,
-    marginVertical: 10,
+    marginRight: 20,
+    marginLeft: 20,
+    marginTop: 10,
+    marginBottom: 10,
     shadowColor: "#000",
     shadowOffset: { width: 3, height: 3 },
     shadowOpacity: 0.2,
