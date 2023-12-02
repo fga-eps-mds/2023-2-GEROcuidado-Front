@@ -1,170 +1,111 @@
-import React from "react";
-import { act, fireEvent, render, waitFor, screen } from "@testing-library/react-native";
-import Rotina from "../private/pages/cadastrarRotina";
-import AsyncStorage from "@react-native-async-storage/async-storage";
-import CadastrarRotina from "../private/pages/cadastrarRotina";
-import { ECategoriaRotina } from "../interfaces/rotina.interface";
+import React from 'react';
+import { render, fireEvent, waitFor, act } from '@testing-library/react-native';
+import CadastrarRotina from '../private/pages/cadastrarRotina';
 
-jest.mock("@react-native-async-storage/async-storage", () => ({
-  getItem: jest.fn(),
-}));
 
-describe("Cadastrar Rotina component", () => {
-      it("renderiza corretamente", async () => {
-        (AsyncStorage.getItem as jest.Mock).mockImplementation((key) => {
-          if (key === "idoso") {
-            return Promise.resolve(JSON.stringify({ id: 1 }));
-          } else if (key === "token") {
-            return Promise.resolve("mockedToken");
-          }
-          return Promise.resolve(null);
-        });
-        await waitFor(() => render(<Rotina />));
-      });
+describe('CadastrarRotina Component', () => {
+    it('Salvar sem titulo', async () => {
+        const { getByText, getByPlaceholderText, getByTestId } = render(<CadastrarRotina />);
+              
+        const titulo = getByPlaceholderText('Adicionar título');
+        const salvar = getByText('Salvar');
 
-      it("titulo com caracteres em excesso", () => {
-        (AsyncStorage.getItem as jest.Mock).mockImplementation((key) => {
-          if (key === "idoso") {
-            return Promise.resolve(JSON.stringify({ id: 1 }));
-          } else if (key === "token") {
-            return Promise.resolve("mockedToken");
-          }
-          return Promise.resolve(null);
-        });
-
-        const { getByText, getByPlaceholderText } = render(<CadastrarRotina />);
-        const titulo = getByPlaceholderText("Adicionar título");
-        const salvar = getByText("Salvar");
-        
         act(() => {
-          fireEvent.changeText(titulo,"Comer comidaaaaaaaaaaaaaaaaaaaaaa delicosaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa");
-          fireEvent.press(salvar);
+            fireEvent.changeText(titulo, '');
+            fireEvent.press(salvar);
         });
+        const erroTitulo = getByTestId('Erro-titulo');
+    
+        expect(erroTitulo.props.children.props.text).toBe('Campo obrigatório!');
+    });
 
-        const erroTitulo = getByText("O título deve ter no máximo 100 caracteres.");
+    it('Salvar com titulo muito grande', async () => {
+        const { getByText, getByPlaceholderText, getByTestId } = render(<CadastrarRotina />);
+              
+        const titulo = getByPlaceholderText('Adicionar título');
+        const salvar = getByText('Salvar');
 
-        expect(erroTitulo).toBeDefined;
-
-      });
-
-      it("lidar com descricao com caracteres em excesso", () => {
-        (AsyncStorage.getItem as jest.Mock).mockImplementation((key) => {
-          if (key === "idoso") {
-            return Promise.resolve(JSON.stringify({ id: 1 }));
-          } else if (key === "token") {
-            return Promise.resolve("mockedToken");
-          }
-          return Promise.resolve(null);
-        });
-
-        const { getByText, getByPlaceholderText } = render(<CadastrarRotina />);
-        const titulo = getByPlaceholderText("Adicionar título");
-        const salvar = getByText("Salvar");
-        const dataRotina = getByPlaceholderText("Data da rotina");
-        const horaRotina = getByPlaceholderText("Horário de início");
-        const descricaoRotina = getByPlaceholderText("Descrição");
-        
         act(() => {
-          fireEvent.changeText(titulo,"Comer comida");
-          fireEvent.changeText(dataRotina,"30/11/2023");
-          fireEvent.changeText(horaRotina,"13:45");
-   
-          fireEvent.changeText(descricaoRotina,"comer é bomComer comer comer comer comer comer comer comer comer comer comer comer comer comer comer comer comer comer comer comer comer comer comer comer comer comer comer comer comer comer comer comer comer comer comer comer comer comer comer comer comer comer comer comer comer comer comer comer comer comer comer comer comer comer comer comer comer comer comer comer comer comer comer comer comer comer comer comer comer comer comer comer comer comer comer comer comer comer comer comer comer comer comer comer comer comer comer comer comer comer comer comer comer comer comer comer comer comer comer comer comer comer comer comer comer comer comer comer comer comer comer comer comer comer comer comer comer comer comer comer comer comer comer comer comer comer comer comer comer comer comer comer comer comer comer comer comer comer comer comer comer comer comer comer comer comer comer comer comer comer comer comer comer comer comer comer comer comer comer comer comer comer comer comer comer comer comer comer comer comer comer comer comer comer comer comer comer comer comer comer comer comer comer comer comer comer comer comer comer comer comer comer comer comer comer comer comer comer comer comer comer comer comer comer comer comer comer comer comer comer comer comer comer comer comer comer comer comer comer comer comer comer comer comer comer comer comer comer comer comer comer comer comer comer comer comer comer comer comer comer comer comer comer comer comer comer comer comer comer comer comer comer comer comer comer comer comer comer comer comer comer comer comer comer comer comer comer comer comer comer comer comer comer comer comer comer comer comer comer comer comer comer comer comer comer comer comer comer comer comer comer comer comer comer comer comer comer comer comer comer comer comer comer comer comer comer comer comer comer comer comer comer comer comer comer comer comer comer comer comer comer comer comer comer comer comer comer comer comer comer comer comer comer comer comer comer comer comer comer comer comer comer comer comer comer comer comer comer comer comer comer comer comer comer comer comer comer comer comer comer comer comer comer comer comer comer comer comer comer comer comer comer comer comer comer comer comer comer comer comer comer comer comer comer comer comer comer comer comer comer comer comer comer comer comer comer comer comer comer comer comer comer comer comer comer comer comer comer comer comer comer comer comer comer comer comer comer comer comer comer comer comer comer comer comer comer comer comer comer comer comer comer ");
-          fireEvent.press(salvar);
+            fireEvent.changeText(titulo, 'Por que o livro de matemática está sempre triste? Porque tem muitos problemas! hahahahahahhahahahahhahahaahahahahahahhahahahahahahahahahahahhahaahahahahahahahahah');
+            fireEvent.press(salvar);
         });
+        const erroTitulo = getByText('O título deve ter no máximo 100 caracteres.');
+    
+        expect(erroTitulo).toBeTruthy();
+    });
 
-        const erroDescricao = getByText("A descrição deve ter no máximo 300 caracteres.");
+    it('Salvar sem data', async () => {
+        const { getByText, getByPlaceholderText, getByTestId } = render(<CadastrarRotina />);
+              
+        const data = getByPlaceholderText('Data da rotina');
+        const salvar = getByText('Salvar');
 
-        expect(erroDescricao).toBeDefined;
-
-      });
-
-      it("lidar com descricao com caracteres em excesso", () => {
-        (AsyncStorage.getItem as jest.Mock).mockImplementation((key) => {
-          if (key === "idoso") {
-            return Promise.resolve(JSON.stringify({ id: 1 }));
-          } else if (key === "token") {
-            return Promise.resolve("mockedToken");
-          }
-          return Promise.resolve(null);
-        });
-
-        const { getByText, getByPlaceholderText } = render(<CadastrarRotina />);
-        const titulo = getByPlaceholderText("Adicionar título");
-        const salvar = getByText("Salvar");
-        const dataRotina = getByPlaceholderText("Data da rotina");
-        const horaRotina = getByPlaceholderText("Horário de início");
-        const descricaoRotina = getByPlaceholderText("Descrição");
-        
         act(() => {
-          fireEvent.changeText(titulo,"Comer comida");
-          fireEvent.changeText(dataRotina,"30/11/2023");
-          fireEvent.changeText(horaRotina,"111:455");
-          fireEvent.changeText(descricaoRotina,"comer");
-          fireEvent.press(salvar);
+            fireEvent.changeText(data, '');
+            fireEvent.press(salvar);
         });
-        
-        const erroHora = getByText("Hora deve ser no formato hh:mm!");
+        const erroData = getByTestId('Erro-data');
+    
+        expect(erroData.props.children.props.text).toBe('Campo obrigatório');
+    });   
+    
+    it('Salvar data com formato errado', async () => {
+        const { getByText, getByPlaceholderText, getByTestId } = render(<CadastrarRotina />);
+              
+        const data = getByPlaceholderText('Data da rotina');
+        const salvar = getByText('Salvar');
 
-        expect(erroHora).toBeDefined;
-
-      });
-      
-      it("Salvar sem hora", () => {
-        (AsyncStorage.getItem as jest.Mock).mockImplementation((key) => {
-          if (key === "idoso") {
-            return Promise.resolve(JSON.stringify({ id: 1 }));
-          } else if (key === "token") {
-            return Promise.resolve("mockedToken");
-          }
-          return Promise.resolve(null);
-        });
-
-        const { getByText, getByPlaceholderText, getByTestId} = render(<CadastrarRotina />);
-        const titulo = getByPlaceholderText("Adicionar título");
-        const salvar = getByText("Salvar");
-        const dataRotina = getByPlaceholderText("Data da rotina");
-        const horaRotina = getByPlaceholderText("Horário de início");
-        const descricaoRotina = getByPlaceholderText("Descrição");
-        
         act(() => {
-          fireEvent.changeText(titulo,"Comer comida");
-          fireEvent.changeText(dataRotina,"30/11/2023");
-          fireEvent.changeText(horaRotina,"");
-          fireEvent.changeText(descricaoRotina,"Comer");
-          fireEvent.press(salvar);
+            fireEvent.changeText(data, '2010');
+            fireEvent.press(salvar);
         });
-        //screen.debug()
-        const erroHora = getByTestId("Erro-hora");
+        const erroData = getByTestId('Erro-data');
+    
+        expect(erroData.props.children.props.text).toBe('Data deve ser no formato dd/mm/yyyy!');
+    });    
+
+    it('Salvar sem hora', async () => {
+        const { getByText, getByPlaceholderText, getByTestId } = render(<CadastrarRotina />);
+              
+        const hora = getByPlaceholderText('Horário de início');
+        const salvar = getByText('Salvar');
+
+        act(() => {
+            fireEvent.changeText(hora, '');
+            fireEvent.press(salvar);
+        });
+        const erroHora = getByTestId('Erro-hora');
+    
         expect(erroHora.props.children.props.text).toBe('Campo obrigatório');
-      });
+    });   
 
-      it("Salvar sem data", () => {
-        (AsyncStorage.getItem as jest.Mock).mockImplementation((key) => {
-          if (key === "idoso") {
-            return Promise.resolve(JSON.stringify({ id: 1 }));
-          } else if (key === "token") {
-            return Promise.resolve("mockedToken");
-          }
-          return Promise.resolve(null);
-        });
+    it('Salvar hora com formato errado', async () => {
+        const { getByText, getByPlaceholderText, getByTestId } = render(<CadastrarRotina />);
+              
+        const hora = getByPlaceholderText('Horário de início');
+        const salvar = getByText('Salvar');
 
-        const { getByText, getByPlaceholderText, getByTestId} = render(<CadastrarRotina />);
-        const titulo = getByPlaceholderText("Adicionar título");
-        const salvar = getByText("Salvar");
-        const dataRotina = getByPlaceholderText("Data da rotina");
-        const horaRotina = getByPlaceholderText("Horário de início");
-        const descricaoRotina = getByPlaceholderText("Descrição");
-        
         act(() => {
-          fireEvent.changeText(titulo,"Comer comida");
-          fireEvent.changeText(dataRotina,"");
-          fireEvent.changeText(horaRotina,"1145");
-          fireEvent.changeText(descricaoRotina,"Comer");
-          fireEvent.press(salvar);
+            fireEvent.changeText(hora, '201');
+            fireEvent.press(salvar);
         });
-        //screen.debug()
-        const erroHora = getByTestId("Erro-data");
-        expect(erroHora.props.children.props.text).toBe('Campo obrigatório');
-      });
+        const erroHora = getByTestId('Erro-hora');
+    
+        expect(erroHora.props.children.props.text).toBe('Hora deve ser no formato hh:mm!');
+    });    
+
+    it('Salvar com descrição muito grande', async () => {
+        const { getByText, getByPlaceholderText, getByTestId } = render(<CadastrarRotina />);
+              
+        const descricao = getByPlaceholderText('Descrição');
+        const salvar = getByText('Salvar');
+
+        act(() => {
+            fireEvent.changeText(descricao, 'Chapeuzinho Vermelho, uma garotinha de capa vermelha, foi mandada pela mãe para levar doces à vovó doente. No caminho, encontrou o lobo, que a enganou perguntando sobre o destino. O lobo, mais rápido, chegou à casa da vovó primeiro, a engoliu e se disfarçou. Quando Chapeuzinho chegou, notou algo estranho na vovó. O lobo tentou enganá-la, mas Chapeuzinho percebeu. O caçador apareceu, salvou-as, cortou a barriga do lobo, libertando vovó e Chapeuzinho. Moral: cuidado com estranhos, até mesmo disfarçados de vovó!');
+            fireEvent.press(salvar);
+        });
+        const erroDescricao = getByTestId('Erro-descricao');
+    
+        expect(erroDescricao.props.children.props.text).toBe('A descrição deve ter no máximo 300 caracteres.');
+    }); 
 });

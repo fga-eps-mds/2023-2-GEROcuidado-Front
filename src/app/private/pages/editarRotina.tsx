@@ -41,7 +41,7 @@ export default function EditarRotina() {
   const [descricao, setDescricao] = useState(params.descricao);
   const [categoria, setCategoria] = useState(params.categoria);
   const [dias, setDias] = useState(
-    params.dias.split(",").map((dia) => Number(dia)),
+    params.dias !== "" ? params.dias.split(",").map((dia) => Number(dia)) : [],
   );
   const [showLoading, setShowLoading] = useState(false);
   const [erros, setErros] = useState<IErrors>({});
@@ -68,7 +68,6 @@ export default function EditarRotina() {
   };
 
   const separaDataHora = () => {
-    //const value = params.dataHora as string;
     const value = params.dataHora as string;
     const valueFinal = value.split("T");
     const separaData = valueFinal[0].split("-");
@@ -120,7 +119,7 @@ export default function EditarRotina() {
 
   const getDateIsoString = (data: string, hora: string) => {
     const dateArray = data.split("/");
-    return `${dateArray[2]}-${dateArray[1]}-${dateArray[0]}T${hora}:00.000Z`;
+    return `${dateArray[2]}-${dateArray[1]}-${dateArray[0]}T${hora}:00.000`;
   };
 
   const salvar = async () => {
@@ -168,7 +167,10 @@ export default function EditarRotina() {
 
     try {
       await deleteRotina(params.id, token);
-      router.replace("private/tabs/rotinas");
+      router.replace({
+        pathname: "private/tabs/rotinas",
+        params: idoso,
+      });
     } catch (err) {
       const error = err as { message: string };
       Toast.show({

@@ -1,8 +1,75 @@
 <testExecutions version="1">
-<file path="src/app/__tests__/CadastrarRotina.spec.tsx">
-<testCase name="Cadastrar Rotina component renderiza corretamente" duration="72" />
-<testCase name="Cadastrar Rotina component titulo com caracteres em excesso" duration="79" />
-<testCase name="Cadastrar Rotina component lidar com descricao com caracteres em excesso" duration="69" />
-<testCase name="Cadastrar Rotina component lidar com descricao com caracteres em excesso" duration="54" />
+<file path="src/app/__tests__/login.spec.tsx">
+<testCase name="Login Component renderiza corretamente" duration="211" />
+<testCase name="Login Component deve alterar o estado do escondeSenha" duration="18" />
+<testCase name="Login Component deve lidar com o login com falha" duration="27" />
+<testCase name="Login Component deve lidar com o login com falha na requisicao" duration="39" />
+<testCase name="Login Component deve lidar com o login com sucesso" duration="71" />
+</file>
+<file path="src/app/__tests__/LinkButton.spec.tsx">
+<testCase name="LinkButton deve renderizar corretamente" duration="22" />
+<testCase name="LinkButton deve usar a cor de fundo personalizada" duration="2" />
+<testCase name="LinkButton deve chamar a fun&#xe7;&#xe3;o de navega&#xe7;&#xe3;o corretamente" duration="2" />
+</file>
+<file path="src/app/__tests__/perfil.spec.tsx">
+<testCase name="Perfil renderiza corretamente" duration="165" />
+<testCase name="Perfil renderiza corretamente com user id" duration="10" />
+<testCase name="Perfil renderiza corretamente com user id e foto" duration="13" />
+<testCase name="Perfil deve chamar logout" duration="105" />
+<testCase name="Perfil deve chamar navigate" duration="104" />
+</file>
+<file path="src/app/__tests__/cadastro.spec.tsx">
+<testCase name="Cadastro Component renderiza corretamente" duration="45" />
+<testCase name="Cadastro Component deve chamar a fun&#xe7;&#xe3;o &apos;postUser&apos; quando n&#xe3;o h&#xe1; erros nos campos" duration="52" />
+<testCase name="Cadastro Component n&#xe3;o deve chamar a fun&#xe7;&#xe3;o &apos;postUser&apos; quando h&#xe1; espec&#xed;ficos erros nos campos" duration="50" />
+<testCase name="Cadastro Component n&#xe3;o deve chamar a fun&#xe7;&#xe3;o &apos;postUser&apos; quando h&#xe1; erros nos campos" duration="10" />
+<testCase name="Cadastro Component n&#xe3;o deve chamar a fun&#xe7;&#xe3;o &apos;postUser&apos; quando h&#xe1; erros espec&#xed;ficos de nome nos campos" duration="15" />
+<testCase name="Cadastro Component deve exibir o Toast de erro" duration="30" />
+<testCase name="Cadastro Component deve alterar o estado do escondeSenha" duration="13" />
+</file>
+<file path="src/app/__tests__/forum.spec.tsx">
+<testCase name="Forum renderiza corretamente" duration="57" />
+</file>
+<file path="src/app/__tests__/rotinas.spec.tsx">
+<testCase name="Rotinas renderiza corretamente" duration="35" />
+<testCase name="Rotinas renderiza corretamente com user id" duration="9" />
+</file>
+<file path="src/app/__tests__/tutorial.spec.tsx">
+<testCase name="O componente Tutorial deve renderizar corretamente" duration="216" />
+<testCase name="O bot&#xe3;o &quot;Pular&quot; deve chamar a fun&#xe7;&#xe3;o &quot;router.replace&quot; com o caminho correto" duration="7" />
+<testCase name="O bot&#xe3;o &quot;Avan&#xe7;ar&quot; deve permitir navegar entre os slides" duration="12" />
+<testCase name="O bot&#xe3;o &quot;Avan&#xe7;ar&quot; deve permitir navegar entre os slides" duration="9" />
+</file>
+<file path="src/app/__tests__/registros.spec.tsx">
+<testCase name="Registros renderiza corretamente" duration="28" />
+<testCase name="Registros renderiza corretamente com user id" duration="6" />
+</file>
+<file path="src/app/__tests__/index.spec.tsx">
+<testCase name="Home renderiza corretamente" duration="32" />
+<testCase name="Home deve conter um t&#xed;tulo" duration="4" />
+<testCase name="Home deve conter bot&#xf5;es de a&#xe7;&#xe3;o" duration="5" />
+</file>
+<file path="src/app/__tests__/UploadImage.spec.tsx">
+<testCase name="UploadImage renderiza corretamente sem imagem inicial" duration="153" />
+<testCase name="UploadImage deve renderizar corretamente" duration="7" />
+</file>
+<file path="src/app/components/__tests__/ModalConfirmation.spec.tsx">
+<testCase name="ModalConfirmation Component renderiza corretamente" duration="162" />
+</file>
+<file path="src/app/__tests__/BackButton.spec.tsx">
+<testCase name="BackButton chama router.back() quando pressionado" duration="151" />
+</file>
+<file path="src/app/__tests__/ItemTutorial.spec.tsx">
+<testCase name="ItemTutorial renderiza corretamente" duration="160" />
+</file>
+<file path="src/app/__tests__/CustomButton.spec.tsx">
+<testCase name="CustomButton renderiza corretamente" duration="208" />
+<testCase name="CustomButton Chama a fun&#xe7;&#xe3;o de callback quando pressionado" duration="3" />
+</file>
+<file path="src/app/__tests__/ErrorMessage.spec.tsx">
+<testCase name="ErrorMessage renderiza corretamente" duration="168" />
+</file>
+<file path="src/app/__tests__/response.interface.spec.tsx">
+<testCase name="IResponse Interface deve ser uma interface com as propriedades data e message" duration="2" />
 </file>
 </testExecutions>
