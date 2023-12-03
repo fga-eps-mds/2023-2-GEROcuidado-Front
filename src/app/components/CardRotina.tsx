@@ -230,6 +230,10 @@ export default function CardRotina({ item, index, date }: IProps) {
           <Text style={styles.title}>{item.titulo}</Text>
           <Text style={styles.description}>{item.descricao}</Text>
         </View>
+
+        <Pressable style={styles.checkBox} testID="checkbox">
+          <Icon name="check" size={30}></Icon>
+        </Pressable>
       </Pressable>
 
       {/* <Pressable
