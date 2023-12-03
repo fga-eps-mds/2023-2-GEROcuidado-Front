@@ -14,12 +14,18 @@ interface IProps {
 }
 
 export default function CardRotina({ item, index, date }: IProps) {
-  // date.setHours(date.getHours() - 3);
-  // const dateString = date.toISOString().split("T")[0];
+  const getDate = () => {
+    return item.dataHora.toLocaleString("pt-BR", {
+      hour: "2-digit",
+      minute: "2-digit",
+    });
+  };
 
-  // const [check, setCheck] = useState(
-  //   item.dataHoraConcluidos.includes(dateString),
-  // );
+  const dateString = getDate().split("T")[0];
+
+  const [check, setCheck] = useState(
+    item.dataHoraConcluidos.includes(dateString),
+  );
   const [token, setToken] = useState<string>("");
   // const [timer, setTimer] = useState<NodeJS.Timeout | null>(null);
 
@@ -206,16 +212,9 @@ export default function CardRotina({ item, index, date }: IProps) {
 
   useEffect(() => getToken());
 
-  const getTime = () => {
-    return item.dataHora.toLocaleString("pt-BR", {
-      hour: "2-digit",
-      minute: "2-digit",
-    });
-  };
-
   return (
     <>
-      <Text style={styles.hora}>{getTime()}</Text>
+      <Text style={styles.hora}>{getDate()}</Text>
 
       <Pressable
         style={[
@@ -231,8 +230,12 @@ export default function CardRotina({ item, index, date }: IProps) {
           <Text style={styles.description}>{item.descricao}</Text>
         </View>
 
-        <Pressable style={styles.checkBox} testID="checkbox">
-          <Icon name="check" size={30}></Icon>
+        <Pressable
+          onPress={() => setCheck(!check)}
+          style={styles.checkBox}
+          testID="checkbox"
+        >
+          {check && <Icon name="check" size={30}></Icon>}
         </Pressable>
       </Pressable>
 
