@@ -68,6 +68,9 @@ export default function Registros() {
     router.push("private/pages/indicaCategoriaMetrica");
   };
 
+  const handlePress = () => {
+    return console.log("entrei")
+  }
   useEffect(() => handleUser(), []);
   useEffect(() => getIdoso(), []);
 
@@ -97,7 +100,10 @@ export default function Registros() {
           numColumns={2}
           showsVerticalScrollIndicator={false}
           data={metricas}
-          renderItem={({ item }) => <CardMetrica item={item} />}
+          renderItem={({ item }) => 
+          <Pressable onPress={handlePress}>
+            <CardMetrica item={item} />
+          </Pressable>}
         />
       </View>
     </>
@@ -112,6 +118,11 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
   },
+
+  verMetrica: {
+    width: "100%",
+  },
+
   fotoPerfil: {
     width: 60,
     aspectRatio: 1,
