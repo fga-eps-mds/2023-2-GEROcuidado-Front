@@ -21,11 +21,9 @@ export default function CardRotina({ item, index, date }: IProps) {
     });
   };
 
-  const dateString = getDate().split("T")[0];
+  // const dateString = getDate().split("T")[0];
 
-  const [check, setCheck] = useState(
-    item.dataHoraConcluidos.includes(dateString),
-  );
+  const [check, setCheck] = useState(false);
   const [token, setToken] = useState<string>("");
   // const [timer, setTimer] = useState<NodeJS.Timeout | null>(null);
 
