@@ -1,19 +1,16 @@
 import React from "react";
 import { Modal, StyleSheet, Text, Pressable, View } from "react-native";
-import { IMetrica } from "../interfaces/metricas.interface";
-
+import { EMetricas, IMetrica } from "../interfaces/metricas.interface";
+import Icon from "react-native-vector-icons/MaterialCommunityIcons";
 interface IProps {
   visible: boolean;
-  callbackFn: () => unknown;
   closeModal: () => unknown;
   message: string;
-  messageButton: string;
   metrica: IMetrica;
 }
 
 export default function ModalMetrica({
   visible,
-  callbackFn,
   closeModal,
   metrica,
   message,
@@ -24,6 +21,9 @@ export default function ModalMetrica({
         <View style={styles.modalView}>
           <Text style={styles.modalText}>{message}</Text>
           <View style={styles.buttonContainer}>
+            ({metrica.categoria == EMetricas.PRESSAO_SANGUINEA && (
+              <Icon name = "heartbeat"/>
+            )})
             <Pressable
               testID="cancelarBtn"
               style={[styles.button, styles.buttonCancel]}
@@ -34,7 +34,6 @@ export default function ModalMetrica({
             <Pressable
               testID="callbackBtn"
               style={[styles.button, styles.buttonClose]}
-              onPress={() => callbackFn()}
             >
               <Text style={styles.textStyle}>{"Salvar"}</Text>
             </Pressable>
