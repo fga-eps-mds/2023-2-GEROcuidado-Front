@@ -206,8 +206,17 @@ export default function CardRotina({ item, index, date }: IProps) {
 
   // useEffect(() => getToken());
 
+  const getTime = () => {
+    return item.dataHora.toLocaleString("pt-BR", {
+      hour: "2-digit",
+      minute: "2-digit",
+    });
+  };
+
   return (
     <>
+      <Text style={styles.hora}>{getTime()}</Text>
+
       <Pressable
         style={[
           styles.container,
@@ -222,11 +231,6 @@ export default function CardRotina({ item, index, date }: IProps) {
           <Text style={styles.description}>{item.descricao}</Text>
         </View>
       </Pressable>
-
-      {/* <Text style={styles.hora}>
-        {new Date(item.dataHora).getHours().toString().padStart(2, "0")}:
-        {new Date(item.dataHora).getMinutes().toString().padStart(2, "0")}
-      </Text> */}
 
       {/* <Pressable
         onPress={editar}
