@@ -29,18 +29,18 @@ export default function CardRotina({ item, index, date }: IProps) {
   //   });
   // };
 
-  // const getIconName = (): string => {
-  //   switch (item.categoria) {
-  //     case ECategoriaRotina.ALIMENTACAO:
-  //       return "food-apple-outline";
-  //     case ECategoriaRotina.EXERCICIOS:
-  //       return "dumbbell";
-  //     case ECategoriaRotina.MEDICAMENTO:
-  //       return "medical-bag";
-  //     default:
-  //       return "view-grid-outline";
-  //   }
-  // };
+  const getIconName = (): string => {
+    switch (item.categoria) {
+      case ECategoriaRotina.ALIMENTACAO:
+        return "food-apple-outline";
+      case ECategoriaRotina.EXERCICIOS:
+        return "dumbbell";
+      case ECategoriaRotina.MEDICAMENTO:
+        return "medical-bag";
+      default:
+        return "view-grid-outline";
+    }
+  };
 
   // const debounceConcluido = (concluido: boolean) => {
   //   setCheck(concluido);
@@ -208,7 +208,16 @@ export default function CardRotina({ item, index, date }: IProps) {
 
   return (
     <>
-      <Text style={styles.hora}>{item.titulo}</Text>
+      <Pressable style={styles.container}>
+        <View style={styles.icon}>
+          <Icon size={30} name={getIconName()}></Icon>
+        </View>
+        <View style={styles.texts}>
+          <Text style={styles.title}>{item.titulo}</Text>
+          <Text style={styles.description}>{item.descricao}</Text>
+        </View>
+      </Pressable>
+
       {/* <Text style={styles.hora}>
         {new Date(item.dataHora).getHours().toString().padStart(2, "0")}:
         {new Date(item.dataHora).getMinutes().toString().padStart(2, "0")}
