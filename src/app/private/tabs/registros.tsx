@@ -2,7 +2,6 @@ import React, { useEffect, useState } from "react";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { IUser } from "../../interfaces/user.interface";
 import NaoAutenticado from "../../components/NaoAutenticado";
-import EmConstrucao from "../../components/EmConstrucao";
 import { View, Text, StyleSheet } from "react-native";
 import { IIdoso } from "../../interfaces/idoso.interface";
 import { Image } from "expo-image";
@@ -11,12 +10,22 @@ import IdosoNaoSelecionado from "../../components/IdosoNaoSelecionado";
 import CardMetrica from "../../components/CardMetrica";
 import { FlatList } from "react-native-gesture-handler";
 import { EMetricas, IMetrica } from "../../interfaces/metricas.interface";
-
+import { router } from "expo-router";
+import { Pressable } from "react-native";
 
 export default function Registros() {
   const [user, setUser] = useState<IUser | undefined>(undefined);
-  const [idoso, setIdoso] = useState<IIdoso>()
-  const [metricas, setMetricas] = useState<IMetrica[]>([{ categoria: EMetricas.FREQ_CARDIACA, id: 1, idIdoso: 1, dataHora: "", valor: 70, idUsuario: 1 }])
+  const [idoso, setIdoso] = useState<IIdoso>();
+  const [metricas, setMetricas] = useState<IMetrica[]>([
+    {
+      categoria: EMetricas.FREQ_CARDIACA,
+      id: 1,
+      idIdoso: 1,
+      dataHora: "",
+      valor: 70,
+      idUsuario: 1,
+    },
+  ]);
 
   const handleUser = () => {
     AsyncStorage.getItem("usuario").then((response) => {
@@ -55,7 +64,9 @@ export default function Registros() {
     );
   };
 
-
+  const novaMetrica = () => {
+    router.push("private/pages/indicaCategoriaMetrica");
+  };
 
   useEffect(() => handleUser(), []);
   useEffect(() => getIdoso(), []);
@@ -74,6 +85,13 @@ export default function Registros() {
         </View>
       )}
 
+      <View>
+        <Pressable style={styles.botaoCriarMetricas} onPress={novaMetrica}>
+          <Icon name="plus" color={"white"} size={20} />
+          <Text style={styles.textoBotaoCriarMetricas}>Nova Métrica</Text>
+        </Pressable>
+      </View>
+
       <View style={styles.cardMetrica}>
         <FlatList
           numColumns={2}
@@ -82,8 +100,6 @@ export default function Registros() {
           renderItem={({ item }) => <CardMetrica item={item} />}
         />
       </View>
-
-      
     </>
   );
 }
@@ -124,7 +140,24 @@ const styles = StyleSheet.create({
     width: "40%",
     margin: 10,
   },
-  list:{
+  list: {
     width: "100%",
-  }
-})
+  },
+  botaoCriarMetricas: {
+    flexDirection: "row",
+    alignItems: "center",
+    backgroundColor: "#B4026D",
+    paddingHorizontal: 10,
+    paddingVertical: 5,
+    borderRadius: 10,
+    marginLeft: "auto",
+    marginRight: 10,
+    marginVertical: 10,
+  },
+  textoBotaoCriarMetricas: {
+    color: "white",
+    fontWeight: "600",
+    fontSize: 14,
+    marginLeft: 5,
+  },
+});
