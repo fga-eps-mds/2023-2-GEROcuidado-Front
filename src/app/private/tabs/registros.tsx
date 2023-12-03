@@ -1,10 +1,9 @@
-import React, { useEffect, useState } from "react";
-import AsyncStorage from "@react-native-async-storage/async-storage";
-import { IUser } from "../../interfaces/user.interface";
+import React, { useEffect, useState} from 'react';
+import { View, StyleSheet, ScrollView, Text, Image, TouchableOpacity} from 'react-native';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { IUser } from '../../interfaces/user.interface';
 import NaoAutenticado from "../../components/NaoAutenticado";
-import { View, Text, StyleSheet } from "react-native";
 import { IIdoso } from "../../interfaces/idoso.interface";
-import { Image } from "expo-image";
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
 import IdosoNaoSelecionado from "../../components/IdosoNaoSelecionado";
 import CardMetrica from "../../components/CardMetrica";
