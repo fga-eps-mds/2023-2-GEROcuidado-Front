@@ -101,7 +101,9 @@ export default function Registros() {
           showsVerticalScrollIndicator={false}
           data={metricas}
           renderItem={({ item }) => 
-          <Pressable onPress={handlePress}>
+          <Pressable 
+            style = {styles.verMetrica}
+            onPress={handlePress}>
             <CardMetrica item={item} />
           </Pressable>}
         />
