@@ -198,13 +198,12 @@ export default function Rotinas() {
             <View style={styles.rotinas}>
               <FlashList
                 data={rotinas}
-                renderItem={({ item }) => (
-                  <Text>{item.titulo}</Text>
-                  // <CardRotina
-                  //   item={item}
-                  //   index={index}
-                  //   date={selectedDate.toDate() || new Date()}
-                  // />
+                renderItem={({ item, index }) => (
+                  <CardRotina
+                    item={item}
+                    index={index}
+                    date={selectedDate.toDate() || new Date()}
+                  />
                 )}
                 estimatedItemSize={50}
               />
