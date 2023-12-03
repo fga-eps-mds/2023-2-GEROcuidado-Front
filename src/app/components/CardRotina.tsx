@@ -208,7 +208,12 @@ export default function CardRotina({ item, index, date }: IProps) {
 
   return (
     <>
-      <Pressable style={styles.container}>
+      <Pressable
+        style={[
+          styles.container,
+          { backgroundColor: index % 2 == 0 ? "#B4FFE8" : "#FFC6C6" },
+        ]}
+      >
         <View style={styles.icon}>
           <Icon size={30} name={getIconName()}></Icon>
         </View>
