@@ -1,5 +1,6 @@
 import React from "react";
 import { Modal, StyleSheet, Text, Pressable, View } from "react-native";
+import { IMetrica } from "../interfaces/metricas.interface";
 
 interface IProps {
   visible: boolean;
@@ -7,12 +8,14 @@ interface IProps {
   closeModal: () => unknown;
   message: string;
   messageButton: string;
+  metrica: IMetrica;
 }
 
-export default function ModalConfirmation({
+export default function ModalMetrica({
   visible,
   callbackFn,
   closeModal,
+  metrica,
   message,
 }: Readonly<IProps>) {
   return (
