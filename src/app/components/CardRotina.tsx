@@ -72,10 +72,10 @@ export default function CardRotina({ item, index, date }: IProps) {
   const editar = () => {
     const fuso = new Date(item.dataHora).getTimezoneOffset() / 60;
 
-    let dataString = new Date(item.dataHora).toISOString();
-    let dataHoraArray = dataString.split("T");
-    let horaArray = dataHoraArray[1].split(":");
-    let dataArray = dataHoraArray[0].split("-");
+    const dataString = new Date(item.dataHora).toISOString();
+    const dataHoraArray = dataString.split("T");
+    const horaArray = dataHoraArray[1].split(":");
+    const dataArray = dataHoraArray[0].split("-");
     if (horaArray[0] == "00") {
       horaArray[0] = "21";
       if (dataArray[2] == "01") {
@@ -186,11 +186,11 @@ export default function CardRotina({ item, index, date }: IProps) {
       }
     } else horaArray[0] = (parseInt(horaArray[0], 10) - fuso).toString();
     horaArray[0] = horaArray[0].padStart(2, "0");
-    let dataString2 = dataArray.join("-");
-    let horaString = horaArray.join(":");
+    const dataString2 = dataArray.join("-");
+    const horaString = horaArray.join(":");
     dataHoraArray[1] = horaString;
     dataHoraArray[0] = dataString2;
-    let dataHoraString = dataHoraArray.join("T");
+    const dataHoraString = dataHoraArray.join("T");
     item.dataHora = dataHoraString;
 
     const params = { ...item, id: item.id };
@@ -203,43 +203,46 @@ export default function CardRotina({ item, index, date }: IProps) {
 
   useEffect(() => handleIcon());
   useEffect(() => getToken());
-  
+
   return (
     <>
-    <Text style = {styles.hora}>{new Date(item.dataHora).getHours().toString().padStart(2, "0")}:{new Date(item.dataHora).getMinutes().toString().padStart(2, "0")}</Text>
-    
-    <Pressable
-    onPress={editar}
-    style={[
-      styles.container,
-      { backgroundColor: index % 2 == 0 ? "#B4FFE8" : "#FFC6C6" },
-    ]}
-    >
-      <View style={styles.icon}>
-        <Icon size={30} name={nameIcon}></Icon>
-      </View>
-      <View style={styles.texts}>
-        <Text style={styles.title}>{item.titulo}</Text>
-        <Text style={styles.description}>{item.descricao}</Text>
-      </View>
+      <Text style={styles.hora}>
+        {new Date(item.dataHora).getHours().toString().padStart(2, "0")}:
+        {new Date(item.dataHora).getMinutes().toString().padStart(2, "0")}
+      </Text>
+
       <Pressable
-        onPress={() => debounceConcluido(!check)}
-        style={styles.checkBox}
-        testID="checkbox"
+        onPress={editar}
+        style={[
+          styles.container,
+          { backgroundColor: index % 2 == 0 ? "#B4FFE8" : "#FFC6C6" },
+        ]}
+      >
+        <View style={styles.icon}>
+          <Icon size={30} name={nameIcon}></Icon>
+        </View>
+        <View style={styles.texts}>
+          <Text style={styles.title}>{item.titulo}</Text>
+          <Text style={styles.description}>{item.descricao}</Text>
+        </View>
+        <Pressable
+          onPress={() => debounceConcluido(!check)}
+          style={styles.checkBox}
+          testID="checkbox"
         >
-        {check && <Icon name="check" size={30}></Icon>}
+          {check && <Icon name="check" size={30}></Icon>}
+        </Pressable>
       </Pressable>
-    </Pressable>
     </>
   );
 }
 
 const styles = StyleSheet.create({
-  hora:{
-    fontSize:18,
-    fontWeight:"300",
-    marginLeft:20,
-    marginTop:10,
+  hora: {
+    fontSize: 18,
+    fontWeight: "300",
+    marginLeft: 20,
+    marginTop: 10,
   },
 
   container: {
