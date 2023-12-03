@@ -206,10 +206,10 @@ export default function CardRotina({ item, index, date }: IProps) {
 
   return (
     <>
-      <Text style={styles.hora}>
+      {/* <Text style={styles.hora}>
         {new Date(item.dataHora).getHours().toString().padStart(2, "0")}:
         {new Date(item.dataHora).getMinutes().toString().padStart(2, "0")}
-      </Text>
+      </Text> */}
 
       <Pressable
         onPress={editar}
