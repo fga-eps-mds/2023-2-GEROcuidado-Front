@@ -70,128 +70,128 @@ export default function CardRotina({ item, index, date }: IProps) {
   };
 
   const editar = () => {
-    const fuso = new Date(item.dataHora).getTimezoneOffset() / 60;
+    // const fuso = new Date(item.dataHora).getTimezoneOffset() / 60;
 
-    const dataString = new Date(item.dataHora).toISOString();
-    const dataHoraArray = dataString.split("T");
-    const horaArray = dataHoraArray[1].split(":");
-    const dataArray = dataHoraArray[0].split("-");
-    if (horaArray[0] == "00") {
-      horaArray[0] = "21";
-      if (dataArray[2] == "01") {
-        if (dataArray[1] == "01") {
-          // caso em que é primeiro de janeiro
-          dataArray[0] = (parseInt(dataArray[0], 10) - 1).toString();
-          dataArray[1] = "12";
-          dataArray[2] = "31";
-        } else {
-          // verifica se o mês é março
-          if (parseInt(dataArray[1], 10) == 3) {
-            /// verifica se o ano é bissexto
-            if (parseInt(dataArray[0], 10) % 4 == 0) dataArray[2] = "29";
-            else dataArray[2] = "28";
-          } else {
-            // verifica os meses de janeiro a agosto
-            if (parseInt(dataArray[1], 10) <= 8) {
-              if (parseInt(dataArray[1], 10) % 2 == 0) dataArray[2] = "31";
-              else {
-                dataArray[2] = "30";
-              }
-            } else {
-              // verifica os meses de setembro a dezembro
-              if (parseInt(dataArray[1], 10) % 2 == 0) dataArray[2] = "30";
-              else {
-                dataArray[2] = "31";
-              }
-            }
-          }
-          dataArray[1] = (parseInt(dataArray[1], 10) - 1).toString();
-          dataArray[1] = dataArray[1].padStart(2, "0");
-        }
-      } else {
-        dataArray[2] = (parseInt(dataArray[2], 10) - 1).toString();
-        dataArray[2] = dataArray[2].padStart(2, "0");
-      }
-    } else if (horaArray[0] == "01") {
-      horaArray[0] = "22";
-      if (dataArray[2] == "01") {
-        if (dataArray[1] == "01") {
-          // caso em que é primeiro de janeiro
-          dataArray[0] = (parseInt(dataArray[0], 10) - 1).toString();
-          dataArray[1] = "12";
-          dataArray[2] = "31";
-        } else {
-          // verifica se o mês é março
-          if (parseInt(dataArray[1], 10) == 3) {
-            /// verifica se o ano é bissexto
-            if (parseInt(dataArray[0], 10) % 4 == 0) dataArray[2] = "29";
-            else dataArray[2] = "28";
-          } else {
-            // verifica os meses de janeiro a agosto
-            if (parseInt(dataArray[1], 10) <= 8) {
-              if (parseInt(dataArray[1], 10) % 2 == 0) dataArray[2] = "31";
-              else {
-                dataArray[2] = "30";
-              }
-            } else {
-              // verifica os meses de setembro a dezembro
-              if (parseInt(dataArray[1], 10) % 2 == 0) dataArray[2] = "30";
-              else {
-                dataArray[2] = "31";
-              }
-            }
-          }
-          dataArray[1] = (parseInt(dataArray[1], 10) - 1).toString();
-          dataArray[1] = dataArray[1].padStart(2, "0");
-        }
-      } else {
-        dataArray[2] = (parseInt(dataArray[2], 10) - 1).toString();
-        dataArray[2] = dataArray[2].padStart(2, "0");
-      }
-    } else if (horaArray[0] == "02") {
-      horaArray[0] = "23";
-      if (dataArray[2] == "01") {
-        if (dataArray[1] == "01") {
-          // caso em que é primeiro de janeiro
-          dataArray[0] = (parseInt(dataArray[0], 10) - 1).toString();
-          dataArray[1] = "12";
-          dataArray[2] = "31";
-        } else {
-          // verifica se o mês é março
-          if (parseInt(dataArray[1], 10) == 3) {
-            /// verifica se o ano é bissexto
-            if (parseInt(dataArray[0], 10) % 4 == 0) dataArray[2] = "29";
-            else dataArray[2] = "28";
-          } else {
-            // verifica os meses de janeiro a agosto
-            if (parseInt(dataArray[1], 10) <= 8) {
-              if (parseInt(dataArray[1], 10) % 2 == 0) dataArray[2] = "31";
-              else {
-                dataArray[2] = "30";
-              }
-            } else {
-              // verifica os meses de setembro a dezembro
-              if (parseInt(dataArray[1], 10) % 2 == 0) dataArray[2] = "30";
-              else {
-                dataArray[2] = "31";
-              }
-            }
-          }
-          dataArray[1] = (parseInt(dataArray[1], 10) - 1).toString();
-          dataArray[1] = dataArray[1].padStart(2, "0");
-        }
-      } else {
-        dataArray[2] = (parseInt(dataArray[2], 10) - 1).toString();
-        dataArray[2] = dataArray[2].padStart(2, "0");
-      }
-    } else horaArray[0] = (parseInt(horaArray[0], 10) - fuso).toString();
-    horaArray[0] = horaArray[0].padStart(2, "0");
-    const dataString2 = dataArray.join("-");
-    const horaString = horaArray.join(":");
-    dataHoraArray[1] = horaString;
-    dataHoraArray[0] = dataString2;
-    const dataHoraString = dataHoraArray.join("T");
-    item.dataHora = dataHoraString;
+    // const dataString = new Date(item.dataHora).toISOString();
+    // const dataHoraArray = dataString.split("T");
+    // const horaArray = dataHoraArray[1].split(":");
+    // const dataArray = dataHoraArray[0].split("-");
+    // if (horaArray[0] == "00") {
+    //   horaArray[0] = "21";
+    //   if (dataArray[2] == "01") {
+    //     if (dataArray[1] == "01") {
+    //       // caso em que é primeiro de janeiro
+    //       dataArray[0] = (parseInt(dataArray[0], 10) - 1).toString();
+    //       dataArray[1] = "12";
+    //       dataArray[2] = "31";
+    //     } else {
+    //       // verifica se o mês é março
+    //       if (parseInt(dataArray[1], 10) == 3) {
+    //         /// verifica se o ano é bissexto
+    //         if (parseInt(dataArray[0], 10) % 4 == 0) dataArray[2] = "29";
+    //         else dataArray[2] = "28";
+    //       } else {
+    //         // verifica os meses de janeiro a agosto
+    //         if (parseInt(dataArray[1], 10) <= 8) {
+    //           if (parseInt(dataArray[1], 10) % 2 == 0) dataArray[2] = "31";
+    //           else {
+    //             dataArray[2] = "30";
+    //           }
+    //         } else {
+    //           // verifica os meses de setembro a dezembro
+    //           if (parseInt(dataArray[1], 10) % 2 == 0) dataArray[2] = "30";
+    //           else {
+    //             dataArray[2] = "31";
+    //           }
+    //         }
+    //       }
+    //       dataArray[1] = (parseInt(dataArray[1], 10) - 1).toString();
+    //       dataArray[1] = dataArray[1].padStart(2, "0");
+    //     }
+    //   } else {
+    //     dataArray[2] = (parseInt(dataArray[2], 10) - 1).toString();
+    //     dataArray[2] = dataArray[2].padStart(2, "0");
+    //   }
+    // } else if (horaArray[0] == "01") {
+    //   horaArray[0] = "22";
+    //   if (dataArray[2] == "01") {
+    //     if (dataArray[1] == "01") {
+    //       // caso em que é primeiro de janeiro
+    //       dataArray[0] = (parseInt(dataArray[0], 10) - 1).toString();
+    //       dataArray[1] = "12";
+    //       dataArray[2] = "31";
+    //     } else {
+    //       // verifica se o mês é março
+    //       if (parseInt(dataArray[1], 10) == 3) {
+    //         /// verifica se o ano é bissexto
+    //         if (parseInt(dataArray[0], 10) % 4 == 0) dataArray[2] = "29";
+    //         else dataArray[2] = "28";
+    //       } else {
+    //         // verifica os meses de janeiro a agosto
+    //         if (parseInt(dataArray[1], 10) <= 8) {
+    //           if (parseInt(dataArray[1], 10) % 2 == 0) dataArray[2] = "31";
+    //           else {
+    //             dataArray[2] = "30";
+    //           }
+    //         } else {
+    //           // verifica os meses de setembro a dezembro
+    //           if (parseInt(dataArray[1], 10) % 2 == 0) dataArray[2] = "30";
+    //           else {
+    //             dataArray[2] = "31";
+    //           }
+    //         }
+    //       }
+    //       dataArray[1] = (parseInt(dataArray[1], 10) - 1).toString();
+    //       dataArray[1] = dataArray[1].padStart(2, "0");
+    //     }
+    //   } else {
+    //     dataArray[2] = (parseInt(dataArray[2], 10) - 1).toString();
+    //     dataArray[2] = dataArray[2].padStart(2, "0");
+    //   }
+    // } else if (horaArray[0] == "02") {
+    //   horaArray[0] = "23";
+    //   if (dataArray[2] == "01") {
+    //     if (dataArray[1] == "01") {
+    //       // caso em que é primeiro de janeiro
+    //       dataArray[0] = (parseInt(dataArray[0], 10) - 1).toString();
+    //       dataArray[1] = "12";
+    //       dataArray[2] = "31";
+    //     } else {
+    //       // verifica se o mês é março
+    //       if (parseInt(dataArray[1], 10) == 3) {
+    //         /// verifica se o ano é bissexto
+    //         if (parseInt(dataArray[0], 10) % 4 == 0) dataArray[2] = "29";
+    //         else dataArray[2] = "28";
+    //       } else {
+    //         // verifica os meses de janeiro a agosto
+    //         if (parseInt(dataArray[1], 10) <= 8) {
+    //           if (parseInt(dataArray[1], 10) % 2 == 0) dataArray[2] = "31";
+    //           else {
+    //             dataArray[2] = "30";
+    //           }
+    //         } else {
+    //           // verifica os meses de setembro a dezembro
+    //           if (parseInt(dataArray[1], 10) % 2 == 0) dataArray[2] = "30";
+    //           else {
+    //             dataArray[2] = "31";
+    //           }
+    //         }
+    //       }
+    //       dataArray[1] = (parseInt(dataArray[1], 10) - 1).toString();
+    //       dataArray[1] = dataArray[1].padStart(2, "0");
+    //     }
+    //   } else {
+    //     dataArray[2] = (parseInt(dataArray[2], 10) - 1).toString();
+    //     dataArray[2] = dataArray[2].padStart(2, "0");
+    //   }
+    // } else horaArray[0] = (parseInt(horaArray[0], 10) - fuso).toString();
+    // horaArray[0] = horaArray[0].padStart(2, "0");
+    // const dataString2 = dataArray.join("-");
+    // const horaString = horaArray.join(":");
+    // dataHoraArray[1] = horaString;
+    // dataHoraArray[0] = dataString2;
+    // const dataHoraString = dataHoraArray.join("T");
+    // item.dataHora = dataHoraString;
 
     const params = { ...item, id: item.id };
 
