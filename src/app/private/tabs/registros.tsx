@@ -67,9 +67,16 @@ export default function Registros() {
     router.push("private/pages/indicaCategoriaMetrica");
   };
 
-  const handlePress = () => {
-    return console.log("entrei")
+  const editarmetrica = (item: IMetrica) => {
+    
+    console.log(item)
+    router.push({
+      pathname: "private/pages/editarValorMetrica",
+      params: item,
+    }
+    );
   }
+
   useEffect(() => handleUser(), []);
   useEffect(() => getIdoso(), []);
 
@@ -102,7 +109,7 @@ export default function Registros() {
           renderItem={({ item }) => 
           <Pressable 
             style = {styles.verMetrica}
-            onPress={handlePress}>
+            onPress={() =>editarmetrica(item)}>
             <CardMetrica item={item} />
           </Pressable>}
         />

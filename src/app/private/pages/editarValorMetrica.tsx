@@ -3,10 +3,15 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import { IUser } from "../../interfaces/user.interface";
 import NaoAutenticado from "../../components/NaoAutenticado";
 import { View, StyleSheet, Pressable, Text} from "react-native";
-import Icon from "react-native-vector-icons/FontAwesome";
+import Icon from "react-native-vector-icons/MaterialCommunityIcons";
+import { IIdoso } from "../../interfaces/idoso.interface";
+import { router, useLocalSearchParams } from "expo-router";
+import { IMetrica } from "../../interfaces/metricas.interface";
 
 export default function EditarvalorMetrica() {
+  const params = useLocalSearchParams() as unknown as IMetrica;
   const [user, setUser] = useState<IUser | undefined>(undefined);
+  const [idoso, setIdoso] = useState<IIdoso>();
   const handleUser = () => {
     AsyncStorage.getItem("usuario").then((response) => {
       const usuario = JSON.parse(response as string);
@@ -16,21 +21,43 @@ export default function EditarvalorMetrica() {
 
   useEffect(() => handleUser(), []);
 
+  const getIdoso = () => {
+    AsyncStorage.getItem("idoso").then((idosoString) => {
+      if (idosoString) {
+        const idosoPayload = JSON.parse(idosoString) as IIdoso;
+        setIdoso(idosoPayload);
+      }
+    });
+  };
+
+  useEffect(() => getIdoso(), []);
+  useEffect(() => handleUser(), []);
+
   const editarMetricacriada = () => {
     // Adicione a lógica para editar uma nova métrica
+  };
+
+  const back = () => {
+    router.push({
+      pathname: "private/tabs/registros",
+    });
   };
 
   return !user?.id ? <NaoAutenticado /> : (
     <View>
     <View>
     <View style={styles.header}>
-
+      <Pressable onPress={() => back()}>
+          <Icon name="chevron-left" size={40} color="#fff" />
+        </Pressable>
+      <Text style = {styles.textheader}>{params.categoria}</Text>
     </View>
-
       <Pressable style={styles.botaoEditarMetricas} onPress={editarMetricacriada}>
         <Icon name="plus" color={"white"} size={20} />
-        <Text style={styles.textoBotaoEditarMetricas}>Editar 'nome da Métrica'</Text>
+        <Text style={styles.textoBotaoEditarMetricas}>Novo valor</Text>
       </Pressable>
+
+
     </View>
     </View>
 
@@ -44,9 +71,9 @@ header: {
   width: "100%",
   padding: 10,
   height: 100,
-  flexDirection: "column",
+  flexDirection: "row",
   alignItems: "center",
-  justifyContent: "center",
+  justifyContent: "flex-start",
 },
 
 botaoEditarMetricas: {
@@ -67,5 +94,11 @@ textoBotaoEditarMetricas: {
   fontSize: 14,
   marginLeft: 5,
 },
+
+textheader:{
+  color:"white",
+  fontSize:20,
+
+}
 
 });
