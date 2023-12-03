@@ -14,60 +14,63 @@ interface IProps {
 }
 
 export default function CardRotina({ item, index, date }: IProps) {
-  date.setHours(date.getHours() - 3);
-  const dateString = date.toISOString().split("T")[0];
+  // date.setHours(date.getHours() - 3);
+  // const dateString = date.toISOString().split("T")[0];
 
-  const [nameIcon, setnameIcon] = useState("view-grid-outline");
-  const [check, setCheck] = useState(
-    item.dataHoraConcluidos.includes(dateString),
-  );
-  const [token, setToken] = useState<string>("");
-  const [timer, setTimer] = useState<NodeJS.Timeout | null>(null);
+  // const [check, setCheck] = useState(
+  //   item.dataHoraConcluidos.includes(dateString),
+  // );
+  // const [token, setToken] = useState<string>("");
+  // const [timer, setTimer] = useState<NodeJS.Timeout | null>(null);
 
-  const getToken = () => {
-    AsyncStorage.getItem("token").then((response) => {
-      setToken(response as string);
-    });
-  };
+  // const getToken = () => {
+  //   AsyncStorage.getItem("token").then((response) => {
+  //     setToken(response as string);
+  //   });
+  // };
 
-  const handleIcon = () => {
-    if (item.categoria == ECategoriaRotina.ALIMENTACAO)
-      setnameIcon("food-apple-outline");
-    else if (item.categoria == ECategoriaRotina.EXERCICIOS)
-      setnameIcon("dumbbell");
-    else if (item.categoria == ECategoriaRotina.MEDICAMENTO)
-      setnameIcon("medical-bag");
-  };
-
-  const debounceConcluido = (concluido: boolean) => {
-    setCheck(concluido);
-    if (timer) clearTimeout(timer);
-    const temp = setTimeout(() => updateRotinaConcluido(concluido), 1000);
-    setTimer(temp);
-  };
-
-  const updateRotinaConcluido = async (concluido: boolean) => {
-    let dataHoraConcluidos = [];
-
-    if (concluido) {
-      dataHoraConcluidos = [...item.dataHoraConcluidos, dateString];
-    } else {
-      dataHoraConcluidos = item.dataHoraConcluidos.filter((item) => {
-        return item !== dateString;
-      });
-    }
-
-    try {
-      await updateRotina(item.id, { dataHoraConcluidos }, token);
-    } catch (err) {
-      const error = err as { message: string };
-      Toast.show({
-        type: "error",
-        text1: "Erro!",
-        text2: error.message,
-      });
+  const getIconName = (): string => {
+    switch (item.categoria) {
+      case ECategoriaRotina.ALIMENTACAO:
+        return "food-apple-outline";
+      case ECategoriaRotina.EXERCICIOS:
+        return "dumbbell";
+      case ECategoriaRotina.MEDICAMENTO:
+        return "medical-bag";
+      default:
+        return "view-grid-outline";
     }
   };
+
+  // const debounceConcluido = (concluido: boolean) => {
+  //   setCheck(concluido);
+  //   if (timer) clearTimeout(timer);
+  //   const temp = setTimeout(() => updateRotinaConcluido(concluido), 1000);
+  //   setTimer(temp);
+  // };
+
+  // const updateRotinaConcluido = async (concluido: boolean) => {
+  //   let dataHoraConcluidos = [];
+
+  //   if (concluido) {
+  //     dataHoraConcluidos = [...item.dataHoraConcluidos, dateString];
+  //   } else {
+  //     dataHoraConcluidos = item.dataHoraConcluidos.filter((item) => {
+  //       return item !== dateString;
+  //     });
+  //   }
+
+  //   try {
+  //     await updateRotina(item.id, { dataHoraConcluidos }, token);
+  //   } catch (err) {
+  //     const error = err as { message: string };
+  //     Toast.show({
+  //       type: "error",
+  //       text1: "Erro!",
+  //       text2: error.message,
+  //     });
+  //   }
+  // };
 
   const editar = () => {
     // const fuso = new Date(item.dataHora).getTimezoneOffset() / 60;
@@ -201,8 +204,7 @@ export default function CardRotina({ item, index, date }: IProps) {
     });
   };
 
-  useEffect(() => handleIcon());
-  useEffect(() => getToken());
+  // useEffect(() => getToken());
 
   return (
     <>
@@ -219,19 +221,19 @@ export default function CardRotina({ item, index, date }: IProps) {
         ]}
       >
         <View style={styles.icon}>
-          <Icon size={30} name={nameIcon}></Icon>
+          <Icon size={30} name={getIconName()}></Icon>
         </View>
         <View style={styles.texts}>
           <Text style={styles.title}>{item.titulo}</Text>
           <Text style={styles.description}>{item.descricao}</Text>
         </View>
-        <Pressable
+        {/* <Pressable
           onPress={() => debounceConcluido(!check)}
           style={styles.checkBox}
           testID="checkbox"
         >
           {check && <Icon name="check" size={30}></Icon>}
-        </Pressable>
+        </Pressable> */}
       </Pressable>
     </>
   );
