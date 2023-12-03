@@ -20,14 +20,14 @@ export default function CardRotina({ item, index, date }: IProps) {
   // const [check, setCheck] = useState(
   //   item.dataHoraConcluidos.includes(dateString),
   // );
-  // const [token, setToken] = useState<string>("");
+  const [token, setToken] = useState<string>("");
   // const [timer, setTimer] = useState<NodeJS.Timeout | null>(null);
 
-  // const getToken = () => {
-  //   AsyncStorage.getItem("token").then((response) => {
-  //     setToken(response as string);
-  //   });
-  // };
+  const getToken = () => {
+    AsyncStorage.getItem("token").then((response) => {
+      setToken(response as string);
+    });
+  };
 
   const getIconName = (): string => {
     switch (item.categoria) {
@@ -204,7 +204,7 @@ export default function CardRotina({ item, index, date }: IProps) {
   //   });
   // };
 
-  // useEffect(() => getToken());
+  useEffect(() => getToken());
 
   const getTime = () => {
     return item.dataHora.toLocaleString("pt-BR", {
