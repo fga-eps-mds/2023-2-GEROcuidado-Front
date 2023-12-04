@@ -14,7 +14,6 @@ interface IProps {
 }
 
 export default function CardRotina({ item, index, date }: IProps) {
-  date.setHours(date.getHours() - 3);
   const dateString = date.toISOString().split("T")[0];
 
   const [nameIcon, setnameIcon] = useState("view-grid-outline");
@@ -203,43 +202,46 @@ export default function CardRotina({ item, index, date }: IProps) {
 
   useEffect(() => handleIcon());
   useEffect(() => getToken());
-  
+
   return (
     <>
-    <Text style = {styles.hora}>{new Date(item.dataHora).getHours().toString().padStart(2, "0")}:{new Date(item.dataHora).getMinutes().toString().padStart(2, "0")}</Text>
-    
-    <Pressable
-    onPress={editar}
-    style={[
-      styles.container,
-      { backgroundColor: index % 2 == 0 ? "#B4FFE8" : "#FFC6C6" },
-    ]}
-    >
-      <View style={styles.icon}>
-        <Icon size={30} name={nameIcon}></Icon>
-      </View>
-      <View style={styles.texts}>
-        <Text style={styles.title}>{item.titulo}</Text>
-        <Text style={styles.description}>{item.descricao}</Text>
-      </View>
+      <Text style={styles.hora}>
+        {new Date(item.dataHora).getHours().toString().padStart(2, "0")}:
+        {new Date(item.dataHora).getMinutes().toString().padStart(2, "0")}
+      </Text>
+
       <Pressable
-        onPress={() => debounceConcluido(!check)}
-        style={styles.checkBox}
-        testID="checkbox"
+        onPress={editar}
+        style={[
+          styles.container,
+          { backgroundColor: index % 2 == 0 ? "#B4FFE8" : "#FFC6C6" },
+        ]}
+      >
+        <View style={styles.icon}>
+          <Icon size={30} name={nameIcon}></Icon>
+        </View>
+        <View style={styles.texts}>
+          <Text style={styles.title}>{item.titulo}</Text>
+          <Text style={styles.description}>{item.descricao}</Text>
+        </View>
+        <Pressable
+          onPress={() => debounceConcluido(!check)}
+          style={styles.checkBox}
+          testID="checkbox"
         >
-        {check && <Icon name="check" size={30}></Icon>}
+          {check && <Icon name="check" size={30}></Icon>}
+        </Pressable>
       </Pressable>
-    </Pressable>
     </>
   );
 }
 
 const styles = StyleSheet.create({
-  hora:{
-    fontSize:18,
-    fontWeight:"300",
-    marginLeft:20,
-    marginTop:10,
+  hora: {
+    fontSize: 18,
+    fontWeight: "300",
+    marginLeft: 20,
+    marginTop: 10,
   },
 
   container: {
