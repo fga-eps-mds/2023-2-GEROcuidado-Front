@@ -200,8 +200,33 @@ export default function CardRotina({ item, index, date }: IProps) {
     });
   };
 
+  function ajustaHoraTexto() {
+    // console.log(item.dataHora);
+    let fuso = new Date(item.dataHora).getTimezoneOffset() / 60;
+
+    let dataHora = new Date(item.dataHora).toISOString();
+    let dataString = dataHora.split("T");
+    let horasString = dataString[1].split(":");
+    if (parseInt(horasString[0], 10) + fuso >= 24) {
+      let aux = 24 - parseInt(horasString[1], 10);
+      aux = fuso - aux;
+      aux = 0 + aux;
+      horasString[0] = aux.toString();
+      horasString[0] = horasString[0].padStart(2, "0");
+    } else {
+      let aux = parseInt(horasString[0], 10) + fuso;
+      horasString[0] = aux.toString();
+      horasString[0] = horasString[0].padStart(2, "0");
+    }
+    dataString[1] = horasString.join(":");
+    let textoFinal = dataString.join("T");
+    item.dataHora = textoFinal;
+    // console.log(textoFinal);
+  }
+
   useEffect(() => handleIcon());
   useEffect(() => getToken());
+  useEffect(() => ajustaHoraTexto(), []);
 
   return (
     <>
@@ -209,7 +234,6 @@ export default function CardRotina({ item, index, date }: IProps) {
         {new Date(item.dataHora).getHours().toString().padStart(2, "0")}:
         {new Date(item.dataHora).getMinutes().toString().padStart(2, "0")}
       </Text>
-
       <Pressable
         onPress={editar}
         style={[
