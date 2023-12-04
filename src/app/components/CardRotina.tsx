@@ -14,7 +14,6 @@ interface IProps {
 }
 
 export default function CardRotina({ item, index, date }: IProps) {
-  date.setHours(date.getHours() - 3);
   const dateString = date.toISOString().split("T")[0];
 
   const [nameIcon, setnameIcon] = useState("view-grid-outline");
@@ -70,129 +69,6 @@ export default function CardRotina({ item, index, date }: IProps) {
   };
 
   const editar = () => {
-    const fuso = new Date(item.dataHora).getTimezoneOffset() / 60;
-
-    let dataString = new Date(item.dataHora).toISOString();
-    let dataHoraArray = dataString.split("T");
-    let horaArray = dataHoraArray[1].split(":");
-    let dataArray = dataHoraArray[0].split("-");
-    if (horaArray[0] == "00") {
-      horaArray[0] = "21";
-      if (dataArray[2] == "01") {
-        if (dataArray[1] == "01") {
-          // caso em que é primeiro de janeiro
-          dataArray[0] = (parseInt(dataArray[0], 10) - 1).toString();
-          dataArray[1] = "12";
-          dataArray[2] = "31";
-        } else {
-          // verifica se o mês é março
-          if (parseInt(dataArray[1], 10) == 3) {
-            /// verifica se o ano é bissexto
-            if (parseInt(dataArray[0], 10) % 4 == 0) dataArray[2] = "29";
-            else dataArray[2] = "28";
-          } else {
-            // verifica os meses de janeiro a agosto
-            if (parseInt(dataArray[1], 10) <= 8) {
-              if (parseInt(dataArray[1], 10) % 2 == 0) dataArray[2] = "31";
-              else {
-                dataArray[2] = "30";
-              }
-            } else {
-              // verifica os meses de setembro a dezembro
-              if (parseInt(dataArray[1], 10) % 2 == 0) dataArray[2] = "30";
-              else {
-                dataArray[2] = "31";
-              }
-            }
-          }
-          dataArray[1] = (parseInt(dataArray[1], 10) - 1).toString();
-          dataArray[1] = dataArray[1].padStart(2, "0");
-        }
-      } else {
-        dataArray[2] = (parseInt(dataArray[2], 10) - 1).toString();
-        dataArray[2] = dataArray[2].padStart(2, "0");
-      }
-    } else if (horaArray[0] == "01") {
-      horaArray[0] = "22";
-      if (dataArray[2] == "01") {
-        if (dataArray[1] == "01") {
-          // caso em que é primeiro de janeiro
-          dataArray[0] = (parseInt(dataArray[0], 10) - 1).toString();
-          dataArray[1] = "12";
-          dataArray[2] = "31";
-        } else {
-          // verifica se o mês é março
-          if (parseInt(dataArray[1], 10) == 3) {
-            /// verifica se o ano é bissexto
-            if (parseInt(dataArray[0], 10) % 4 == 0) dataArray[2] = "29";
-            else dataArray[2] = "28";
-          } else {
-            // verifica os meses de janeiro a agosto
-            if (parseInt(dataArray[1], 10) <= 8) {
-              if (parseInt(dataArray[1], 10) % 2 == 0) dataArray[2] = "31";
-              else {
-                dataArray[2] = "30";
-              }
-            } else {
-              // verifica os meses de setembro a dezembro
-              if (parseInt(dataArray[1], 10) % 2 == 0) dataArray[2] = "30";
-              else {
-                dataArray[2] = "31";
-              }
-            }
-          }
-          dataArray[1] = (parseInt(dataArray[1], 10) - 1).toString();
-          dataArray[1] = dataArray[1].padStart(2, "0");
-        }
-      } else {
-        dataArray[2] = (parseInt(dataArray[2], 10) - 1).toString();
-        dataArray[2] = dataArray[2].padStart(2, "0");
-      }
-    } else if (horaArray[0] == "02") {
-      horaArray[0] = "23";
-      if (dataArray[2] == "01") {
-        if (dataArray[1] == "01") {
-          // caso em que é primeiro de janeiro
-          dataArray[0] = (parseInt(dataArray[0], 10) - 1).toString();
-          dataArray[1] = "12";
-          dataArray[2] = "31";
-        } else {
-          // verifica se o mês é março
-          if (parseInt(dataArray[1], 10) == 3) {
-            /// verifica se o ano é bissexto
-            if (parseInt(dataArray[0], 10) % 4 == 0) dataArray[2] = "29";
-            else dataArray[2] = "28";
-          } else {
-            // verifica os meses de janeiro a agosto
-            if (parseInt(dataArray[1], 10) <= 8) {
-              if (parseInt(dataArray[1], 10) % 2 == 0) dataArray[2] = "31";
-              else {
-                dataArray[2] = "30";
-              }
-            } else {
-              // verifica os meses de setembro a dezembro
-              if (parseInt(dataArray[1], 10) % 2 == 0) dataArray[2] = "30";
-              else {
-                dataArray[2] = "31";
-              }
-            }
-          }
-          dataArray[1] = (parseInt(dataArray[1], 10) - 1).toString();
-          dataArray[1] = dataArray[1].padStart(2, "0");
-        }
-      } else {
-        dataArray[2] = (parseInt(dataArray[2], 10) - 1).toString();
-        dataArray[2] = dataArray[2].padStart(2, "0");
-      }
-    } else horaArray[0] = (parseInt(horaArray[0], 10) - fuso).toString();
-    horaArray[0] = horaArray[0].padStart(2, "0");
-    let dataString2 = dataArray.join("-");
-    let horaString = horaArray.join(":");
-    dataHoraArray[1] = horaString;
-    dataHoraArray[0] = dataString2;
-    let dataHoraString = dataHoraArray.join("T");
-    item.dataHora = dataHoraString;
-
     const params = { ...item, id: item.id };
 
     router.push({
@@ -201,45 +77,57 @@ export default function CardRotina({ item, index, date }: IProps) {
     });
   };
 
+  function ajustaHoraTexto() {
+    let dataHora = new Date(item.dataHora).toISOString();
+    if (dataHora[23] == "Z") {
+      let dataHoraSemUltimo = dataHora.slice(0, -1);
+      console.log(dataHoraSemUltimo);
+      item.dataHora = dataHoraSemUltimo;
+    }
+  }
+
   useEffect(() => handleIcon());
   useEffect(() => getToken());
-  
+  useEffect(() => ajustaHoraTexto(), []);
+
   return (
     <>
-    <Text style = {styles.hora}>{new Date(item.dataHora).getHours().toString().padStart(2, "0")}:{new Date(item.dataHora).getMinutes().toString().padStart(2, "0")}</Text>
-    
-    <Pressable
-    onPress={editar}
-    style={[
-      styles.container,
-      { backgroundColor: index % 2 == 0 ? "#B4FFE8" : "#FFC6C6" },
-    ]}
-    >
-      <View style={styles.icon}>
-        <Icon size={30} name={nameIcon}></Icon>
-      </View>
-      <View style={styles.texts}>
-        <Text style={styles.title}>{item.titulo}</Text>
-        <Text style={styles.description}>{item.descricao}</Text>
-      </View>
+      <Text style={styles.hora}>
+        {new Date(item.dataHora).getHours().toString().padStart(2, "0")}:
+        {new Date(item.dataHora).getMinutes().toString().padStart(2, "0")}
+      </Text>
       <Pressable
-        onPress={() => debounceConcluido(!check)}
-        style={styles.checkBox}
-        testID="checkbox"
+        onPress={editar}
+        style={[
+          styles.container,
+          { backgroundColor: index % 2 == 0 ? "#B4FFE8" : "#FFC6C6" },
+        ]}
+      >
+        <View style={styles.icon}>
+          <Icon size={30} name={nameIcon}></Icon>
+        </View>
+        <View style={styles.texts}>
+          <Text style={styles.title}>{item.titulo}</Text>
+          <Text style={styles.description}>{item.descricao}</Text>
+        </View>
+        <Pressable
+          onPress={() => debounceConcluido(!check)}
+          style={styles.checkBox}
+          testID="checkbox"
         >
-        {check && <Icon name="check" size={30}></Icon>}
+          {check && <Icon name="check" size={30}></Icon>}
+        </Pressable>
       </Pressable>
-    </Pressable>
     </>
   );
 }
 
 const styles = StyleSheet.create({
-  hora:{
-    fontSize:18,
-    fontWeight:"300",
-    marginLeft:20,
-    marginTop:10,
+  hora: {
+    fontSize: 18,
+    fontWeight: "300",
+    marginLeft: 20,
+    marginTop: 10,
   },
 
   container: {
