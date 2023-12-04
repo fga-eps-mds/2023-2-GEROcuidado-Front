@@ -21,9 +21,16 @@ export default function CardRotina({ item, index, date }: IProps) {
     });
   };
 
-  // const dateString = getDate().split("T")[0];
+  const isChecked = () => {
+    const dateString = getDate().split("T")[0];
+    const index = item.dataHoraConcluidos.findIndex((item) => {
+      return item === dateString;
+    });
 
-  const [check, setCheck] = useState(false);
+    return index > -1;
+  };
+
+  const [check, setCheck] = useState(isChecked());
   const [token, setToken] = useState<string>("");
   // const [timer, setTimer] = useState<NodeJS.Timeout | null>(null);
 
