@@ -10,11 +10,16 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 interface IProps {
   item: IRotina;
   index: number;
+  date: Date;
 }
 
-export default function CardRotina({ item, index }: IProps) {
+export default function CardRotina({ item, index, date }: IProps) {
+  const dateString = date.toISOString().split("T")[0];
+
   const [nameIcon, setnameIcon] = useState("view-grid-outline");
-  const [check, setCheck] = useState(item.concluido);
+  const [check, setCheck] = useState(
+    item.dataHoraConcluidos.includes(dateString),
+  );
   const [token, setToken] = useState<string>("");
   const [timer, setTimer] = useState<NodeJS.Timeout | null>(null);
 
@@ -41,8 +46,18 @@ export default function CardRotina({ item, index }: IProps) {
   };
 
   const updateRotinaConcluido = async (concluido: boolean) => {
+    let dataHoraConcluidos = [];
+
+    if (concluido) {
+      dataHoraConcluidos = [...item.dataHoraConcluidos, dateString];
+    } else {
+      dataHoraConcluidos = item.dataHoraConcluidos.filter((item) => {
+        return item !== dateString;
+      });
+    }
+
     try {
-      await updateRotina(item.id, { concluido }, token);
+      await updateRotina(item.id, { dataHoraConcluidos }, token);
     } catch (err) {
       const error = err as { message: string };
       Toast.show({
@@ -62,41 +77,67 @@ export default function CardRotina({ item, index }: IProps) {
     });
   };
 
+  function ajustaHoraTexto() {
+    let dataHora = new Date(item.dataHora).toISOString();
+    if (dataHora[23] == "Z") {
+      let dataHoraSemUltimo = dataHora.slice(0, -1);
+      console.log(dataHoraSemUltimo);
+      item.dataHora = dataHoraSemUltimo;
+    }
+  }
+
   useEffect(() => handleIcon());
   useEffect(() => getToken());
+  useEffect(() => ajustaHoraTexto(), []);
 
   return (
-    <Pressable
-      onPress={editar}
-      style={[
-        styles.container,
-        { backgroundColor: index % 2 == 0 ? "#B4FFE8" : "#FFC6C6" },
-      ]}
-    >
-      <View style={styles.icon}>
-        <Icon size={30} name={nameIcon}></Icon>
-      </View>
-      <View style={styles.texts}>
-        <Text style={styles.title}>{item.titulo}</Text>
-        <Text style={styles.description}>{item.descricao}</Text>
-      </View>
+    <>
+      <Text style={styles.hora}>
+        {new Date(item.dataHora).getHours().toString().padStart(2, "0")}:
+        {new Date(item.dataHora).getMinutes().toString().padStart(2, "0")}
+      </Text>
       <Pressable
-        onPress={() => debounceConcluido(!check)}
-        style={styles.checkBox}
+        onPress={editar}
+        style={[
+          styles.container,
+          { backgroundColor: index % 2 == 0 ? "#B4FFE8" : "#FFC6C6" },
+        ]}
       >
-        {check && <Icon name="check" size={30}></Icon>}
+        <View style={styles.icon}>
+          <Icon size={30} name={nameIcon}></Icon>
+        </View>
+        <View style={styles.texts}>
+          <Text style={styles.title}>{item.titulo}</Text>
+          <Text style={styles.description}>{item.descricao}</Text>
+        </View>
+        <Pressable
+          onPress={() => debounceConcluido(!check)}
+          style={styles.checkBox}
+          testID="checkbox"
+        >
+          {check && <Icon name="check" size={30}></Icon>}
+        </Pressable>
       </Pressable>
-    </Pressable>
+    </>
   );
 }
 
 const styles = StyleSheet.create({
+  hora: {
+    fontSize: 18,
+    fontWeight: "300",
+    marginLeft: 20,
+    marginTop: 10,
+  },
+
   container: {
     flexDirection: "row",
     alignItems: "center",
     width: Dimensions.get("window").width - 40,
-    marginHorizontal: 20,
-    marginVertical: 10,
+    marginRight: 20,
+    marginLeft: 20,
+    marginTop: 10,
+    marginBottom: 10,
     shadowColor: "#000",
     shadowOffset: { width: 3, height: 3 },
     shadowOpacity: 0.2,

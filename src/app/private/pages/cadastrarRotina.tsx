@@ -55,6 +55,7 @@ export default function CadastrarRotina() {
   const [showErrors, setShowErrors] = useState(false);
   const [token, setToken] = useState<string>("");
   const [dias, setDias] = useState<number[]>([]);
+  const [dataHoraConcluidos, setDataHoraConcluidos] = useState<string[]>([]);
 
   const getToken = () => {
     AsyncStorage.getItem("token").then((response) => {
@@ -115,7 +116,7 @@ export default function CadastrarRotina() {
   const getDateIsoString = (data: string, hora: string) => {
     const dateArray = data.split("/");
 
-    return `${dateArray[2]}-${dateArray[1]}-${dateArray[0]}T${hora}:00.000Z`;
+    return `${dateArray[2]}-${dateArray[1]}-${dateArray[0]}T${hora}:00.000`;
   };
 
   const salvar = async () => {
@@ -131,6 +132,7 @@ export default function CadastrarRotina() {
       categoria: categoria as ECategoriaRotina,
       dias: dias,
       descricao,
+      dataHoraConcluidos,
     };
 
     try {
@@ -202,7 +204,7 @@ export default function CadastrarRotina() {
             style={styles.inputTitulo}
           />
         </View>
-        <View style={styles.erroTitulo}>
+        <View style={styles.erroTitulo} testID="Erro-titulo">
           <ErrorMessage show={showErrors} text={erros.titulo} />
         </View>
         <View style={styles.dataHora}>
@@ -216,7 +218,7 @@ export default function CadastrarRotina() {
             placeholderTextColor={"#3D3D3D"}
           />
         </View>
-        <View style={styles.erro}>
+        <View style={styles.erro} testID="Erro-data">
           <ErrorMessage show={showErrors} text={erros.data} />
         </View>
 
@@ -235,7 +237,7 @@ export default function CadastrarRotina() {
             inputMaskChange={(hora) => setHora(hora)}
           />
         </View>
-        <View style={styles.erro}>
+        <View style={styles.erro} testID="Erro-hora">
           <ErrorMessage show={showErrors} text={erros.hora} />
         </View>
 
@@ -292,7 +294,7 @@ export default function CadastrarRotina() {
             placeholderTextColor={"#3D3D3D"}
           />
         </View>
-        <View style={styles.erro}>
+        <View style={styles.erro} testID="Erro-descricao">
           <ErrorMessage show={showErrors} text={erros.descricao} />
         </View>
 
