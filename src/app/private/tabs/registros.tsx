@@ -8,14 +8,14 @@ import Icon from "react-native-vector-icons/MaterialCommunityIcons";
 import IdosoNaoSelecionado from "../../components/IdosoNaoSelecionado";
 import CardMetrica from "../../components/CardMetrica";
 import { FlatList } from "react-native-gesture-handler";
-import { EMetricas, IMetrica } from "../../interfaces/metricas.interface";
+import { EMetricas, IMetrica, IValorMetrica } from "../../interfaces/metricas.interface";
 import { router } from "expo-router";
 import { Pressable } from "react-native";
 
 export default function Registros() {
   const [user, setUser] = useState<IUser | undefined>(undefined);
   const [idoso, setIdoso] = useState<IIdoso>();
-  const [metricas, setMetricas] = useState<IMetrica[]>([
+  const [metricas, setMetricas] = useState<IValorMetrica[]>([
     {
       categoria: EMetricas.FREQ_CARDIACA,
       id: 1,
@@ -64,12 +64,11 @@ export default function Registros() {
   };
 
   const novaMetrica = () => {
-    router.push("private/pages/indicaCategoriaMetrica");
+    router.push("private/pages/cadastrarMetrica");
   };
 
   const editarmetrica = (item: IMetrica) => {
     
-    console.log(item)
     router.push({
       pathname: "private/pages/editarValorMetrica",
       params: item,

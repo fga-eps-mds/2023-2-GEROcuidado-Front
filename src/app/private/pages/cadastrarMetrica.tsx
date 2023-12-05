@@ -12,9 +12,22 @@ import Icon from "react-native-vector-icons/FontAwesome";
 import { IUser } from "../../interfaces/user.interface";
 import { IIdoso } from "../../interfaces/idoso.interface";
 import { router } from "expo-router";
+import { postMetrica } from "../../services/metrica.service";
+import { EMetricas } from "../../interfaces/metricas.interface";
+import Toast from "react-native-toast-message";
+
+
 export default function criarMetrica() {
   const [user, setUser] = useState<IUser | undefined>(undefined);
   const [idoso, setIdoso] = useState<IIdoso>();
+  const [token, setToken] = useState<string>("");
+  const [showLoading, setShowLoading] = useState(false);
+
+  const getToken = () => {
+    AsyncStorage.getItem("token").then((response) => {
+      setToken(response as string);
+    });
+  };
 
   const handleUser = () => {
     AsyncStorage.getItem("usuario").then((response) => {
@@ -53,8 +66,34 @@ export default function criarMetrica() {
     );
   };
 
-  const handleMetricSelection = (metricType: string) => {
-    console.log(`Selecionado: ${metricType}`);
+  const handleMetricSelection = async (metricType: EMetricas) => {
+    const body = {
+      idIdoso: Number(idoso?.id),
+      categoria: metricType
+    }
+
+    try {
+      setShowLoading(true);
+      const response = await postMetrica(body, token);
+      console.log(response);
+      Toast.show({
+        type: "success",
+        text1: "Sucesso!",
+        text2: response.message as string,
+      });
+      router.replace({
+        pathname: "private/tabs/registros",
+      });
+    } catch (err) {
+      const error = err as { message: string };
+      Toast.show({
+        type: "error",
+        text1: "Erro!",
+        text2: error.message,
+      });
+    } finally {
+      setShowLoading(false);
+    }
   };
 
   const back = () => {
@@ -63,11 +102,8 @@ export default function criarMetrica() {
     });
   };
 
-  useEffect(() => handleUser(), []);
-  useEffect(() => getIdoso(), []);
-
   const renderMetricCard = (
-    metricType: string,
+    metricType: EMetricas,
     iconName: string,
     description: string,
     iconColor: string,
@@ -99,6 +135,11 @@ export default function criarMetrica() {
     </Pressable>
   );
 
+  useEffect(() => getToken(), []);
+  useEffect(() => handleUser(), []);
+  useEffect(() => getIdoso(), []);
+
+
   return (
     <ScrollView contentContainerStyle={styles.container}>
       <View style={styles.header}>
@@ -128,30 +169,35 @@ export default function criarMetrica() {
 
       <View style={styles.metricCardsContainer}>
         {renderMetricCard(
-          "frequenciaCardiaca",
+          EMetricas.FREQ_CARDIACA,
           "heartbeat",
           "Frequência Cardíaca",
           "#FF7D7D",
         )}
         {renderMetricCard(
-          "pressaoSanguinea",
+          EMetricas.PRESSAO_SANGUINEA,
           "tint",
           "Pressão Sanguínea",
           "#FF7D7D",
         )}
         {renderMetricCard(
-          "saturacaoOxigenio",
+          EMetricas.SATURACAO_OXIGENIO,
           "oxygen",
           "Saturação do Oxigênio",
           "87F4E4",
         )}
         {renderMetricCard(
-          "temperatura",
+          EMetricas.TEMPERATURA,
           "thermometer",
           "Temperatura",
           "FFAC7D",
         )}
-        {renderMetricCard("glicemia", "cubes", "Glicemia", "#3F3F3F")}
+        {renderMetricCard(
+          EMetricas.GLICEMIA, 
+          "cubes", 
+          "Glicemia", 
+          "#3F3F3F"
+        )}
       </View>
 
       {/* Adicione aqui o restante do conteúdo do componente criarMetrica */}
