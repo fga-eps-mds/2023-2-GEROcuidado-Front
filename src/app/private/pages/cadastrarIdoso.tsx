@@ -93,7 +93,7 @@ export default function CadastrarIdoso() {
         text1: "Sucesso!",
         text2: response.message as string,
       });
-      //cadastrarMetricas(response.data?.id as Number);
+      cadastrarMetricas(response.data?.id as Number);
       router.replace("private/pages/listarIdosos");
     } catch (err) {
       const error = err as { message: string };

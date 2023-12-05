@@ -2,7 +2,7 @@ import React from 'react';
 import { render, fireEvent, waitFor } from '@testing-library/react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import '@react-native-async-storage/async-storage/jest/async-storage-mock';
-import EditarvalorMetrica from '../private/pages/editarValorMetrica';
+import VisualizarMetrica from '../private/pages/visualizarMetrica';
 
 describe('EditarMetrica Component', () => {
 
@@ -17,6 +17,6 @@ describe('EditarMetrica Component', () => {
           return Promise.resolve(null);
         });
     
-        render(<EditarvalorMetrica />);
+        render(<VisualizarMetrica />);
       });
 });

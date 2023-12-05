@@ -5,7 +5,6 @@ import {
   ScrollView,
   Text,
   Image,
-  TouchableOpacity,
 } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { IUser } from "../../interfaces/user.interface";
@@ -25,21 +24,13 @@ import { router } from "expo-router";
 import { Pressable } from "react-native";
 import { getAllMetrica } from "../../services/metrica.service";
 import Toast from "react-native-toast-message";
-import { DraggableGrid } from "react-native-draggable-grid";
+import GridView from 'react-native-draggable-gridview'
 
 export default function Registros() {
   const [user, setUser] = useState<IUser | undefined>(undefined);
   const [idoso, setIdoso] = useState<IIdoso>();
-  const [metricas, setMetricas] = useState<IMetrica[]>([
-    {
-      categoria: EMetricas.FREQ_CARDIACA,
-      id: 1,
-      idIdoso: 1,
-    },
-  ]);
+  const [metricas, setMetricas] = useState<IMetrica[]>([]);
   const [loading, setLoading] = useState(true);
-  const [data, setData] = useState([]);
-
   const handleUser = () => {
     AsyncStorage.getItem("usuario").then((response) => {
       const usuario = JSON.parse(response as string);
@@ -81,14 +72,14 @@ export default function Registros() {
   //   router.push("private/pages/cadastrarMetrica");
   // };
 
-  const editarmetrica = (item: IMetrica) => {
+  const visualizarMetrica = (item: IMetrica) => {
     router.push({
-      pathname: "private/pages/editarValorMetrica",
+      pathname: "private/pages/visualizarMetrica",
       params: item,
     });
   };
 
-  const getMetricas = async () => {
+  const getMetricas = () => {
     if (idoso == undefined) return;
 
     setLoading(true);
@@ -100,7 +91,6 @@ export default function Registros() {
     getAllMetrica(metricaFilter)
       .then((response) => {
         const newMetricas = response.data as IMetrica[];
-        console.log(newMetricas);
         setMetricas(newMetricas);
       })
       .catch((err) => {
@@ -116,25 +106,9 @@ export default function Registros() {
       });
   };
 
-  const renderItem = (item: { name: string; key: string }) => {
-    return (
-      <View>
-        <Text>{item.name}</Text>
-      </View>
-    );
-  };
-
-  const metricasComChaves = metricas.map((item) => ({
-    ...item,
-    key: item.id.toString(),
-    name: item.id.toString(),
-  }));
-
   useEffect(() => handleUser(), []);
   useEffect(() => getIdoso(), []);
-  useEffect(() => {
-    getMetricas();
-  }, []);
+  useEffect(() => getMetricas(), [idoso]);
 
   return (
     <>
@@ -156,8 +130,7 @@ export default function Registros() {
           <Text style={styles.textoBotaoCriarMetricas}>Nova Métrica</Text>
         </Pressable>
       </View> */}
-
-      <View style={styles.cardMetrica}>
+      <ScrollView>
         {/* <FlatList
           numColumns={2}
           showsVerticalScrollIndicator={false}
@@ -171,28 +144,18 @@ export default function Registros() {
             </Pressable>
           )}
         /> */}
-
-        <DraggableGrid
+        <GridView
+          data={metricas}
           numColumns={2}
-          // itemHeight={100}
-          renderItem={(item) => {
-            return (
-              // <Pressable
-              //   style={styles.verMetrica}
-              //   onPress={() => editarmetrica(item)}
-              // >
-              // </Pressable>
-              <View>
-                <CardMetrica item={item} />
-              </View>
-            );
-          }}
-          data={metricasComChaves}
-          onDragRelease={(data) => {
-            // setData(data); // need reset the props data sort after drag release
-          }}
-        />
-      </View>
+          renderItem={(item) => (
+            <View style={styles.verMetrica}>
+              <CardMetrica item={item} />
+            </View>
+          )}
+          onPressCell={(item) => visualizarMetrica(item)}
+          onReleaseCell={(items) => setMetricas(items)}
+          />
+      </ScrollView>
     </>
   );
 }
@@ -207,7 +170,8 @@ const styles = StyleSheet.create({
   },
 
   verMetrica: {
-    width: "100%",
+    alignSelf:"center",
+    width: "80%",
   },
 
   fotoPerfil: {

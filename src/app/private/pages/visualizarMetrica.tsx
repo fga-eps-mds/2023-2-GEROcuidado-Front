@@ -8,7 +8,7 @@ import { IIdoso } from "../../interfaces/idoso.interface";
 import { router, useLocalSearchParams } from "expo-router";
 import { IMetrica } from "../../interfaces/metricas.interface";
 
-export default function EditarvalorMetrica() {
+export default function VisualizarMetrica() {
   const params = useLocalSearchParams() as unknown as IMetrica;
   const [user, setUser] = useState<IUser | undefined>(undefined);
   const [idoso, setIdoso] = useState<IIdoso>();
@@ -33,7 +33,7 @@ export default function EditarvalorMetrica() {
   useEffect(() => getIdoso(), []);
   useEffect(() => handleUser(), []);
 
-  const editarMetricacriada = () => {
+  const novoValor = () => {
     // Adicione a lógica para editar uma nova métrica
   };
 
@@ -52,7 +52,7 @@ export default function EditarvalorMetrica() {
         </Pressable>
       <Text style = {styles.textheader}>{params.categoria}</Text>
     </View>
-      <Pressable style={styles.botaoEditarMetricas} onPress={editarMetricacriada}>
+      <Pressable style={styles.botaoEditarMetricas} onPress={novoValor}>
         <Icon name="plus" color={"white"} size={20} />
         <Text style={styles.textoBotaoEditarMetricas}>Novo valor</Text>
       </Pressable>
@@ -98,7 +98,7 @@ textoBotaoEditarMetricas: {
 textheader:{
   color:"white",
   fontSize:20,
-
+  fontWeight:"bold"
 }
 
 });
