@@ -17,9 +17,8 @@ export default function CardRotina({ item, index, date }: IProps) {
   const dateString = date.toISOString().split("T")[0];
 
   const [nameIcon, setnameIcon] = useState("view-grid-outline");
-  const [check, setCheck] = useState(
-    item.dataHoraConcluidos.includes(dateString),
-  );
+  const [check, setCheck] = useState(false);
+  const [time, setTime] = useState<string>("");
   const [token, setToken] = useState<string>("");
   const [timer, setTimer] = useState<NodeJS.Timeout | null>(null);
 
@@ -77,25 +76,27 @@ export default function CardRotina({ item, index, date }: IProps) {
     });
   };
 
-  function ajustaHoraTexto() {
-    const dataHora = new Date(item.dataHora).toISOString();
-    if (dataHora[23] == "Z") {
-      const dataHoraSemUltimo = dataHora.slice(0, -1);
-      console.log(dataHoraSemUltimo);
-      item.dataHora = dataHoraSemUltimo;
-    }
-  }
+  const handleDataHora = () => {
+    const dateString = new Date(item.dataHora).toLocaleString("pt-BR", {
+      year: "numeric",
+      month: "2-digit",
+      day: "2-digit",
+      hour: "2-digit",
+      minute: "2-digit",
+    });
+
+    const [data, hora] = dateString.split(" ");
+    setCheck(item.dataHoraConcluidos.includes(data));
+    setTime(hora);
+  };
 
   useEffect(() => handleIcon());
   useEffect(() => getToken());
-  useEffect(() => ajustaHoraTexto(), []);
+  useEffect(() => handleDataHora());
 
   return (
     <>
-      <Text style={styles.hora}>
-        {new Date(item.dataHora).getHours().toString().padStart(2, "0")}:
-        {new Date(item.dataHora).getMinutes().toString().padStart(2, "0")}
-      </Text>
+      <Text style={styles.hora}>{time}</Text>
       <Pressable
         onPress={editar}
         style={[

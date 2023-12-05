@@ -44,7 +44,7 @@ export default function AppLayout() {
       </View>
       <Stack
         screenOptions={{
-          header: () => <View style={{ height: 40 }} />,
+          header: () => <View style={{ height: 50 }} />,
         }}
       />
     </>
