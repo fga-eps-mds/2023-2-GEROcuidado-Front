@@ -47,6 +47,7 @@ export default function AppLayout() {
           header: () => <View style={{ height: 50 }} />,
         }}
       />
+      <View style={{ height: 25 }} />
     </>
   );
 }
