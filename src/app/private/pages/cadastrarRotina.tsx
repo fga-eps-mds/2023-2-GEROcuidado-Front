@@ -114,7 +114,7 @@ export default function CadastrarRotina() {
     { key: ECategoriaRotina.EXERCICIOS, value: ECategoriaRotina.EXERCICIOS },
   ];
 
-  const getDateIsoString = (data: string, hora: string) => {
+  const getDateIsoString = () => {
     const dateArray = data.split("/");
 
     return `${dateArray[2]}-${dateArray[1]}-${dateArray[0]}T${hora}:00.000`;
@@ -129,7 +129,7 @@ export default function CadastrarRotina() {
     const body = {
       idIdoso: Number(idoso?.id),
       titulo,
-      dataHora: getDateIsoString(data, hora),
+      dataHora: getDateIsoString(),
       categoria: categoria as ECategoriaRotina,
       dias: dias,
       token: expoToken,

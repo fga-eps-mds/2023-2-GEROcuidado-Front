@@ -78,9 +78,9 @@ export default function CardRotina({ item, index, date }: IProps) {
   };
 
   function ajustaHoraTexto() {
-    let dataHora = new Date(item.dataHora).toISOString();
+    const dataHora = new Date(item.dataHora).toISOString();
     if (dataHora[23] == "Z") {
-      let dataHoraSemUltimo = dataHora.slice(0, -1);
+      const dataHoraSemUltimo = dataHora.slice(0, -1);
       console.log(dataHoraSemUltimo);
       item.dataHora = dataHoraSemUltimo;
     }

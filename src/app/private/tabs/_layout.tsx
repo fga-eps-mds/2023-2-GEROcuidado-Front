@@ -1,9 +1,8 @@
-import { Platform, StyleSheet, View } from "react-native";
+import { Platform, StyleSheet } from "react-native";
 
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
 import React from "react";
 import { Tabs } from "expo-router";
-import Toast from "react-native-toast-message";
 
 export default function TabsLayout() {
   const iconComponent = (focused: boolean, size: number, iconName: string) => (
@@ -16,9 +15,6 @@ export default function TabsLayout() {
 
   return (
     <>
-      <View style={{ zIndex: 9999 }}>
-        <Toast />
-      </View>
       <Tabs
         screenOptions={{
           tabBarActiveTintColor: "lightgrey",
@@ -44,7 +40,7 @@ export default function TabsLayout() {
             },
           }}
         />
-        
+
         <Tabs.Screen
           name="registros"
           options={{
