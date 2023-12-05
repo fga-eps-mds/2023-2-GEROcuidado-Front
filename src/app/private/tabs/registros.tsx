@@ -1,30 +1,44 @@
-import React, { useEffect, useState} from 'react';
-import { View, StyleSheet, ScrollView, Text, Image, TouchableOpacity} from 'react-native';
-import AsyncStorage from '@react-native-async-storage/async-storage';
-import { IUser } from '../../interfaces/user.interface';
+import React, { useEffect, useState } from "react";
+import {
+  View,
+  StyleSheet,
+  ScrollView,
+  Text,
+  Image,
+  TouchableOpacity,
+} from "react-native";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import { IUser } from "../../interfaces/user.interface";
 import NaoAutenticado from "../../components/NaoAutenticado";
 import { IIdoso } from "../../interfaces/idoso.interface";
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
 import IdosoNaoSelecionado from "../../components/IdosoNaoSelecionado";
 import CardMetrica from "../../components/CardMetrica";
 import { FlatList } from "react-native-gesture-handler";
-import { EMetricas, IMetrica, IValorMetrica } from "../../interfaces/metricas.interface";
+import {
+  EMetricas,
+  IMetrica,
+  IMetricaFilter,
+  IValorMetrica,
+} from "../../interfaces/metricas.interface";
 import { router } from "expo-router";
 import { Pressable } from "react-native";
+import { getAllMetrica } from "../../services/metrica.service";
+import Toast from "react-native-toast-message";
+import { DraggableGrid } from "react-native-draggable-grid";
 
 export default function Registros() {
   const [user, setUser] = useState<IUser | undefined>(undefined);
   const [idoso, setIdoso] = useState<IIdoso>();
-  const [metricas, setMetricas] = useState<IValorMetrica[]>([
+  const [metricas, setMetricas] = useState<IMetrica[]>([
     {
       categoria: EMetricas.FREQ_CARDIACA,
       id: 1,
       idIdoso: 1,
-      dataHora: "",
-      valor: 70,
-      idUsuario: 1,
     },
   ]);
+  const [loading, setLoading] = useState(true);
+  const [data, setData] = useState([]);
 
   const handleUser = () => {
     AsyncStorage.getItem("usuario").then((response) => {
@@ -63,21 +77,64 @@ export default function Registros() {
     );
   };
 
-  const novaMetrica = () => {
-    router.push("private/pages/cadastrarMetrica");
-  };
+  // const novaMetrica = () => {
+  //   router.push("private/pages/cadastrarMetrica");
+  // };
 
   const editarmetrica = (item: IMetrica) => {
-    
     router.push({
       pathname: "private/pages/editarValorMetrica",
       params: item,
-    }
+    });
+  };
+
+  const getMetricas = async () => {
+    if (idoso == undefined) return;
+
+    setLoading(true);
+
+    const metricaFilter: IMetricaFilter = {
+      idIdoso: Number(idoso.id),
+    };
+
+    getAllMetrica(metricaFilter)
+      .then((response) => {
+        const newMetricas = response.data as IMetrica[];
+        console.log(newMetricas);
+        setMetricas(newMetricas);
+      })
+      .catch((err) => {
+        const error = err as { message: string };
+        Toast.show({
+          type: "error",
+          text1: "Erro!",
+          text2: error.message,
+        });
+      })
+      .finally(() => {
+        setLoading(false);
+      });
+  };
+
+  const renderItem = (item: { name: string; key: string }) => {
+    return (
+      <View>
+        <Text>{item.name}</Text>
+      </View>
     );
-  }
+  };
+
+  const metricasComChaves = metricas.map((item) => ({
+    ...item,
+    key: item.id.toString(),
+    name: item.id.toString(),
+  }));
 
   useEffect(() => handleUser(), []);
   useEffect(() => getIdoso(), []);
+  useEffect(() => {
+    getMetricas();
+  }, []);
 
   return (
     <>
@@ -93,24 +150,47 @@ export default function Registros() {
         </View>
       )}
 
-      <View>
+      {/* <View>
         <Pressable style={styles.botaoCriarMetricas} onPress={novaMetrica}>
           <Icon name="plus" color={"white"} size={20} />
           <Text style={styles.textoBotaoCriarMetricas}>Nova Métrica</Text>
         </Pressable>
-      </View>
+      </View> */}
 
       <View style={styles.cardMetrica}>
-        <FlatList
+        {/* <FlatList
           numColumns={2}
           showsVerticalScrollIndicator={false}
           data={metricas}
-          renderItem={({ item }) => 
-          <Pressable 
-            style = {styles.verMetrica}
-            onPress={() =>editarmetrica(item)}>
-            <CardMetrica item={item} />
-          </Pressable>}
+          renderItem={({ item }) => (
+            <Pressable
+              style={styles.verMetrica}
+              onPress={() => editarmetrica(item)}
+            >
+              <CardMetrica item={item} />
+            </Pressable>
+          )}
+        /> */}
+
+        <DraggableGrid
+          numColumns={2}
+          // itemHeight={100}
+          renderItem={(item) => {
+            return (
+              // <Pressable
+              //   style={styles.verMetrica}
+              //   onPress={() => editarmetrica(item)}
+              // >
+              // </Pressable>
+              <View>
+                <CardMetrica item={item} />
+              </View>
+            );
+          }}
+          data={metricasComChaves}
+          onDragRelease={(data) => {
+            // setData(data); // need reset the props data sort after drag release
+          }}
         />
       </View>
     </>

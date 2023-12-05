@@ -12,16 +12,21 @@ import Icon from "react-native-vector-icons/FontAwesome";
 import { IUser } from "../../interfaces/user.interface";
 import { IIdoso } from "../../interfaces/idoso.interface";
 import { router } from "expo-router";
-import { postMetrica } from "../../services/metrica.service";
-import { EMetricas } from "../../interfaces/metricas.interface";
+import { getAllMetrica, postMetrica } from "../../services/metrica.service";
+import {
+  EMetricas,
+  IMetrica,
+  IMetricaFilter,
+} from "../../interfaces/metricas.interface";
 import Toast from "react-native-toast-message";
-
 
 export default function criarMetrica() {
   const [user, setUser] = useState<IUser | undefined>(undefined);
   const [idoso, setIdoso] = useState<IIdoso>();
   const [token, setToken] = useState<string>("");
   const [showLoading, setShowLoading] = useState(false);
+  const [loading, setLoading] = useState(true);
+  const [metricas, setMetricas] = useState<IMetrica[]>([]);
 
   const getToken = () => {
     AsyncStorage.getItem("token").then((response) => {
@@ -69,13 +74,12 @@ export default function criarMetrica() {
   const handleMetricSelection = async (metricType: EMetricas) => {
     const body = {
       idIdoso: Number(idoso?.id),
-      categoria: metricType
-    }
+      categoria: metricType,
+    };
 
     try {
       setShowLoading(true);
       const response = await postMetrica(body, token);
-      console.log(response);
       Toast.show({
         type: "success",
         text1: "Sucesso!",
@@ -139,7 +143,6 @@ export default function criarMetrica() {
   useEffect(() => handleUser(), []);
   useEffect(() => getIdoso(), []);
 
-
   return (
     <ScrollView contentContainerStyle={styles.container}>
       <View style={styles.header}>
@@ -192,12 +195,7 @@ export default function criarMetrica() {
           "Temperatura",
           "FFAC7D",
         )}
-        {renderMetricCard(
-          EMetricas.GLICEMIA, 
-          "cubes", 
-          "Glicemia", 
-          "#3F3F3F"
-        )}
+        {renderMetricCard(EMetricas.GLICEMIA, "cubes", "Glicemia", "#3F3F3F")}
       </View>
 
       {/* Adicione aqui o restante do conteúdo do componente criarMetrica */}

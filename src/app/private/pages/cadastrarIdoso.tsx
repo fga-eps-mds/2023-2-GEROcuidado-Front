@@ -14,6 +14,8 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import { IUser } from "../../interfaces/user.interface";
 import MaskInput, { Masks } from "react-native-mask-input";
 import UploadImageV2 from "../../components/UploadImageV2";
+import { EMetricas } from "../../interfaces/metricas.interface";
+import { postMetrica } from "../../services/metrica.service";
 
 interface IErrors {
   nome?: string;
@@ -57,6 +59,15 @@ export default function CadastrarIdoso() {
     return `${dateArray[2]}-${dateArray[1]}-${dateArray[0]}T12:00:00.000Z`;
   };
 
+  const metricas = [
+    { key: EMetricas.FREQ_CARDIACA, value: EMetricas.FREQ_CARDIACA },
+    { key: EMetricas.GLICEMIA, value: EMetricas.GLICEMIA },
+    { key: EMetricas.PESO, value: EMetricas.PESO },
+    { key: EMetricas.PRESSAO_SANGUINEA, value: EMetricas.PRESSAO_SANGUINEA },
+    { key: EMetricas.SATURACAO_OXIGENIO, value: EMetricas.SATURACAO_OXIGENIO },
+    { key: EMetricas.TEMPERATURA, value: EMetricas.TEMPERATURA },
+  ];
+
   const salvar = async () => {
     if (Object.keys(erros).length > 0) {
       setShowErrors(true);
@@ -82,6 +93,7 @@ export default function CadastrarIdoso() {
         text1: "Sucesso!",
         text2: response.message as string,
       });
+      //cadastrarMetricas(response.data?.id as Number);
       router.replace("private/pages/listarIdosos");
     } catch (err) {
       const error = err as { message: string };
@@ -92,6 +104,34 @@ export default function CadastrarIdoso() {
       });
     } finally {
       setShowLoading(false);
+    }
+  };
+
+  const cadastrarMetricas = async (idIdoso: Number) => {
+    for (const metrica of metricas) {
+      const body = {
+        idIdoso: Number(idIdoso),
+        categoria: metrica.value,
+      };
+
+      try {
+        setShowLoading(true);
+        const response = await postMetrica(body, token);
+        Toast.show({
+          type: "success",
+          text1: "Sucesso!",
+          text2: response.message as string,
+        });
+      } catch (err) {
+        const error = err as { message: string };
+        Toast.show({
+          type: "error",
+          text1: "Erro!",
+          text2: error.message,
+        });
+      } finally {
+        setShowLoading(false);
+      }
     }
   };
 
