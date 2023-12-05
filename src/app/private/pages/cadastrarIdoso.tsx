@@ -152,7 +152,9 @@ export default function CadastrarIdoso() {
               style={styles.textInput}
             />
           </View>
-          <ErrorMessage show={showErrors} text={erros.nome} />
+          <View testID="Erro-nome">
+            <ErrorMessage show={showErrors} text={erros.nome} />
+          </View>
         </View>
 
         <View style={styles.formControl}>
@@ -170,7 +172,9 @@ export default function CadastrarIdoso() {
               placeholder="Data de Nascimento"
             />
           </View>
-          <ErrorMessage show={showErrors} text={erros.dataNascimento} />
+          <View testID="Erro-data">
+            <ErrorMessage show={showErrors} text={erros.dataNascimento} />
+          </View>
         </View>
 
         <View style={styles.formControl}>
@@ -187,7 +191,9 @@ export default function CadastrarIdoso() {
               placeholder="Telefone Responsável"
             />
           </View>
-          <ErrorMessage show={showErrors} text={erros.telefoneResponsavel} />
+          <View testID="Erro-telefone">
+            <ErrorMessage show={showErrors} text={erros.telefoneResponsavel} />
+          </View>
         </View>
 
         <View style={styles.formControl}>
