@@ -1,13 +1,12 @@
 
 import React from "react";
-import { View, Text, StyleSheet, Pressable } from "react-native";
+import { View, Text, StyleSheet, Pressable, ScrollView } from "react-native";
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
 import FontAwesome from "react-native-vector-icons/FontAwesome";
 import { router } from "expo-router";
 import { getImageUri, noImage } from "../shared/helpers/image.helper";
 import { Image } from "expo-image";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { IRotina } from "../interfaces/rotina.interface";
 import { EMetricas, IMetrica } from "../interfaces/metricas.interface";
 
 interface IProps {
@@ -62,7 +61,7 @@ export default function CardIdoso({ item }: IProps) {
     }
 
     return (
-        <View style={styles.container}>
+      <ScrollView contentContainerStyle={styles.container}>
             <View style={[styles.card, { borderColor: '#ddd', backgroundColor: '#fff' }]}>
                 <View style={ item.categoria == EMetricas.SATURACAO_OXIGENIO ? styles.oxygenIcon : styles.othersIcons}>
                     {icone()}
@@ -75,14 +74,15 @@ export default function CardIdoso({ item }: IProps) {
                 <Text style={[styles.time, { color: textColor }]}>{"16:00"}</Text>
                 <Icon name="chevron-right" size={16} color={textColor} style={styles.chevron} />
             </View>
-        </View>
+        </ScrollView>
     );
 }
 
 const styles = StyleSheet.create({
     container:{
-        width: "100%",
-        height: "100%",
+      flex: 1,
+      justifyContent: 'center',
+      alignItems: 'center',
     },
     texto: {
         alignSelf: "center",
@@ -97,7 +97,7 @@ const styles = StyleSheet.create({
         height:150,
         shadowColor: '#000',
         shadowOffset: { width: 0, height: 2 },
-        shadowOpacity: 0.2,
+        shadowOpacity: 0.4,
         shadowRadius: 4,
         elevation: 3, 
     },
@@ -124,16 +124,17 @@ const styles = StyleSheet.create({
         marginTop: 8,
     },
     chevron: {
-        top: 12,
-        left: 100,
-    },
-    othersIcons: {
-        flexDirection:"row", 
-        alignItems:"center"
-    },
-    oxygenIcon: {
-        flexDirection:"row", 
-        alignItems:"baseline"
-    },
+      top: 10,
+      left: '85%', 
+      position: 'absolute', 
+  },
+  othersIcons: {
+      flexDirection: "row",
+      alignItems: "center"
+  },
+  oxygenIcon: {
+      flexDirection: "row",
+      alignItems: "baseline"
+  },
 
 });
