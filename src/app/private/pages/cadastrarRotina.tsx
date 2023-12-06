@@ -21,6 +21,7 @@ import MaskHour from "../../components/MaskHour";
 import { postRotina } from "../../services/rotina.service";
 import Toast from "react-native-toast-message";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import ToggleButton from "../../components/ToggleButtonNotification";
 import { IIdoso } from "../../interfaces/idoso.interface";
 import ErrorMessage from "../../components/ErrorMessage";
 import * as Notifications from "expo-notifications";
@@ -34,6 +35,7 @@ interface IErrors {
 }
 
 export default function CadastrarRotina() {
+  const [isToggleActive, setIsToggleActive] = useState(false);
   const getInitialDateTime = (isData = true) => {
     const today = new Date();
     const formattedDate = today.toLocaleDateString("pt-BR", {
@@ -307,6 +309,10 @@ export default function CadastrarRotina() {
             />
           </View>
           <ErrorMessage show={showErrors} text={erros.categoria} />
+
+          <View style={styles.toggleButtonContainer}>
+                <ToggleButton onPress={() => setIsToggleActive(!isToggleActive)} active={isToggleActive} />
+          </View>
         </View>
 
         <View style={styles.repete}>
@@ -482,5 +488,11 @@ const styles = StyleSheet.create({
   erro: {
     marginBottom: 15,
     alignSelf: "flex-start",
+  },
+  toggleButtonContainer: {
+    flexDirection: 'row',
+    justifyContent: 'flex-start', 
+    marginTop: 10,
+    marginLeft: 20, 
   },
 });
