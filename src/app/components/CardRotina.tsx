@@ -14,7 +14,11 @@ interface IProps {
 }
 
 export default function CardRotina({ item, index, date }: IProps) {
-  const dateString = date.toISOString().split("T")[0];
+  const dateString = date.toLocaleString("pt-BR", {
+    year: "numeric",
+    month: "2-digit",
+    day: "2-digit",
+  });
 
   const [nameIcon, setnameIcon] = useState("view-grid-outline");
   const [check, setCheck] = useState(false);
@@ -29,12 +33,13 @@ export default function CardRotina({ item, index, date }: IProps) {
   };
 
   const handleIcon = () => {
-    if (item.categoria == ECategoriaRotina.ALIMENTACAO)
+    if (item.categoria == ECategoriaRotina.ALIMENTACAO) {
       setnameIcon("food-apple-outline");
-    else if (item.categoria == ECategoriaRotina.EXERCICIOS)
+    } else if (item.categoria == ECategoriaRotina.EXERCICIOS) {
       setnameIcon("dumbbell");
-    else if (item.categoria == ECategoriaRotina.MEDICAMENTO)
+    } else if (item.categoria == ECategoriaRotina.MEDICAMENTO) {
       setnameIcon("medical-bag");
+    }
   };
 
   const debounceConcluido = (concluido: boolean) => {
@@ -90,9 +95,9 @@ export default function CardRotina({ item, index, date }: IProps) {
     setTime(hora);
   };
 
-  useEffect(() => handleIcon());
-  useEffect(() => getToken());
-  useEffect(() => handleDataHora());
+  useEffect(() => handleIcon(), []);
+  useEffect(() => getToken(), []);
+  useEffect(() => handleDataHora(), []);
 
   return (
     <>
