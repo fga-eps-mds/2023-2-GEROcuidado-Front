@@ -29,3 +29,7 @@ export interface IValorMetrica extends IValorMetricaBody {
 export interface IMetricaFilter {
   idIdoso: number;
 }
+
+export interface IMetricaValueFilter {
+  idMetrica: number;
+}

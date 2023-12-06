@@ -6,12 +6,19 @@ import { View, StyleSheet, Pressable, Text} from "react-native";
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
 import { IIdoso } from "../../interfaces/idoso.interface";
 import { router, useLocalSearchParams } from "expo-router";
-import { IMetrica } from "../../interfaces/metricas.interface";
+import { EMetricas, IMetrica, IMetricaValueFilter, IValorMetrica } from "../../interfaces/metricas.interface";
+import { getAllMetricaVAlues } from "../../services/metricaValue.service";
+import Toast from "react-native-toast-message";
+import { FlatList } from "react-native-gesture-handler";
+import ModalMetrica from "../../components/ModalMetrica";
 
 export default function VisualizarMetrica() {
   const params = useLocalSearchParams() as unknown as IMetrica;
   const [user, setUser] = useState<IUser | undefined>(undefined);
   const [idoso, setIdoso] = useState<IIdoso>();
+  const [loading, setLoading] = useState(true);
+  const [valueMetrica,setValueMetrica] = useState<IValorMetrica[]>([]); 
+  const [modalVisible, setModalVisible] = useState(false);
   const handleUser = () => {
     AsyncStorage.getItem("usuario").then((response) => {
       const usuario = JSON.parse(response as string);
@@ -30,12 +37,45 @@ export default function VisualizarMetrica() {
     });
   };
 
+  const getMetricasValues = () => {
+    if (!idoso) return;
+
+    setLoading(true);
+    const filter : IMetricaValueFilter = {idMetrica: params.id}
+    getAllMetricaVAlues(filter)
+      .then((response) => {
+        const newMetricasVAlues = response.data as IValorMetrica[];
+        console.log(newMetricasVAlues);
+        setValueMetrica(newMetricasVAlues);
+      })
+      .catch((err) => {
+        const error = err as { message: string };
+        Toast.show({
+          type: "error",
+          text1: "Erro!",
+          text2: error.message,
+        });
+      })
+      .finally(() => {
+        setLoading(false);
+      });
+  };
+
   useEffect(() => getIdoso(), []);
   useEffect(() => handleUser(), []);
+  useEffect(() => getMetricasValues(), [idoso]);
 
   const novoValor = () => {
-    // Adicione a lógica para editar uma nova métrica
+    setModalVisible(true);
   };
+
+  const salvar = () => {
+
+  }
+
+  const vizualizarMetrica = (item: IValorMetrica) => {
+    //////////////////////////
+  }
 
   const back = () => {
     router.push({
@@ -56,7 +96,29 @@ export default function VisualizarMetrica() {
         <Icon name="plus" color={"white"} size={20} />
         <Text style={styles.textoBotaoEditarMetricas}>Novo valor</Text>
       </Pressable>
+      
+      <FlatList
+        data={valueMetrica}
+        renderItem={({ item }) => (
+          <Pressable
+            //style={styles.verMetrica}
+            onPress={() => vizualizarMetrica(item)}
+          >
+            <Text>{item.valor}</Text>
+          </Pressable>
+        )}
+      />
 
+      {modalVisible && (
+        <ModalMetrica
+        visible = {modalVisible}
+        callbackFn={salvar}
+        closeModal={() => setModalVisible(false)}
+        metrica={params}
+        message={params.categoria}
+
+        />
+      )}
 
     </View>
     </View>
