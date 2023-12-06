@@ -10,6 +10,8 @@ export interface IRotinaBody {
   idIdoso: number;
   categoria?: ECategoriaRotina | null;
   descricao?: string;
+  notificacao: boolean;
+  token?: string;
   dataHoraConcluidos: string[];
   dataHora: Date | string;
   dias: EDiasSemana[];
@@ -35,6 +37,6 @@ export enum EDiasSemana {
 }
 
 export interface IOrder {
-  column: string,
-  dir: "ASC",
+  column: string;
+  dir: "ASC";
 }

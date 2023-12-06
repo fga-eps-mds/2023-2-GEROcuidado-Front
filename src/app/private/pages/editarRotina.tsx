@@ -67,13 +67,18 @@ export default function EditarRotina() {
     });
   };
 
-  const separaDataHora = () => {
-    const value = params.dataHora as string;
-    const valueFinal = value.split("T");
-    const separaData = valueFinal[0].split("-");
-    setData(`${separaData[2]}/${separaData[1]}/${separaData[0]}`);
-    const separaHora = valueFinal[1].split(":");
-    setHora(`${separaHora[0]}:${separaHora[1]}`);
+  const handleDataHora = () => {
+    const dateString = new Date(params.dataHora).toLocaleString("pt-BR", {
+      year: "numeric",
+      month: "2-digit",
+      day: "2-digit",
+      hour: "2-digit",
+      minute: "2-digit",
+    });
+
+    const [data, hora] = dateString.split(" ");
+    setData(data);
+    setHora(hora);
   };
 
   const handleErrors = () => {
@@ -186,7 +191,7 @@ export default function EditarRotina() {
   useEffect(() => getIdoso(), []);
   useEffect(() => getToken(), []);
   useEffect(() => handleErrors(), [titulo, data, hora, categoria, descricao]);
-  useEffect(() => separaDataHora(), []);
+  useEffect(() => handleDataHora(), []);
 
   const confirmation = () => {
     setModalVisible(!modalVisible);

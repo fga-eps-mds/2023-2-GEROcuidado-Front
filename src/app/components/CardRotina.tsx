@@ -14,12 +14,15 @@ interface IProps {
 }
 
 export default function CardRotina({ item, index, date }: IProps) {
-  const dateString = date.toISOString().split("T")[0];
+  const dateString = date.toLocaleString("pt-BR", {
+    year: "numeric",
+    month: "2-digit",
+    day: "2-digit",
+  });
 
   const [nameIcon, setnameIcon] = useState("view-grid-outline");
-  const [check, setCheck] = useState(
-    item.dataHoraConcluidos.includes(dateString),
-  );
+  const [check, setCheck] = useState(false);
+  const [time, setTime] = useState<string>("");
   const [token, setToken] = useState<string>("");
   const [timer, setTimer] = useState<NodeJS.Timeout | null>(null);
 
@@ -30,12 +33,13 @@ export default function CardRotina({ item, index, date }: IProps) {
   };
 
   const handleIcon = () => {
-    if (item.categoria == ECategoriaRotina.ALIMENTACAO)
+    if (item.categoria == ECategoriaRotina.ALIMENTACAO) {
       setnameIcon("food-apple-outline");
-    else if (item.categoria == ECategoriaRotina.EXERCICIOS)
+    } else if (item.categoria == ECategoriaRotina.EXERCICIOS) {
       setnameIcon("dumbbell");
-    else if (item.categoria == ECategoriaRotina.MEDICAMENTO)
+    } else if (item.categoria == ECategoriaRotina.MEDICAMENTO) {
       setnameIcon("medical-bag");
+    }
   };
 
   const debounceConcluido = (concluido: boolean) => {
@@ -77,25 +81,27 @@ export default function CardRotina({ item, index, date }: IProps) {
     });
   };
 
-  function ajustaHoraTexto() {
-    let dataHora = new Date(item.dataHora).toISOString();
-    if (dataHora[23] == "Z") {
-      let dataHoraSemUltimo = dataHora.slice(0, -1);
-      console.log(dataHoraSemUltimo);
-      item.dataHora = dataHoraSemUltimo;
-    }
-  }
+  const handleDataHora = () => {
+    const dateString = new Date(item.dataHora).toLocaleString("pt-BR", {
+      year: "numeric",
+      month: "2-digit",
+      day: "2-digit",
+      hour: "2-digit",
+      minute: "2-digit",
+    });
 
-  useEffect(() => handleIcon());
-  useEffect(() => getToken());
-  useEffect(() => ajustaHoraTexto(), []);
+    const [data, hora] = dateString.split(" ");
+    setCheck(item.dataHoraConcluidos.includes(data));
+    setTime(hora);
+  };
+
+  useEffect(() => handleIcon(), []);
+  useEffect(() => getToken(), []);
+  useEffect(() => handleDataHora(), []);
 
   return (
     <>
-      <Text style={styles.hora}>
-        {new Date(item.dataHora).getHours().toString().padStart(2, "0")}:
-        {new Date(item.dataHora).getMinutes().toString().padStart(2, "0")}
-      </Text>
+      <Text style={styles.hora}>{time}</Text>
       <Pressable
         onPress={editar}
         style={[
