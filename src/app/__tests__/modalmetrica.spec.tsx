@@ -32,4 +32,22 @@ describe('ModalMetrica Component', () => {
     );
   });
 
+
+  it('chama callbackFn ao pressionar o botão de salvar', () => {
+    const mockCallbackFn = jest.fn();
+
+    const { getByTestId } = render(
+      <ModalMetrica
+        visible={true}
+        callbackFn={mockCallbackFn}
+        closeModal={() => {}}
+        message="Teste"
+        metrica={mockMetrica}
+      />
+    );
+
+    fireEvent.press(getByTestId('callbackBtn'));
+    expect(mockCallbackFn).toHaveBeenCalled();
+  });
+  
 });
