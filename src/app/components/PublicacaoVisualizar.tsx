@@ -39,7 +39,7 @@ export default function PublicacaoVisualizar({ item }: Readonly<IProps>) {
     <View style={styles.postContainer}>
       <View style={styles.userInfo}>
         {getFoto(item.foto)}
-        <Text style={styles.username}>{item.nome}</Text>
+        <Text style={styles.username}>{item.nome || "Usuário deletado"}</Text>
       </View>
       <Text style={styles.titulo}>{item.titulo}</Text>
       <Text style={styles.descricao}>{item.descricao}</Text>
