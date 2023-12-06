@@ -41,6 +41,5 @@ describe('CardIdoso Component', () => {
       expect(() => getByText('bpm')).toThrow();
     }
   });
-  
 
 });
