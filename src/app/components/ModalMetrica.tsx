@@ -30,7 +30,9 @@ export default function ModalMetrica({
               {metrica.categoria == EMetricas.FREQ_CARDIACA && (
                 <FontAwesome name="heartbeat" color={"#FF7D7D"} size={60}/>
               )}
-
+              {metrica.categoria === EMetricas.HORAS_DORMIDAS && (
+                <FontAwesome name="bed" color={"#3F3F3F"} size={60} />
+              )}
               {metrica.categoria == EMetricas.GLICEMIA && (
                 <FontAwesome name="cubes" color={"#3F3F3F"} size={60}/>
               )}

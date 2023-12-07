@@ -213,6 +213,13 @@ export default function criarMetrica() {
           "Peso (kg)",
           "#000000",
         )}
+
+        {renderMetricCard( 
+          EMetricas.HORAS_DORMIDAS,
+          "bed",
+          "Horas Dormidas",
+          "#3F3F3F",
+        )}
       </View>
 
       {/* Adicione aqui o restante do conteúdo do componente criarMetrica */}

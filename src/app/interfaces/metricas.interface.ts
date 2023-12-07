@@ -5,7 +5,8 @@ export enum EMetricas {
   PESO = "Peso",
   GLICEMIA = "Glicemia",
   SATURACAO_OXIGENIO = "Saturação",
-  ALTURA = "ALTURA", // Add this line for height
+  ALTURA = "ALTURA", 
+  HORAS_DORMIDAS = "horas_dormidas",
 }
 
 export interface IMetricaBody {
