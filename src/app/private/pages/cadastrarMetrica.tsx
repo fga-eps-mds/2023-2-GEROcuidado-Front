@@ -27,6 +27,8 @@ export default function criarMetrica() {
   const [showLoading, setShowLoading] = useState(false);
   const [loading, setLoading] = useState(true);
   const [metricas, setMetricas] = useState<IMetrica[]>([]);
+  const [metricaSelecionada, setMetricaSelecionada] = useState<IMetrica | null>(null);
+
 
   const getToken = () => {
     AsyncStorage.getItem("token").then((response) => {
@@ -85,6 +87,7 @@ export default function criarMetrica() {
         text1: "Sucesso!",
         text2: response.message as string,
       });
+      
       router.replace({
         pathname: "private/tabs/registros",
       });
@@ -196,6 +199,20 @@ export default function criarMetrica() {
           "FFAC7D",
         )}
         {renderMetricCard(EMetricas.GLICEMIA, "cubes", "Glicemia", "#3F3F3F")}
+        
+        {renderMetricCard( //Apenas para o caso de serem necessários nesta tela (se não forem, podem excluir)
+          EMetricas.ALTURA,
+          "user",
+          "Altura (m)",
+          "#3F3F3F",
+        )}
+
+        {renderMetricCard( //Apenas para o caso de serem necessários nesta tela (se não forem, podem excluir)
+          EMetricas.PESO,
+          "balance-scale",
+          "Peso (kg)",
+          "#000000",
+        )}
       </View>
 
       {/* Adicione aqui o restante do conteúdo do componente criarMetrica */}
