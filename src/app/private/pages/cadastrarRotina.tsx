@@ -5,6 +5,7 @@ import {
   View,
   TextInput,
   Platform,
+  Switch,
 } from "react-native";
 import React, { useEffect, useState } from "react";
 import { ScrollView } from "react-native-gesture-handler";
@@ -22,6 +23,7 @@ import Toast from "react-native-toast-message";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { IIdoso } from "../../interfaces/idoso.interface";
 import ErrorMessage from "../../components/ErrorMessage";
+import * as Notifications from "expo-notifications";
 
 interface IErrors {
   titulo?: string;
@@ -46,6 +48,8 @@ export default function CadastrarRotina() {
   const [titulo, setTitulo] = useState("");
   const [data, setData] = useState(getInitialDateTime());
   const [hora, setHora] = useState(getInitialDateTime(false));
+  const [notificacao, setNotificacao] = useState(false);
+  const [expoToken, setExpoToken] = useState("");
   const [descricao, setDescricao] = useState("");
   const [categoria, setCategoria] = useState<ECategoriaRotina | null>(null);
   const [showLoading, setShowLoading] = useState(false);
@@ -110,10 +114,10 @@ export default function CadastrarRotina() {
     { key: ECategoriaRotina.EXERCICIOS, value: ECategoriaRotina.EXERCICIOS },
   ];
 
-  const getDateIsoString = (data: string, hora: string) => {
+  const getDateIsoString = () => {
     const dateArray = data.split("/");
 
-    return `${dateArray[2]}-${dateArray[1]}-${dateArray[0]}T${hora}:00.000Z`;
+    return `${dateArray[2]}-${dateArray[1]}-${dateArray[0]}T${hora}:00.000`;
   };
 
   const salvar = async () => {
@@ -125,10 +129,13 @@ export default function CadastrarRotina() {
     const body = {
       idIdoso: Number(idoso?.id),
       titulo,
-      dataHora: getDateIsoString(data, hora),
+      dataHora: getDateIsoString(),
       categoria: categoria as ECategoriaRotina,
       dias: dias,
+      token: expoToken,
+      notificacao,
       descricao,
+      dataHoraConcluidos: [],
     };
 
     try {
@@ -176,10 +183,48 @@ export default function CadastrarRotina() {
     }
   };
 
+  const handleNotificacao = async () => {
+    if (!notificacao) return;
+
+    if (Platform.OS === "android") {
+      Notifications.setNotificationChannelAsync("default", {
+        name: "default",
+        importance: Notifications.AndroidImportance.MAX,
+        vibrationPattern: [0, 250, 250, 250],
+        lightColor: "#FF231F7C",
+      });
+    }
+
+    const { status: existingStatus } =
+      await Notifications.getPermissionsAsync();
+
+    let finalStatus = existingStatus;
+
+    if (existingStatus !== "granted") {
+      const { status } = await Notifications.requestPermissionsAsync();
+      finalStatus = status;
+    }
+
+    if (finalStatus !== "granted") {
+      alert("É necessário permitir as notificações!");
+      setNotificacao(false);
+      return;
+    }
+
+    const response = await Notifications.getExpoPushTokenAsync({
+      projectId: "7028a81c-adee-41de-91a7-b7e80535a448",
+    });
+
+    setExpoToken(response.data);
+  };
+
   useEffect(() => getIdoso(), []);
   useEffect(() => getToken(), []);
   useEffect(() => setSuggestedTitle(), [categoria]);
   useEffect(() => handleErrors(), [titulo, data, hora, categoria, descricao]);
+  useEffect(() => {
+    handleNotificacao();
+  }, [notificacao]);
 
   return (
     <ScrollView>
@@ -200,7 +245,7 @@ export default function CadastrarRotina() {
             style={styles.inputTitulo}
           />
         </View>
-        <View style={styles.erroTitulo}>
+        <View style={styles.erroTitulo} testID="Erro-titulo">
           <ErrorMessage show={showErrors} text={erros.titulo} />
         </View>
         <View style={styles.dataHora}>
@@ -214,7 +259,7 @@ export default function CadastrarRotina() {
             placeholderTextColor={"#3D3D3D"}
           />
         </View>
-        <View style={styles.erro}>
+        <View style={styles.erro} testID="Erro-data">
           <ErrorMessage show={showErrors} text={erros.data} />
         </View>
 
@@ -233,7 +278,7 @@ export default function CadastrarRotina() {
             inputMaskChange={(hora) => setHora(hora)}
           />
         </View>
-        <View style={styles.erro}>
+        <View style={styles.erro} testID="Erro-hora">
           <ErrorMessage show={showErrors} text={erros.hora} />
         </View>
 
@@ -272,6 +317,15 @@ export default function CadastrarRotina() {
           <WeekDays callbackFn={setDias} dias={[]} />
         </View>
 
+        <View style={styles.notificacaoContainer}>
+          <Switch
+            trackColor={{ false: "#767577", true: "#2CCDB5" }}
+            onValueChange={setNotificacao}
+            value={notificacao}
+          />
+          <Text style={styles.notificacaoText}>Ativar notificação</Text>
+        </View>
+
         <View style={styles.descricao}>
           <TextInput
             onChangeText={setDescricao}
@@ -286,7 +340,7 @@ export default function CadastrarRotina() {
             placeholderTextColor={"#3D3D3D"}
           />
         </View>
-        <View style={styles.erro}>
+        <View style={styles.erro} testID="Erro-descricao">
           <ErrorMessage show={showErrors} text={erros.descricao} />
         </View>
 
@@ -303,6 +357,19 @@ export default function CadastrarRotina() {
 }
 
 const styles = StyleSheet.create({
+  notificacaoContainer: {
+    flexDirection: "row",
+    alignItems: "center",
+    width: "100%",
+    fontWeight: "700",
+    marginBottom: 25,
+  },
+  notificacaoText: {
+    fontWeight: "600",
+    marginLeft: 7,
+    fontSize: 16,
+    color: "#616161",
+  },
   header: {
     backgroundColor: "#2CCDB5",
     height: 60,
@@ -387,7 +454,7 @@ const styles = StyleSheet.create({
   weekDays: {
     flexDirection: "row",
     marginTop: 15,
-    marginBottom: 30,
+    marginBottom: 0,
   },
   descricao: {
     flexDirection: "row",

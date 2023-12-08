@@ -10,11 +10,19 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 interface IProps {
   item: IRotina;
   index: number;
+  date: Date;
 }
 
-export default function CardRotina({ item, index }: IProps) {
+export default function CardRotina({ item, index, date }: IProps) {
+  const dateString = date.toLocaleString("pt-BR", {
+    year: "numeric",
+    month: "2-digit",
+    day: "2-digit",
+  });
+
   const [nameIcon, setnameIcon] = useState("view-grid-outline");
-  const [check, setCheck] = useState(item.concluido);
+  const [check, setCheck] = useState(false);
+  const [time, setTime] = useState<string>("");
   const [token, setToken] = useState<string>("");
   const [timer, setTimer] = useState<NodeJS.Timeout | null>(null);
 
@@ -25,12 +33,13 @@ export default function CardRotina({ item, index }: IProps) {
   };
 
   const handleIcon = () => {
-    if (item.categoria == ECategoriaRotina.ALIMENTACAO)
+    if (item.categoria == ECategoriaRotina.ALIMENTACAO) {
       setnameIcon("food-apple-outline");
-    else if (item.categoria == ECategoriaRotina.EXERCICIOS)
+    } else if (item.categoria == ECategoriaRotina.EXERCICIOS) {
       setnameIcon("dumbbell");
-    else if (item.categoria == ECategoriaRotina.MEDICAMENTO)
+    } else if (item.categoria == ECategoriaRotina.MEDICAMENTO) {
       setnameIcon("medical-bag");
+    }
   };
 
   const debounceConcluido = (concluido: boolean) => {
@@ -41,8 +50,18 @@ export default function CardRotina({ item, index }: IProps) {
   };
 
   const updateRotinaConcluido = async (concluido: boolean) => {
+    let dataHoraConcluidos = [];
+
+    if (concluido) {
+      dataHoraConcluidos = [...item.dataHoraConcluidos, dateString];
+    } else {
+      dataHoraConcluidos = item.dataHoraConcluidos.filter((item) => {
+        return item !== dateString;
+      });
+    }
+
     try {
-      await updateRotina(item.id, { concluido }, token);
+      await updateRotina(item.id, { dataHoraConcluidos }, token);
     } catch (err) {
       const error = err as { message: string };
       Toast.show({
@@ -62,41 +81,69 @@ export default function CardRotina({ item, index }: IProps) {
     });
   };
 
-  useEffect(() => handleIcon());
-  useEffect(() => getToken());
+  const handleDataHora = () => {
+    const dateString = new Date(item.dataHora).toLocaleString("pt-BR", {
+      year: "numeric",
+      month: "2-digit",
+      day: "2-digit",
+      hour: "2-digit",
+      minute: "2-digit",
+    });
+
+    const [data, hora] = dateString.split(" ");
+    setCheck(item.dataHoraConcluidos.includes(data));
+    setTime(hora);
+  };
+
+  useEffect(() => handleIcon(), []);
+  useEffect(() => getToken(), []);
+  useEffect(() => handleDataHora(), []);
 
   return (
-    <Pressable
-      onPress={editar}
-      style={[
-        styles.container,
-        { backgroundColor: index % 2 == 0 ? "#B4FFE8" : "#FFC6C6" },
-      ]}
-    >
-      <View style={styles.icon}>
-        <Icon size={30} name={nameIcon}></Icon>
-      </View>
-      <View style={styles.texts}>
-        <Text style={styles.title}>{item.titulo}</Text>
-        <Text style={styles.description}>{item.descricao}</Text>
-      </View>
+    <>
+      <Text style={styles.hora}>{time}</Text>
       <Pressable
-        onPress={() => debounceConcluido(!check)}
-        style={styles.checkBox}
+        onPress={editar}
+        style={[
+          styles.container,
+          { backgroundColor: index % 2 == 0 ? "#B4FFE8" : "#FFC6C6" },
+        ]}
       >
-        {check && <Icon name="check" size={30}></Icon>}
+        <View style={styles.icon}>
+          <Icon size={30} name={nameIcon}></Icon>
+        </View>
+        <View style={styles.texts}>
+          <Text style={styles.title}>{item.titulo}</Text>
+          <Text style={styles.description}>{item.descricao}</Text>
+        </View>
+        <Pressable
+          onPress={() => debounceConcluido(!check)}
+          style={styles.checkBox}
+          testID="checkbox"
+        >
+          {check && <Icon name="check" size={30}></Icon>}
+        </Pressable>
       </Pressable>
-    </Pressable>
+    </>
   );
 }
 
 const styles = StyleSheet.create({
+  hora: {
+    fontSize: 18,
+    fontWeight: "300",
+    marginLeft: 20,
+    marginTop: 10,
+  },
+
   container: {
     flexDirection: "row",
     alignItems: "center",
     width: Dimensions.get("window").width - 40,
-    marginHorizontal: 20,
-    marginVertical: 10,
+    marginRight: 20,
+    marginLeft: 20,
+    marginTop: 10,
+    marginBottom: 10,
     shadowColor: "#000",
     shadowOffset: { width: 3, height: 3 },
     shadowOpacity: 0.2,

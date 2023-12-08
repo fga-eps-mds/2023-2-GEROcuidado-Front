@@ -3,6 +3,7 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import { IUser } from "../../interfaces/user.interface";
 import NaoAutenticado from "../../components/NaoAutenticado";
 import IdosoNaoSelecionado from "../../components/IdosoNaoSelecionado";
+import CalendarStrip from "react-native-calendar-strip";
 
 import {
   Pressable,
@@ -14,19 +15,39 @@ import {
 } from "react-native";
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
 import { router } from "expo-router";
-import { IRotina, IRotinaFilter } from "../../interfaces/rotina.interface";
+import {
+  IOrder,
+  IRotina,
+  IRotinaFilter,
+} from "../../interfaces/rotina.interface";
 import CardRotina from "../../components/CardRotina";
 import { getAllRotina } from "../../services/rotina.service";
 import Toast from "react-native-toast-message";
 import { FlashList } from "@shopify/flash-list";
 import { Image } from "expo-image";
 import { IIdoso } from "../../interfaces/idoso.interface";
+import moment from "moment";
+import "moment/locale/pt-br";
 
 export default function Rotinas() {
+  moment.locale("pt-br");
+
   const [idoso, setIdoso] = useState<IIdoso>();
   const [user, setUser] = useState<IUser>();
   const [rotinas, setRotinas] = useState<IRotina[]>([]);
   const [loading, setLoading] = useState(true);
+  const [selectedDate, setSelectedDate] = useState(moment());
+  const order: IOrder = {
+    column: "dataHora",
+    dir: "ASC",
+  };
+
+  const datesWhitelist = [
+    {
+      start: moment().clone().subtract(1, "y"),
+      end: moment().add(1, "y"),
+    },
+  ];
 
   const getIdoso = () => {
     AsyncStorage.getItem("idoso").then((idosoString) => {
@@ -72,16 +93,33 @@ export default function Rotinas() {
   };
 
   const getRotinas = () => {
+    if (idoso == undefined || !selectedDate) return;
+
     setLoading(true);
 
+    const dataHora = selectedDate.toDate();
+    dataHora.setHours(dataHora.getHours() - 3);
+
     const rotinaFilter: IRotinaFilter = {
-      idIdoso: Number(idoso?.id),
+      idIdoso: Number(idoso.id),
+      dataHora: dataHora.toISOString(),
     };
 
-    getAllRotina(rotinaFilter)
+    getAllRotina(rotinaFilter, order)
       .then((response) => {
         const newRotinas = response.data as IRotina[];
-        setRotinas(newRotinas);
+        const filteredRotinas = newRotinas.filter((rotina) => {
+          if (rotina.dias.length > 0) {
+            const date = selectedDate.toDate();
+            const weekday = date.getDay();
+            const dateRotina = new Date(rotina.dataHora);
+
+            return rotina.dias.includes(weekday) && dateRotina < date;
+          } else {
+            return true;
+          }
+        });
+        setRotinas(filteredRotinas);
       })
       .catch((err) => {
         const error = err as { message: string };
@@ -96,15 +134,21 @@ export default function Rotinas() {
       });
   };
 
+  const markedDates = [
+    {
+      date: moment(),
+      dots: [{ color: "#fff" }],
+    },
+  ];
+
   useEffect(() => handleUser(), []);
   useEffect(() => getIdoso(), []);
-  useEffect(() => getRotinas(), [idoso]);
+  useEffect(() => getRotinas(), [idoso, selectedDate]);
 
   return (
     <>
       {!user?.id && <NaoAutenticado />}
 
-      {/* TODO fazer componente de idoso não selecionado que direcione pra listagem de idosos */}
       {user?.id && !idoso?.id && <IdosoNaoSelecionado />}
 
       {user?.id && idoso?.id && (
@@ -114,6 +158,26 @@ export default function Rotinas() {
             <Text style={styles.nomeUsuario}>
               <Text style={styles.negrito}>{idoso?.nome}</Text>
             </Text>
+          </View>
+
+          <View>
+            <CalendarStrip
+              scrollerPaging={true}
+              scrollable={true}
+              style={styles.Calendar}
+              calendarHeaderStyle={{ color: "#fff" }}
+              dateNumberStyle={{ color: "#fff" }}
+              dateNameStyle={{ color: "#fff" }}
+              iconContainer={{ flex: 0.1 }}
+              highlightDateNameStyle={{ color: "#fff" }}
+              highlightDateNumberStyle={{ color: "#fff" }}
+              highlightDateContainerStyle={{ backgroundColor: "#B4026D" }}
+              showMonth={true}
+              datesWhitelist={datesWhitelist}
+              onDateSelected={setSelectedDate}
+              selectedDate={selectedDate}
+              markedDates={markedDates}
+            />
           </View>
 
           <Pressable style={styles.botaoCriarRotina} onPress={novaRotina}>
@@ -130,15 +194,28 @@ export default function Rotinas() {
             />
           )}
 
-          {!loading && (
+          {!loading && rotinas.length > 0 && (
             <View style={styles.rotinas}>
               <FlashList
                 data={rotinas}
                 renderItem={({ item, index }) => (
-                  <CardRotina item={item} index={index} />
+                  <CardRotina
+                    item={item}
+                    index={index}
+                    date={selectedDate.toDate() || new Date()}
+                  />
                 )}
                 estimatedItemSize={50}
               />
+            </View>
+          )}
+          {rotinas.length === 0 && (
+            <View>
+              <Text
+                style={styles.semRotinas}
+              >{`Você ainda não tem nenhuma rotina cadastrada no dia ${moment(
+                selectedDate,
+              ).format("DD/MM")}`}</Text>
             </View>
           )}
         </View>
@@ -159,6 +236,11 @@ const styles = StyleSheet.create({
     width: 60,
     aspectRatio: 1,
     borderRadius: 100,
+  },
+  Calendar: {
+    height: 80,
+    margin: 0,
+    backgroundColor: "#2CCDB5",
   },
   semFoto: { position: "relative", backgroundColor: "#EFEFF0" },
   semFotoIcon: {
@@ -198,6 +280,12 @@ const styles = StyleSheet.create({
   },
   rotinas: {
     width: Dimensions.get("window").width,
-    height: Dimensions.get("window").height - 280,
+    height: Dimensions.get("window").height - 315,
+  },
+  semRotinas: {
+    fontSize: 35,
+    opacity: 0.3,
+    textAlign: "center",
+    marginTop: "35%",
   },
 });

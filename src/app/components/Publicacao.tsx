@@ -51,7 +51,8 @@ export default function Publicacao({ item, crop }: Readonly<IProps>) {
     });
   };
 
-  const getNome = (nome: string): string => {
+  const getNome = (nome?: string): string => {
+    if (!nome) return "Usuário deletado";
     if (!crop) return nome;
 
     return nome.length < 25 ? nome : nome.slice(0, 25) + "...";
