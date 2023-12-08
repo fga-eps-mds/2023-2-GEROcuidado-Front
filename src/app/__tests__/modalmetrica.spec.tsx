@@ -4,9 +4,10 @@ import ModalMetrica from '../components/ModalMetrica';
 import { EMetricas } from '../interfaces/metricas.interface';
 import { ETipoSanguineo } from '../interfaces/idoso.interface';
 
+
 const mockMetrica = {
-  id: 1, 
-  idIdoso: 123, 
+  id: 1,
+  idIdoso: 123,
   nome: 'João Silva',
   dataNascimento: '1950-01-01',
   idUsuario: 123,
@@ -24,14 +25,14 @@ describe('ModalMetrica Component', () => {
     render(
       <ModalMetrica
         visible={true}
-        callbackFn={() => {}}
-        closeModal={() => {}}
+        callbackFn={() => { }}
+        closeModal={() => { }}
+        callbackValor={() => { }}
         message="Teste"
         metrica={mockMetrica}
       />
     );
   });
-
 
   it('chama callbackFn ao pressionar o botão de salvar', () => {
     const mockCallbackFn = jest.fn();
@@ -40,7 +41,8 @@ describe('ModalMetrica Component', () => {
       <ModalMetrica
         visible={true}
         callbackFn={mockCallbackFn}
-        closeModal={() => {}}
+        closeModal={() => { }}
+        callbackValor={mockCallbackFn}
         message="Teste"
         metrica={mockMetrica}
       />
@@ -49,5 +51,6 @@ describe('ModalMetrica Component', () => {
     fireEvent.press(getByTestId('callbackBtn'));
     expect(mockCallbackFn).toHaveBeenCalled();
   });
-  
 });
+
+

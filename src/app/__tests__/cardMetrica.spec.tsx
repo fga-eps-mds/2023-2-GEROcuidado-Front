@@ -101,6 +101,54 @@ valor: 75,
 
 };
 
+const mockItem6 = {
+  id: 1, 
+idIdoso: 123, 
+nome: 'João Silva',
+dataNascimento: '1950-01-01',
+idUsuario: 123,
+foto: 'url_da_foto.jpg',
+tipoSanguineo: ETipoSanguineo.A_POSITIVO,
+telefoneResponsavel: '123456789',
+descricao: 'Idoso com histórico de hipertensão',
+dataHora: new Date(),
+categoria: EMetricas.HORAS_DORMIDAS,
+valor: 75,
+
+};
+
+const mockItem7 = {
+  id: 1, 
+idIdoso: 123, 
+nome: 'João Silva',
+dataNascimento: '1950-01-01',
+idUsuario: 123,
+foto: 'url_da_foto.jpg',
+tipoSanguineo: ETipoSanguineo.A_POSITIVO,
+telefoneResponsavel: '123456789',
+descricao: 'Idoso com histórico de hipertensão',
+dataHora: new Date(),
+categoria: EMetricas.ALTURA,
+valor: 75,
+
+};
+
+const mockItem8 = {
+  id: 1, 
+idIdoso: 123, 
+nome: 'João Silva',
+dataNascimento: '1950-01-01',
+idUsuario: 123,
+foto: 'url_da_foto.jpg',
+tipoSanguineo: ETipoSanguineo.A_POSITIVO,
+telefoneResponsavel: '123456789',
+descricao: 'Idoso com histórico de hipertensão',
+dataHora: new Date(),
+categoria: EMetricas.IMC,
+valor: 75,
+
+};
+
  jest.mock("expo-router", () => ({
     router: {
       push: jest.fn(),
@@ -164,6 +212,36 @@ describe('CardIdoso Component', () => {
       expect(getByText('°C')).toBeTruthy();
     } else {
       expect(() => getByText('°C')).toThrow();
+    }
+  });
+
+  it('exibe as unidades corretas 6', () => {
+    const { getByText } = render(<CardMetrica item={mockItem6} />);
+    
+    if (mockItem6.categoria === EMetricas.HORAS_DORMIDAS) {
+      expect(getByText('h')).toBeTruthy();
+    } else {
+      expect(() => getByText('h')).toThrow();
+    }
+  });
+
+  it('exibe as unidades corretas 7', () => {
+    const { getByText } = render(<CardMetrica item={mockItem7} />);
+    
+    if (mockItem7.categoria === EMetricas.ALTURA) {
+      expect(getByText('cm')).toBeTruthy();
+    } else {
+      expect(() => getByText('cm')).toThrow();
+    }
+  });
+
+  it('exibe as unidades corretas 8', () => {
+    const { getByText } = render(<CardMetrica item={mockItem8} />);
+    
+    if (mockItem8.categoria === EMetricas.IMC) {
+      expect(getByText('kg/m²')).toBeTruthy();
+    } else {
+      expect(() => getByText('kg/m²')).toThrow();
     }
   });
 
