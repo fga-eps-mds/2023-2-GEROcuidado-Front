@@ -7,6 +7,7 @@ import { TextInput } from "react-native-gesture-handler";
 interface IProps {
   visible: boolean;
   callbackFn: () => unknown;
+  callbackValor: (valor: string) => unknown
   closeModal: () => unknown;
   message: string;
   metrica: IMetrica;
@@ -15,6 +16,7 @@ interface IProps {
 export default function ModalMetrica({
   visible,
   callbackFn,
+  callbackValor,
   closeModal,
   metrica,
   message,
@@ -51,7 +53,12 @@ export default function ModalMetrica({
               
               <TextInput
                 value={valor}
-                onChangeText={(valor) => setValor(valor)}
+                onChangeText={(valor) => 
+                {
+                  setValor(valor);
+                  callbackValor(valor);
+                }
+                }
                 style = {styles.textInput}
                 placeholderTextColor={"#3D3D3D"}
               />

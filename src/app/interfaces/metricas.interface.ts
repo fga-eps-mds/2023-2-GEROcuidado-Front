@@ -5,8 +5,9 @@ export enum EMetricas {
   PESO = "Peso",
   GLICEMIA = "Glicemia",
   SATURACAO_OXIGENIO = "Saturação",
-  ALTURA = "ALTURA", 
-  HORAS_DORMIDAS = "horas_dormidas",
+  ALTURA = "Altura", 
+  HORAS_DORMIDAS = "Horas Dormidas",
+  IMC = "IMC",
 }
 
 export interface IMetricaBody {
@@ -17,11 +18,9 @@ export interface IMetrica extends IMetricaBody {
   id: number;
 }
 export interface IValorMetricaBody {
-  categoria: EMetricas;
-  valor: number;
+  valor: string;
   dataHora: Date | string;
-  idUsuario: number;
-  idIdoso: number;
+  idMetrica: number;
 }
 
 export interface IValorMetrica extends IValorMetricaBody {
@@ -34,4 +33,8 @@ export interface IMetricaFilter {
 
 export interface IMetricaValueFilter {
   idMetrica: number;
+}
+
+export interface IValorMetricaCategoria extends IValorMetrica{
+  categoria: EMetricas;
 }

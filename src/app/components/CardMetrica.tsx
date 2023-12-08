@@ -13,7 +13,7 @@ interface IProps {
     item: IMetrica;
 }
 
-export default function CardIdoso({ item }: IProps) {
+export default function CardMetrica({ item }: IProps) {
 
     const titleColor = '#000'
     const textColor = '#888' 

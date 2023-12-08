@@ -1,13 +1,13 @@
-import { IMetrica, IMetricaValueFilter } from "../interfaces/metricas.interface";
+import { IMetrica, IMetricaValueFilter, IValorMetrica, IValorMetricaBody } from "../interfaces/metricas.interface";
 import { IResponse } from "../interfaces/response.interface";
 
 const API_URL = process.env.EXPO_PUBLIC_API_URL;
 const API_PORT = process.env.EXPO_PUBLIC_API_SAUDE_PORT;
 const BASE_URL = `${API_URL}:${API_PORT}/api/saude/valorMetrica`;
 
-export const getAllMetricaVAlues = async (
+export const getAllMetricaValues = async (
     filter: IMetricaValueFilter,
-  ): Promise<IResponse<IMetrica[] | null>> => {
+  ): Promise<IResponse<IValorMetrica[] | null>> => {
     const params = `limit=20&offset=0&filter=${JSON.stringify(filter)}`;
     const response = await fetch(`${BASE_URL}?${params}`, {
       method: "GET",
@@ -24,4 +24,27 @@ export const getAllMetricaVAlues = async (
     }
   
     return json;
+};
+
+export const postMetricaValue = async (
+  body: IValorMetricaBody,
+  token: string,
+): Promise<IResponse<IValorMetrica | null>> => {
+  const response = await fetch(BASE_URL, {
+    method: "POST",
+    headers: {
+      Accept: "application/json",
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${token}`,
+    },
+    body: JSON.stringify(body),
+  });
+
+  const json = await response.json();
+
+  if (response.status !== 201) {
+    throw new Error(json.message as string);
+  }
+
+  return json;
 };
