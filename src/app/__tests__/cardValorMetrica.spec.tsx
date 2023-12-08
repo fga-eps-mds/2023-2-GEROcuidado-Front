@@ -2,7 +2,6 @@ import React from 'react';
 import { render } from '@testing-library/react-native';
 import CardValorMetrica from '../components/CardValorMetrica';
 import { EMetricas } from '../interfaces/metricas.interface';
-import { ETipoSanguineo } from '../interfaces/idoso.interface';
 
 const mockItem = {
     categoria: EMetricas.FREQ_CARDIACA,
@@ -46,7 +45,27 @@ const mockItem5 = {
     dataHora: '2023-01-01T12:30:00',
     idMetrica: 123,  };
 
+const mockItem6 = {
+    categoria: EMetricas.ALTURA,
+    id: 1,
+    valor: '80',
+    dataHora: '2023-01-01T12:30:00',
+    idMetrica: 123,  };
 
+const mockItem7 = {
+    categoria: EMetricas.HORAS_DORMIDAS,
+    id: 1,
+    valor: '80',
+    dataHora: '2023-01-01T12:30:00',
+    idMetrica: 123,  };
+
+const mockItem8 = {
+    categoria: EMetricas.IMC,
+    id: 1,
+    valor: '80',
+    dataHora: '2023-01-01T12:30:00',
+    idMetrica: 123,  };
+    
 describe('CardValorMetrica Component', () => {
 
   it('renderiza corretamente', () => {
@@ -106,7 +125,35 @@ describe('CardValorMetrica Component', () => {
     }
   });
 
-  
+  it('exibe as unidades corretas 6', () => {
+    const { getByText } = render(<CardValorMetrica item={mockItem6} />);
+    
+    if (mockItem6.categoria === EMetricas.ALTURA) {
+      expect(getByText('cm')).toBeTruthy();
+    } else {
+      expect(() => getByText('cm')).toThrow();
+    }
+  });
+
+  it('exibe as unidades corretas 7', () => {
+    const { getByText } = render(<CardValorMetrica item={mockItem7} />);
+    
+    if (mockItem7.categoria === EMetricas.HORAS_DORMIDAS) {
+      expect(getByText('h')).toBeTruthy();
+    } else {
+      expect(() => getByText('h')).toThrow();
+    }
+  });
+
+  it('exibe as unidades corretas 8', () => {
+    const { getByText } = render(<CardValorMetrica item={mockItem8} />);
+    
+    if (mockItem8.categoria === EMetricas.IMC) {
+      expect(getByText('kg/m²')).toBeTruthy();
+    } else {
+      expect(() => getByText('cmkg/m²')).toThrow();
+    }
+  });
 
 });
 
