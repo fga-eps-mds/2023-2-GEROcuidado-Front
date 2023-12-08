@@ -41,7 +41,7 @@ export default function EditarRotina() {
   const [descricao, setDescricao] = useState(params.descricao);
   const [categoria, setCategoria] = useState(params.categoria);
   const [dias, setDias] = useState(
-    params.dias !== "" ? params.dias.split(",").map((dia) => Number(dia)) : [],
+    params.dias && params.dias !== "" ? params.dias.split(",").map((dia) => Number(dia)) : [],
   );
   const [showLoading, setShowLoading] = useState(false);
   const [erros, setErros] = useState<IErrors>({});
@@ -69,11 +69,13 @@ export default function EditarRotina() {
 
   const separaDataHora = () => {
     const value = params.dataHora as string;
-    const valueFinal = value.split("T");
-    const separaData = valueFinal[0].split("-");
-    setData(`${separaData[2]}/${separaData[1]}/${separaData[0]}`);
-    const separaHora = valueFinal[1].split(":");
-    setHora(`${separaHora[0]}:${separaHora[1]}`);
+    if (value) {
+      const valueFinal = value.split("T");
+      const separaData = valueFinal[0].split("-");
+      setData(`${separaData[2]}/${separaData[1]}/${separaData[0]}`);
+      const separaHora = valueFinal[1].split(":");
+      setHora(`${separaHora[0]}:${separaHora[1]}`);
+    }
   };
 
   const handleErrors = () => {
@@ -215,7 +217,7 @@ export default function EditarRotina() {
             style={styles.inputTitulo}
           />
         </View>
-        <View style={styles.erroTitulo}>
+        <View style={styles.erroTitulo} testID="Erro-titulo">
           <ErrorMessage show={showErrors} text={erros.titulo} />
         </View>
         <View style={styles.dataHora}>
