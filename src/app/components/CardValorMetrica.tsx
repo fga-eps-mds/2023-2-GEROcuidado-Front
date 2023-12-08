@@ -39,6 +39,15 @@ export default function CardValorMetrica({ item }: IProps) {
         if(item.categoria == EMetricas.TEMPERATURA){
             return "°C"
         }
+        if(item.categoria == EMetricas.ALTURA){
+            return "cm"
+        }
+        if(item.categoria == EMetricas.HORAS_DORMIDAS){
+            return "h"
+        }
+        if(item.categoria == EMetricas.IMC){
+            return "kg/m²"
+        }
     }
     const separaDataHora = () => {
         const value = item.dataHora as string;
@@ -69,6 +78,16 @@ export default function CardValorMetrica({ item }: IProps) {
         if(item.categoria == EMetricas.TEMPERATURA){
             return <FontAwesome name="thermometer" color={"#FFAC7D"} size={25}/>
         }
+        if(item.categoria == EMetricas.ALTURA){
+            return <Icon name="human-male-height-variant" color={"#3F3F3F"} size={25}/>
+        }
+        if(item.categoria == EMetricas.HORAS_DORMIDAS){
+            return <FontAwesome name="bed" color={"#3F3F3F"} size={25}/>
+        }
+        if(item.categoria == EMetricas.IMC){
+            return <View><Text style={{fontSize:25}}>IMC</Text></View>
+        }
+        
     }
 
     useEffect(() => separaDataHora(), []);
@@ -125,6 +144,8 @@ const styles = StyleSheet.create({
         fontSize: 24, 
     },
     units: {
+
+        marginTop:5,
         marginLeft:3,
         fontSize: 18, 
     },

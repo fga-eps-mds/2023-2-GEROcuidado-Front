@@ -38,6 +38,9 @@ export default function ModalMetrica({
               {metrica.categoria == EMetricas.GLICEMIA && (
                 <FontAwesome name="cubes" color={"#3F3F3F"} size={60}/>
               )}
+              {metrica.categoria == EMetricas.ALTURA && (
+                <Icon name="human-male-height-variant" color={"#3F3F3F"} size={60}/>
+              )}
               {metrica.categoria == EMetricas.TEMPERATURA && (
                 <FontAwesome name="thermometer" color={"#FFAC7D"} size={60}/>
               )}
@@ -50,7 +53,9 @@ export default function ModalMetrica({
               {metrica.categoria == EMetricas.SATURACAO_OXIGENIO && (
                 <View><Text style = {{fontSize: 60}}>O<Text style={{fontSize:30}}>2</Text></Text></View>
               )}
-              
+              {metrica.categoria == EMetricas.IMC && (
+                <View><Text style = {{fontSize: 60}}>IMC</Text></View>
+              )}
               <TextInput
                 value={valor}
                 onChangeText={(valor) => 
