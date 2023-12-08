@@ -45,7 +45,7 @@ const FiltroDropdown: React.FC<FiltroDropdownProps> = ({ filtro, setFiltro }) =>
       ]}
       onPress={() => selectOption(item)}
     >
-      <Text style={[styles.optionText, { color: selectedOption === item.value ? "#fff" : "#333" }]}>
+      <Text style={[styles.optionText, { color: selectedOption === item.value ? "#fff" : "#333", textAlign: 'left' }]}>
         {item.value}
       </Text>
     </TouchableOpacity>
