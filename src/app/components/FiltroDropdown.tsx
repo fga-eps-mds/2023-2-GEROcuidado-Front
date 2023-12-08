@@ -33,7 +33,7 @@ const FiltroDropdown: React.FC<FiltroDropdownProps> = ({ filtro, setFiltro }) =>
 
   const selectOption = (item: IOrderOption) => {
     setFiltro(item.value);
-    setSelectedOption(item.value);
+    setSelectedOption(item.value === selectedOption ? null : item.value);
     setDropdownVisible(false);
   };
 
@@ -102,8 +102,8 @@ const styles = StyleSheet.create({
     paddingVertical: 8,
     paddingHorizontal: 15,
     borderRadius: 5,
-    width: 150,  
-    marginLeft: 15,  
+    width: 150,
+    marginLeft: 15,
   },
   label: {
     color: "#fff",
