@@ -6,7 +6,7 @@ import { View, StyleSheet, Pressable, Text} from "react-native";
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
 import { IIdoso } from "../../interfaces/idoso.interface";
 import { router, useLocalSearchParams } from "expo-router";
-import { EMetricas, IMetrica, IMetricaValueFilter, IValorMetrica } from "../../interfaces/metricas.interface";
+import { EMetricas, IMetrica, IMetricaValueFilter, IOrder, IValorMetrica } from "../../interfaces/metricas.interface";
 import { getAllMetricaValues, postMetricaValue } from "../../services/metricaValue.service";
 import Toast from "react-native-toast-message";
 import { FlatList, ScrollView } from "react-native-gesture-handler";
@@ -23,6 +23,13 @@ export default function VisualizarMetrica() {
   const [valor,setValor] = useState<string>("");
   const [showLoading, setShowLoading] = useState(false);
   const [modalVisible, setModalVisible] = useState(false);
+
+  const order: IOrder = {
+    column: "dataHora",
+    dir: "DESC",
+  }
+
+
   const handleUser = () => {
     AsyncStorage.getItem("usuario").then((response) => {
       const usuario = JSON.parse(response as string);
@@ -50,7 +57,7 @@ export default function VisualizarMetrica() {
 
     setLoading(true);
     const filter : IMetricaValueFilter = {idMetrica: params.id}
-    getAllMetricaValues(filter)
+    getAllMetricaValues(filter, order)
       .then((response) => {
         const newMetricasVAlues = response.data as IValorMetrica[];
         setValueMetrica(newMetricasVAlues);
