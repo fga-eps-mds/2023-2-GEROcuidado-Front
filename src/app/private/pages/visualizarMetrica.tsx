@@ -7,22 +7,30 @@ import Icon from "react-native-vector-icons/MaterialCommunityIcons";
 import { IIdoso } from "../../interfaces/idoso.interface";
 import { router, useLocalSearchParams } from "expo-router";
 import { EMetricas, IMetrica, IMetricaValueFilter, IValorMetrica } from "../../interfaces/metricas.interface";
-import { getAllMetricaVAlues } from "../../services/metricaValue.service";
+import { getAllMetricaValues, postMetricaValue } from "../../services/metricaValue.service";
 import Toast from "react-native-toast-message";
-import { FlatList } from "react-native-gesture-handler";
+import { FlatList, ScrollView } from "react-native-gesture-handler";
 import ModalMetrica from "../../components/ModalMetrica";
+import CardValorMetrica from "../../components/CardValorMetrica";
 
 export default function VisualizarMetrica() {
   const params = useLocalSearchParams() as unknown as IMetrica;
   const [user, setUser] = useState<IUser | undefined>(undefined);
   const [idoso, setIdoso] = useState<IIdoso>();
   const [loading, setLoading] = useState(true);
+  const [token, setToken] = useState<string>("");
   const [valueMetrica,setValueMetrica] = useState<IValorMetrica[]>([]); 
+  const [valor,setValor] = useState<string>("");
+  const [showLoading, setShowLoading] = useState(false);
   const [modalVisible, setModalVisible] = useState(false);
   const handleUser = () => {
     AsyncStorage.getItem("usuario").then((response) => {
       const usuario = JSON.parse(response as string);
       setUser(usuario);
+    });
+
+    AsyncStorage.getItem("token").then((response) => {
+      setToken(response as string);
     });
   };
 
@@ -42,10 +50,9 @@ export default function VisualizarMetrica() {
 
     setLoading(true);
     const filter : IMetricaValueFilter = {idMetrica: params.id}
-    getAllMetricaVAlues(filter)
+    getAllMetricaValues(filter)
       .then((response) => {
         const newMetricasVAlues = response.data as IValorMetrica[];
-        console.log(newMetricasVAlues);
         setValueMetrica(newMetricasVAlues);
       })
       .catch((err) => {
@@ -69,8 +76,37 @@ export default function VisualizarMetrica() {
     setModalVisible(true);
   };
 
-  const salvar = () => {
+  const salvar = async () => {
 
+    const body = {
+      idMetrica: Number(params.id),
+      valor : valor,
+      dataHora: new Date(),
+    };
+
+    try {
+      setShowLoading(true);
+      const response = await postMetricaValue(body, token);
+      Toast.show({
+        type: "success",
+        text1: "Sucesso!",
+        text2: response.message as string,
+      });
+      router.replace({pathname:"private/pages/visualizarMetrica",params:params});
+    } catch (err) {
+      const error = err as { message: string };
+      Toast.show({
+        type: "error",
+        text1: "Erro!",
+        text2: error.message,
+      });
+    } finally {
+      setShowLoading(false);
+    }
+  };
+
+  const debounceValor = (valor: string) => {
+    setValor(valor);
   }
 
   const vizualizarMetrica = (item: IValorMetrica) => {
@@ -104,7 +140,7 @@ export default function VisualizarMetrica() {
             //style={styles.verMetrica}
             onPress={() => vizualizarMetrica(item)}
           >
-            <Text>{item.valor}</Text>
+            <CardValorMetrica item = {{...item, categoria:params.categoria}}/>
           </Pressable>
         )}
       />
@@ -113,6 +149,7 @@ export default function VisualizarMetrica() {
         <ModalMetrica
         visible = {modalVisible}
         callbackFn={salvar}
+        callbackValor={debounceValor}
         closeModal={() => setModalVisible(false)}
         metrica={params}
         message={params.categoria}
