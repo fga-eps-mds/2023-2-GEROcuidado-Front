@@ -66,6 +66,9 @@ export default function CadastrarIdoso() {
     { key: EMetricas.PRESSAO_SANGUINEA, value: EMetricas.PRESSAO_SANGUINEA },
     { key: EMetricas.SATURACAO_OXIGENIO, value: EMetricas.SATURACAO_OXIGENIO },
     { key: EMetricas.TEMPERATURA, value: EMetricas.TEMPERATURA },
+    { key: EMetricas.ALTURA, value: EMetricas.ALTURA},
+    { key: EMetricas.IMC, value: EMetricas.IMC},
+    { key: EMetricas.HORAS_DORMIDAS, value: EMetricas.HORAS_DORMIDAS},
   ];
 
   const salvar = async () => {

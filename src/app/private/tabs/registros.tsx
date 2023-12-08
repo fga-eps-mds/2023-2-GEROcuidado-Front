@@ -131,19 +131,6 @@ export default function Registros() {
         </Pressable>
       </View> */}
       <ScrollView>
-        {/* <FlatList
-          numColumns={2}
-          showsVerticalScrollIndicator={false}
-          data={metricas}
-          renderItem={({ item }) => (
-            <Pressable
-              style={styles.verMetrica}
-              onPress={() => editarmetrica(item)}
-            >
-              <CardMetrica item={item} />
-            </Pressable>
-          )}
-        /> */}
         <GridView
           data={metricas}
           numColumns={2}
