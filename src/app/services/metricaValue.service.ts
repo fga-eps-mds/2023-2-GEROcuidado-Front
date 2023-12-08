@@ -1,4 +1,4 @@
-import { IMetrica, IMetricaValueFilter, IValorMetrica, IValorMetricaBody } from "../interfaces/metricas.interface";
+import { IMetrica, IMetricaValueFilter, IOrder, IValorMetrica, IValorMetricaBody } from "../interfaces/metricas.interface";
 import { IResponse } from "../interfaces/response.interface";
 
 const API_URL = process.env.EXPO_PUBLIC_API_URL;
@@ -7,8 +7,9 @@ const BASE_URL = `${API_URL}:${API_PORT}/api/saude/valorMetrica`;
 
 export const getAllMetricaValues = async (
     filter: IMetricaValueFilter,
+    order: IOrder
   ): Promise<IResponse<IValorMetrica[] | null>> => {
-    const params = `limit=20&offset=0&filter=${JSON.stringify(filter)}`;
+    const params = `limit=20&offset=0&filter=${JSON.stringify(filter)}&order=${JSON.stringify(order)}`;
     const response = await fetch(`${BASE_URL}?${params}`, {
       method: "GET",
       headers: {

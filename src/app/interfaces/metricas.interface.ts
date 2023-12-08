@@ -38,3 +38,8 @@ export interface IMetricaValueFilter {
 export interface IValorMetricaCategoria extends IValorMetrica{
   categoria: EMetricas;
 }
+
+export interface IOrder {
+  column:string;
+  dir: "ASC" | "DESC";
+}
