@@ -33,6 +33,7 @@ const FiltroDropdown: React.FC<FiltroDropdownProps> = ({ filtro, setFiltro }) =>
 
   const selectOption = (item: IOrderOption) => {
     setFiltro(item.value);
+    setSelectedOption(item.value);
     setDropdownVisible(false);
   };
 
@@ -80,7 +81,7 @@ const FiltroDropdown: React.FC<FiltroDropdownProps> = ({ filtro, setFiltro }) =>
           keyExtractor={(item) => item.value}
           style={[
             styles.dropdownList,
-            { width: buttonDimensions.width, top: buttonDimensions.height },
+            { width: buttonDimensions.width, top: buttonDimensions.height, marginLeft: 15 },
           ]}
         />
       )}
@@ -101,7 +102,8 @@ const styles = StyleSheet.create({
     paddingVertical: 8,
     paddingHorizontal: 15,
     borderRadius: 5,
-    width: 150, 
+    width: 150,  
+    marginLeft: 15,  
   },
   label: {
     color: "#fff",
