@@ -4,19 +4,23 @@ import { useEffect, useState } from "react";
 import { View, Text, StyleSheet, ScrollView } from "react-native";
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
 import FontAwesome from "react-native-vector-icons/FontAwesome";
-import { EMetricas, IMetrica, IMetricaValueFilter, IOrder, IValorMetrica } from "../interfaces/metricas.interface";
+import { EMetricas, IMetrica, IMetricaFilter, IMetricaValueFilter, IOrder, IValorMetrica } from "../interfaces/metricas.interface";
 import { getAllMetricaValues } from "../services/metricaValue.service";
 import Toast from "react-native-toast-message";
 import { Entypo } from "@expo/vector-icons";
+import { getAllMetrica } from "../services/metrica.service";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import { IIdoso } from "../interfaces/idoso.interface";
 
 interface IProps {
     item: IMetrica;
 }
 
-export default function CardMetrica({ item }: IProps) {
+export default function CardMetrica({ item}: IProps) {
     const [valorMetrica, setValorMetrica] = useState<IValorMetrica>();
     const [dataHora, setDataHora] = useState<string>()
     const [hora, setHora] = useState("");
+    const [data, setData] = useState("");
 
     const order: IOrder = {
         column: "dataHora",
@@ -106,17 +110,22 @@ export default function CardMetrica({ item }: IProps) {
 
     const separaDataHora = () => {
         setDataHora(valorMetrica?.dataHora as string)
-
+        
         if (!dataHora) return
-
-        const value = dataHora;
+        
+        const dataHoraNum = new Date(dataHora).getTime();
+        const fuso = new Date(dataHora).getTimezoneOffset()*60000;
+        const value = new Date(dataHoraNum - fuso).toISOString();
         const valueFinal = value.split("T");
         const separaHora = valueFinal[1].split(":");
         setHora(`${separaHora[0]}:${separaHora[1]}`);
+        const separaData = valueFinal[0].split("-");
+        setData(`${separaData[2]}/${separaData[1]}/${separaData[0]}`);
     };
 
     useEffect(getMetricas, []);
     useEffect(() => separaDataHora(), [dataHora, valorMetrica]);
+
 
     return (
         <ScrollView contentContainerStyle={styles.container}>
@@ -127,11 +136,18 @@ export default function CardMetrica({ item }: IProps) {
                 </View>
                 <Text style={styles.content}>
                     {valorMetrica && (
+                        <>
                         <Text style={[styles.number]}>{valorMetrica.valor}</Text>
+                        <Text style={[styles.units, { color: textColor }]}>{unidade()}</Text>
+                        </>
                     )}
-                    <Text style={[styles.units, { color: textColor }]}>{unidade()}</Text>
+                    {!valorMetrica && (
+                        <Text style={[styles.units, { color: textColor }]}>Nenhum valor cadastrado</Text>
+                    )}
                 </Text>
-                <Text style={[styles.time, { color: textColor }]}>{hora}</Text>
+                {dataHora && (
+                    <Text style={[styles.time, { color: textColor }]}>{data} às {hora}</Text>
+                )}
                 <Icon name="chevron-right" size={16} color={textColor} style={styles.chevron} />
             </View>
         </ScrollView>
@@ -143,6 +159,7 @@ const styles = StyleSheet.create({
         flex: 1,
         justifyContent: 'center',
         alignItems: 'center',
+        margin:5
     },
     texto: {
         alignSelf: "center",
@@ -153,7 +170,7 @@ const styles = StyleSheet.create({
         borderRadius: 8,
         padding: 16,
         margin: 8,
-        width: '100%',
+        width: 150,
         height: 150,
         shadowColor: '#000',
         shadowOffset: { width: 0, height: 2 },
@@ -176,6 +193,7 @@ const styles = StyleSheet.create({
         fontSize: 24,
     },
     units: {
+        marginLeft: 3,
         fontSize: 18,
     },
     time: {
