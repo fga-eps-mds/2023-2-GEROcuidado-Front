@@ -99,4 +99,23 @@ describe("CadastrarIdoso component", () => {
     );
   });
 
+  it("Salvar com telefone errado", async () => {
+    const { getByText, getByPlaceholderText, getByTestId } = render(
+      <CadastrarIdoso />,
+    );
+
+    const data = getByPlaceholderText("Telefone Responsável");
+    const salvar = getByText("Cadastrar");
+
+    act(() => {
+      fireEvent.changeText(data, "55111");
+      fireEvent.press(salvar);
+    });
+    const erroData = getByTestId("Erro-telefone");
+
+    expect(erroData.props.children.props.text).toBe(
+      "Deve estar no formato (XX)XXXXX-XXXX",
+    );
+  });
+
 });

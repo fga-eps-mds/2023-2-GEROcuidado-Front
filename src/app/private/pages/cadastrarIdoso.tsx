@@ -234,7 +234,9 @@ export default function CadastrarIdoso() {
               placeholder="Telefone Responsável"
             />
           </View>
+        <View testID="Erro-telefone">
           <ErrorMessage show={showErrors} text={erros.telefoneResponsavel} />
+        </View>
         </View>
 
         <View style={styles.formControl}>
