@@ -252,11 +252,11 @@ export default function EditarRotina() {
             inputMaskChange={(hora) => setHora(hora)}
           />
         </View>
-        <View style={styles.erro}>
+        <View style={styles.erro} testID="Erro-hora">
           <ErrorMessage show={showErrors} text={erros.hora} />
         </View>
 
-        <View>
+        <View>a
           <View style={styles.categoria}>
             {!categoria ||
               (categoria === ECategoriaRotina.GERAL && (

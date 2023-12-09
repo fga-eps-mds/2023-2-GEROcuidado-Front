@@ -58,4 +58,34 @@ describe("CadastrarRotina Component", () => {
       "Data deve ser no formato dd/mm/yyyy!",
     );
   });
+
+  it('Salvar sem hora', async () => {
+    const { getByText, getByPlaceholderText, getByTestId } = render(<EditarRotina />);
+          
+    const hora = getByPlaceholderText('Horário de início');
+    const salvar = getByText('Salvar');
+
+    act(() => {
+        fireEvent.changeText(hora, '');
+        fireEvent.press(salvar);
+    });
+    const erroHora = getByTestId('Erro-hora');
+
+    expect(erroHora.props.children.props.text).toBe('Campo obrigatório');
+});   
+
+it('Salvar hora com formato errado', async () => {
+    const { getByText, getByPlaceholderText, getByTestId } = render(<EditarRotina />);
+          
+    const hora = getByPlaceholderText('Horário de início');
+    const salvar = getByText('Salvar');
+
+    act(() => {
+        fireEvent.changeText(hora, '201');
+        fireEvent.press(salvar);
+    });
+    const erroHora = getByTestId('Erro-hora');
+
+    expect(erroHora.props.children.props.text).toBe('Hora deve ser no formato hh:mm!');
+}); 
 });
