@@ -58,9 +58,9 @@ docker compose -f docker-compose.test.yml up
 
 ## QR Code para testes
 ### IOS
-![IOS](assets/testes/ios_27-10.png.jpeg)
+![IOS](https://github.com/fga-eps-mds/2023-2-GEROcuidado-Front/assets/51385738/1a9562d5-dec5-485d-999a-59f2f16e2427)
 ### Android
-![Android](assets/testes/Android_27-10.png)
+![Android](https://github.com/fga-eps-mds/2023-2-GEROcuidado-Front/assets/51385738/9a6d23c0-2f88-42de-ac26-719e6faa9fd3)
 ### 📝 Notes
 
 - [Expo Router: Docs](https://expo.github.io/router)
