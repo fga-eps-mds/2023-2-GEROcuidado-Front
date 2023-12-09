@@ -1,9 +1,11 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Modal, StyleSheet, Text, Pressable, View } from "react-native";
 import { EMetricas, IMetrica, IValorMetrica } from "../interfaces/metricas.interface";
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
 import { FontAwesome } from "@expo/vector-icons";
 import { TextInput } from "react-native-gesture-handler";
+import ErrorMessage from "./ErrorMessage";
+import { Entypo } from "@expo/vector-icons";
 interface IProps {
   visible: boolean;
   callbackFn: () => unknown;
@@ -11,6 +13,10 @@ interface IProps {
   closeModal: () => unknown;
   message: string;
   metrica: IMetrica;
+}
+
+interface IErrors {
+  valor?: string;
 }
 
 export default function ModalMetrica({
@@ -22,24 +28,43 @@ export default function ModalMetrica({
   message,
 }: Readonly<IProps>) {
   const [valor, setValor] = useState<string>("");
+  const [erros, setErros] = useState<IErrors>({});
+  const [showErrors, setShowErrors] = useState(false);
+
+  const handleErrors = () => {
+    const erros: IErrors = {};
+
+    if (!valor) {
+      erros.valor = "Campo obrigatório!";
+      setShowErrors(true);
+    } else if (!/^[0-9/]+$/.test(valor)) {
+      erros.valor = "Formato inválido!";
+      setShowErrors(true);
+    }
+
+    setErros(erros);
+  };
+
+  useEffect(() => handleErrors(), [valor]);
+
   return (
     <Modal animationType="fade" transparent={true} visible={visible}>
       <View style={styles.centeredView}>
         <View style={styles.modalView}>
           <Text style={styles.modalText}>{message}</Text>
-            <View style = {styles.input}>
+            <View style = {styles.modal}>
 
               {metrica.categoria == EMetricas.FREQ_CARDIACA && (
                 <FontAwesome name="heartbeat" color={"#FF7D7D"} size={60}/>
               )}
               {metrica.categoria === EMetricas.HORAS_DORMIDAS && (
-                <FontAwesome name="bed" color={"#3F3F3F"} size={60} />
+                <FontAwesome name="bed" color={"#4B0082"} size={60} />
               )}
               {metrica.categoria == EMetricas.GLICEMIA && (
                 <FontAwesome name="cubes" color={"#3F3F3F"} size={60}/>
               )}
               {metrica.categoria == EMetricas.ALTURA && (
-                <Icon name="human-male-height-variant" color={"#3F3F3F"} size={60}/>
+                <Entypo name="ruler" color={"#000"} size={60} style={{ opacity: 0.8 }} />
               )}
               {metrica.categoria == EMetricas.TEMPERATURA && (
                 <FontAwesome name="thermometer" color={"#FFAC7D"} size={60}/>
@@ -54,19 +79,24 @@ export default function ModalMetrica({
                 <View><Text style = {{fontSize: 60}}>O<Text style={{fontSize:30}}>2</Text></Text></View>
               )}
               {metrica.categoria == EMetricas.IMC && (
-                <View><Text style = {{fontSize: 60}}>IMC</Text></View>
+                <Entypo name="calculator" color={"#000"} size={60} />
               )}
-              <TextInput
-                value={valor}
-                onChangeText={(valor) => 
-                {
-                  setValor(valor);
-                  callbackValor(valor);
-                }
-                }
-                style = {styles.textInput}
-                placeholderTextColor={"#3D3D3D"}
-              />
+              <View style={styles.input}>
+                <TextInput
+                  value={valor}
+                  onChangeText={(valor) => 
+                  {
+                    setValor(valor);
+                    callbackValor(valor);
+                  }
+                  }
+                  style = {styles.textInput}
+                  placeholderTextColor={"#3D3D3D"}
+                />
+                <View style={styles.erroValor}>
+                  <ErrorMessage show={showErrors} text={erros.valor}/>
+                </View>
+              </View>
 
             </View>
           <View style={styles.buttonContainer}>
@@ -81,7 +111,14 @@ export default function ModalMetrica({
             <Pressable
               testID="callbackBtn"
               style={[styles.button, styles.buttonClose]}
-              onPress={() => callbackFn()}
+              onPress={() => {
+                if (Object.keys(erros).length > 0){
+                  setShowErrors(true);
+                } else {
+                  callbackFn();
+                }
+
+              } }
             >
               <Text style={styles.textStyle}>{"Salvar"}</Text>
             </Pressable>
@@ -100,15 +137,20 @@ const styles = StyleSheet.create({
     alignItems: "center",
     backgroundColor: "#00000098",
   },
-
-  input:{
+  modal:{
     flexDirection:"row",
     marginBottom: 30,
   },
-
+  erroValor:{
+    padding:5
+  },
+  input:{
+    flexDirection:"column", 
+    alignItems:"center"
+  },
   textInput:{
     fontSize: 40,
-    width:100,
+    width:150,
     marginLeft:15,
     textAlign: "center",
   },
@@ -137,11 +179,11 @@ const styles = StyleSheet.create({
     backgroundColor: "#F194FF",
   },
   buttonClose: {
-    backgroundColor: "#FF7F7F",
+    backgroundColor: "#2CCDB5",
     marginHorizontal: 15,
   },
   buttonCancel: {
-    backgroundColor: "#2CCDB5",
+    backgroundColor: "#FF7F7F",
     marginHorizontal: 15,
   },
   textStyle: {
