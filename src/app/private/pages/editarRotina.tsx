@@ -41,7 +41,9 @@ export default function EditarRotina() {
   const [descricao, setDescricao] = useState(params.descricao);
   const [categoria, setCategoria] = useState(params.categoria);
   const [dias, setDias] = useState(
-    params.dias && params.dias !== "" ? params.dias.split(",").map((dia) => Number(dia)) : [],
+    params.dias && params.dias !== ""
+      ? params.dias.split(",").map((dia) => Number(dia))
+      : [],
   );
   const [showLoading, setShowLoading] = useState(false);
   const [erros, setErros] = useState<IErrors>({});
@@ -231,7 +233,7 @@ export default function EditarRotina() {
             placeholderTextColor={"#3D3D3D"}
           />
         </View>
-        <View style={styles.erro}>
+        <View style={styles.erro} testID="Erro-data">
           <ErrorMessage show={showErrors} text={erros.data} />
         </View>
 
