@@ -59,33 +59,61 @@ describe("CadastrarRotina Component", () => {
     );
   });
 
-  it('Salvar sem hora', async () => {
-    const { getByText, getByPlaceholderText, getByTestId } = render(<EditarRotina />);
-          
-    const hora = getByPlaceholderText('Horário de início');
-    const salvar = getByText('Salvar');
+  it("Salvar sem hora", async () => {
+    const { getByText, getByPlaceholderText, getByTestId } = render(
+      <EditarRotina />,
+    );
+
+    const hora = getByPlaceholderText("Horário de início");
+    const salvar = getByText("Salvar");
 
     act(() => {
-        fireEvent.changeText(hora, '');
-        fireEvent.press(salvar);
+      fireEvent.changeText(hora, "");
+      fireEvent.press(salvar);
     });
-    const erroHora = getByTestId('Erro-hora');
+    const erroHora = getByTestId("Erro-hora");
 
-    expect(erroHora.props.children.props.text).toBe('Campo obrigatório');
-});   
+    expect(erroHora.props.children.props.text).toBe("Campo obrigatório");
+  });
 
-it('Salvar hora com formato errado', async () => {
-    const { getByText, getByPlaceholderText, getByTestId } = render(<EditarRotina />);
-          
-    const hora = getByPlaceholderText('Horário de início');
-    const salvar = getByText('Salvar');
+  it("Salvar hora com formato errado", async () => {
+    const { getByText, getByPlaceholderText, getByTestId } = render(
+      <EditarRotina />,
+    );
+
+    const hora = getByPlaceholderText("Horário de início");
+    const salvar = getByText("Salvar");
 
     act(() => {
-        fireEvent.changeText(hora, '201');
-        fireEvent.press(salvar);
+      fireEvent.changeText(hora, "201");
+      fireEvent.press(salvar);
     });
-    const erroHora = getByTestId('Erro-hora');
+    const erroHora = getByTestId("Erro-hora");
 
-    expect(erroHora.props.children.props.text).toBe('Hora deve ser no formato hh:mm!');
-}); 
+    expect(erroHora.props.children.props.text).toBe(
+      "Hora deve ser no formato hh:mm!",
+    );
+  });
+
+  it("Salvar com descrição muito grande", async () => {
+    const { getByText, getByPlaceholderText, getByTestId } = render(
+      <EditarRotina />,
+    );
+
+    const descricao = getByPlaceholderText("Descrição");
+    const salvar = getByText("Salvar");
+
+    act(() => {
+      fireEvent.changeText(
+        descricao,
+        "Num universo vasto e misterioso, onde galáxias dançam em uma sinfonia cósmica, a teia da existência se entrelaça, conectando cada átomo e cada pensamento em uma tapeçaria intricada de tempo e espaço; neste intricado emaranhado, as histórias dos indivíduos se entrelaçam, tecendo um tecido social complexo onde sonhos se desdobram e destinos se entrelaçam, criando uma narrativa épica que transcende as fronteiras do tempo, desafiando a compreensão humana e convidando-nos a contemplar a beleza efêmera da vida, como se fôssemos observadores temporários de um espetáculo cósmico em constante evolução, onde cada escolha, cada suspiro, ecoa através das eras, deixando uma marca indelével na vastidão do infinito.",
+      );
+      fireEvent.press(salvar);
+    });
+    const erroDescricao = getByText(
+      "A descrição deve ter no máximo 300 caracteres.",
+    );
+
+    expect(erroDescricao).toBeTruthy();
+  });
 });
