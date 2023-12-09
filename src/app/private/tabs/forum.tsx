@@ -13,12 +13,12 @@ import { router } from "expo-router";
 import Publicacao from "../../components/Publicacao";
 import { getAllPublicacao } from "../../services/forum.service";
 import Toast from "react-native-toast-message";
-import { IOrder, IPublicacao } from "../../interfaces/forum.interface";
+import { ECategoriaPesquisa, ECategoriaPublicacao, IOrder, IPublicacao } from "../../interfaces/forum.interface";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { IUser } from "../../interfaces/user.interface";
 import BarraPesquisa from "../../components/BarraPesquisa";
 import { ScrollView } from "react-native-gesture-handler";
-import FiltroDropdown from "../../components/FiltroDropdown";
+import { SelectList } from "react-native-dropdown-select-list";
 
 export default function Forum() {
   const [publicacoes, setPublicacoes] = useState<IPublicacao[]>([]);
@@ -30,11 +30,20 @@ export default function Forum() {
   const [titulo, setTitulo] = useState("");
   const [timer, setTimer] = useState<NodeJS.Timeout | null>(null);
   const [isReported, setIsReported] = useState(false);
-  const [filtro, setFiltro] = useState<string | null>(null);
+  const [categoria, setCategoria] = useState<ECategoriaPesquisa>(ECategoriaPesquisa.TODAS);
   const order: IOrder = {
     column: "dataHora",
     dir: "DESC",
   };
+
+  const data = [
+    {key: ECategoriaPesquisa.TODAS, value: ECategoriaPesquisa.TODAS},
+    {key: ECategoriaPesquisa.ALIMENTACAO, value: ECategoriaPesquisa.ALIMENTACAO},
+    {key: ECategoriaPesquisa.SAUDE, value: ECategoriaPesquisa.SAUDE},
+    {key: ECategoriaPesquisa.EXERCICIOS, value: ECategoriaPesquisa.EXERCICIOS},
+    {key: ECategoriaPesquisa.GERAL, value: ECategoriaPesquisa.GERAL},
+
+  ]
 
   const novaPublicacao = () => {
     router.push("private/pages/criaPublicacao");
@@ -56,28 +65,55 @@ export default function Forum() {
     setOffset(offset);
     setTitulo(titulo);
 
-    getAllPublicacao(offset, { titulo, isReported }, order)
-      .then((response) => {
-        const newPublicacoes = response.data as IPublicacao[];
-
-        if (newPublicacoes.length === 0) {
-          setShowCarregarMais(false);
-        }
-
-        setPublicacoes([...anterior, ...newPublicacoes]);
-      })
-      .catch((err) => {
-        const error = err as { message: string };
-        Toast.show({
-          type: "error",
-          text1: "Erro!",
-          text2: error.message,
+    if (categoria === ECategoriaPesquisa.TODAS) {
+      getAllPublicacao(offset, { titulo, isReported }, order)
+        .then((response) => {
+          const newPublicacoes = response.data as IPublicacao[];
+  
+          if (newPublicacoes.length === 0) {
+            setShowCarregarMais(false);
+          }
+  
+          setPublicacoes([...anterior, ...newPublicacoes]);
+        })
+        .catch((err) => {
+          const error = err as { message: string };
+          Toast.show({
+            type: "error",
+            text1: "Erro!",
+            text2: error.message,
+          });
+        })
+        .finally(() => {
+          setLoading(false);
+          setLoadingCarregarMais(false);
         });
-      })
-      .finally(() => {
-        setLoading(false);
-        setLoadingCarregarMais(false);
-      });
+      
+    } else {
+      getAllPublicacao(offset, { titulo, isReported, categoria }, order)
+        .then((response) => {
+          const newPublicacoes = response.data as IPublicacao[];
+  
+          if (newPublicacoes.length === 0) {
+            setShowCarregarMais(false);
+          }
+  
+          setPublicacoes([...anterior, ...newPublicacoes]);
+        })
+        .catch((err) => {
+          const error = err as { message: string };
+          Toast.show({
+            type: "error",
+            text1: "Erro!",
+            text2: error.message,
+          });
+        })
+        .finally(() => {
+          setLoading(false);
+          setLoadingCarregarMais(false);
+        });
+    }
+
   };
 
   const handleCarregarMais = () => {
@@ -111,7 +147,7 @@ export default function Forum() {
   };
 
   useEffect(() => getUsuario(), []);
-  useEffect(() => getPublicacoes([], "", false, 0), []);
+  useEffect(() => getPublicacoes([], "", false, 0), [categoria]);
 
   return (
     <View style={styles.scrollView}>
@@ -120,11 +156,27 @@ export default function Forum() {
         <BarraPesquisa callbackFn={debouncePesquisar} />
       </View>
 
+      
       <View style={styles.botoes}>
-        
-        <FiltroDropdown filtro={filtro} setFiltro={setFiltro} />
-        
-        
+        {!usuario?.admin && (
+         <View style={styles.list}>
+          <SelectList
+            data={data}
+            setSelected={(item: ECategoriaPesquisa) => {
+              setCategoria(item);
+            }}
+            search={false}
+            boxStyles={styles.boxDropDown}
+            inputStyles={styles.boxInputDropDown}
+            dropdownStyles={styles.dropDown}
+            defaultOption={data[4]}
+            placeholder="Todas"
+          />
+      </View>
+
+        )}
+
+      
         {usuario?.id && usuario?.admin && (
           <View style={styles.reportadas}>
             <Switch
@@ -146,6 +198,23 @@ export default function Forum() {
           </Pressable>
         )}
       </View>
+      {usuario?.admin && (
+         <View style={styles.list}>
+        <SelectList
+          data={data}
+          setSelected={(item: ECategoriaPesquisa) => {
+            setCategoria(item);
+          }}
+          search={false}
+          boxStyles={styles.boxDropDown}
+          inputStyles={styles.boxInputDropDown}
+          dropdownStyles={styles.dropDown}
+          defaultOption={data[4]}
+          placeholder="Todas"
+        />
+      </View>
+
+        )}
 
       {loading && (
         <View style={styles.loading}>
@@ -250,6 +319,9 @@ const styles = StyleSheet.create({
     marginLeft: "auto",
     marginRight: 10,
     marginVertical: 10,
+    position: "absolute",
+    right: 0,
+    height:45
   },
   botaoCarregarMais: {
     flexDirection: "row",
@@ -311,5 +383,32 @@ const styles = StyleSheet.create({
   },
   botoes: {
     flexDirection: "row",
+  },
+  boxDropDownDefault: {
+    borderWidth: 0,
+    backgroundColor: "#2CCDB5",
+  },
+  boxDropDown: {
+    borderWidth: 0,
+    width: 149,
+    backgroundColor: "#2CCDB5",
+    shadowRadius: 1,
+    shadowColor: "#3d3d3d",
+    marginLeft: 5,
+  },
+  boxInputDropDown: {
+    color: "#FFFFFF",
+    fontSize: 16,
+    paddingRight: 6,
+  },
+  dropDown: {
+    borderColor: "#2CCDB5",
+    width: 150,
+    marginTop: 3,
+    marginLeft: 5,
+  },
+  list: {
+    marginTop:10,
+    marginBottom: 20,
   },
 });

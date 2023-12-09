@@ -7,6 +7,14 @@ export enum ECategoriaPublicacao {
   GERAL = "Geral",
 }
 
+export enum ECategoriaPesquisa {
+  SAUDE = "Saúde",
+  ALIMENTACAO = "Alimentação",
+  EXERCICIOS = "Exercícios",
+  GERAL = "Geral",
+  TODAS = "Todas",
+}
+
 export interface IPublicacaoBody {
   idUsuario: number;
   titulo: string;
@@ -28,11 +36,12 @@ export interface IPublicacaoParams extends IPublicacaoBody, IUser {
   idUsuarioReporte: string;
 }
 
-export interface IPublicacaoUsuario extends IPublicacao, IUser {}
+export interface IPublicacaoUsuario extends IPublicacao, IUser { }
 
 export interface IPublicacaoFilter {
   titulo?: string;
   isReported?: boolean;
+  categoria?: ECategoriaPesquisa;
 }
 
 export interface IOrder {
