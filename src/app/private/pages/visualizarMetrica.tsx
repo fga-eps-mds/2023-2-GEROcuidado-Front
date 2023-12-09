@@ -23,6 +23,7 @@ export default function VisualizarMetrica() {
   const [valor,setValor] = useState<string>("");
   const [showLoading, setShowLoading] = useState(false);
   const [modalVisible, setModalVisible] = useState(false);
+  const [showErrors, setShowErrors] = useState(false);
 
   const order: IOrder = {
     column: "dataHora",
@@ -116,7 +117,7 @@ export default function VisualizarMetrica() {
     setValor(valor);
   }
 
-  const vizualizarMetrica = (item: IValorMetrica) => {
+  const vizualizarValorMetrica = (item: IValorMetrica) => {
     //////////////////////////
   }
 
@@ -144,10 +145,9 @@ export default function VisualizarMetrica() {
         data={valueMetrica}
         renderItem={({ item }) => (
           <Pressable
-            //style={styles.verMetrica}
-            onPress={() => vizualizarMetrica(item)}
+            onPress={() => vizualizarValorMetrica(item)}
           >
-            <CardValorMetrica item = {{...item, categoria:params.categoria}}/>
+            <CardValorMetrica item = {{...item, categoria:params.categoria}} metrica={params}/>
           </Pressable>
         )}
       />
