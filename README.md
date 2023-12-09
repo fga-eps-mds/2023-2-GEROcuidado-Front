@@ -5,6 +5,13 @@
 [![Maintainability Rating](https://sonarcloud.io/api/project_badges/measure?project=fga-eps-mds_2023-2-GEROcuidado-Front&metric=sqale_rating)](https://sonarcloud.io/summary/new_code?id=fga-eps-mds_2023-2-GEROcuidado-Front)
 [![Security Rating](https://sonarcloud.io/api/project_badges/measure?project=fga-eps-mds_2023-2-GEROcuidado-Front&metric=security_rating)](https://sonarcloud.io/summary/new_code?id=fga-eps-mds_2023-2-GEROcuidado-Front)
 [![Bugs](https://sonarcloud.io/api/project_badges/measure?project=fga-eps-mds_2023-2-GEROcuidado-Front&metric=bugs)](https://sonarcloud.io/summary/new_code?id=fga-eps-mds_2023-2-GEROcuidado-Front)
+[![Vulnerabilities](https://sonarcloud.io/api/project_badges/measure?project=fga-eps-mds_2023-2-GEROcuidado-Front&metric=vulnerabilities)](https://sonarcloud.io/summary/new_code?id=fga-eps-mds_2023-2-GEROcuidado-Front)
+[![Duplicated Lines (%)](https://sonarcloud.io/api/project_badges/measure?project=fga-eps-mds_2023-2-GEROcuidado-Front&metric=duplicated_lines_density)](https://sonarcloud.io/summary/new_code?id=fga-eps-mds_2023-2-GEROcuidado-Front)
+[![Reliability Rating](https://sonarcloud.io/api/project_badges/measure?project=fga-eps-mds_2023-2-GEROcuidado-Front&metric=reliability_rating)](https://sonarcloud.io/summary/new_code?id=fga-eps-mds_2023-2-GEROcuidado-Front)
+[![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=fga-eps-mds_2023-2-GEROcuidado-Front&metric=alert_status)](https://sonarcloud.io/summary/new_code?id=fga-eps-mds_2023-2-GEROcuidado-Front)
+[![Technical Debt](https://sonarcloud.io/api/project_badges/measure?project=fga-eps-mds_2023-2-GEROcuidado-Front&metric=sqale_index)](https://sonarcloud.io/summary/new_code?id=fga-eps-mds_2023-2-GEROcuidado-Front)
+[![Coverage](https://sonarcloud.io/api/project_badges/measure?project=fga-eps-mds_2023-2-GEROcuidado-Front&metric=coverage)](https://sonarcloud.io/summary/new_code?id=fga-eps-mds_2023-2-GEROcuidado-Front)
+[![Lines of Code](https://sonarcloud.io/api/project_badges/measure?project=fga-eps-mds_2023-2-GEROcuidado-Front&metric=ncloc)](https://sonarcloud.io/summary/new_code?id=fga-eps-mds_2023-2-GEROcuidado-Front)
 
 
 ## Como rodar o projeto
