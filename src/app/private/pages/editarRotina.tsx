@@ -54,7 +54,9 @@ export default function EditarRotina() {
   const [hora, setHora] = useState("");
   const [showLoadingApagar, setShowLoadingApagar] = useState(false);
   const [modalVisible, setModalVisible] = useState(false);
-  const [notificacao, setNotificacao] = useState(!!params.notificacao);
+  const [notificacao, setNotificacao] = useState(
+    String(params.notificacao) === "true",
+  );
   const [expoToken, setExpoToken] = useState(params.token);
 
   const getIdoso = () => {
