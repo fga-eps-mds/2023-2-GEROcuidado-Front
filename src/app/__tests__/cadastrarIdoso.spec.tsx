@@ -79,4 +79,24 @@ describe("CadastrarIdoso component", () => {
 
     expect(erroTitulo.props.children.props.text).toBe("O nome completo deve ter pelo menos 5 caractéres.");
   });
+
+  it("Salvar data com formato errado", async () => {
+    const { getByText, getByPlaceholderText, getByTestId } = render(
+      <CadastrarIdoso />,
+    );
+
+    const data = getByPlaceholderText("Data de Nascimento");
+    const salvar = getByText("Cadastrar");
+
+    act(() => {
+      fireEvent.changeText(data, "2010");
+      fireEvent.press(salvar);
+    });
+    const erroData = getByTestId("Erro-data");
+
+    expect(erroData.props.children.props.text).toBe(
+      "Data deve ser no formato dd/mm/yyyy!",
+    );
+  });
+
 });

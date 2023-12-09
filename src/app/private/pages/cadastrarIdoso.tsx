@@ -215,7 +215,9 @@ export default function CadastrarIdoso() {
               placeholder="Data de Nascimento"
             />
           </View>
+        <View testID="Erro-data">
           <ErrorMessage show={showErrors} text={erros.dataNascimento} />
+        </View> 
         </View>
 
         <View style={styles.formControl}>
