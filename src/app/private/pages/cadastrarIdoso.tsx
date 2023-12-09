@@ -195,7 +195,9 @@ export default function CadastrarIdoso() {
               style={styles.textInput}
             />
           </View>
+        <View testID="Erro-nome">
           <ErrorMessage show={showErrors} text={erros.nome} />
+        </View>
         </View>
 
         <View style={styles.formControl}>

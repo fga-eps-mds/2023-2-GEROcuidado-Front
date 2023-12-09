@@ -1,5 +1,5 @@
 import React from "react";
-import { render } from "@testing-library/react-native";
+import { render, fireEvent, act } from "@testing-library/react-native";
 import CadastrarIdoso from "../private/pages/cadastrarIdoso";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
@@ -24,5 +24,59 @@ describe("CadastrarIdoso component", () => {
 
     const cadastrarButton = getByText("Cadastrar");
     expect(cadastrarButton).toBeTruthy();
+  });
+
+  it("Salvar sem nome", async () => {
+    const { getByText, getByPlaceholderText, getByTestId } = render(
+      <CadastrarIdoso />,
+    );
+
+    const nome = getByPlaceholderText("Nome");
+    const cadastrar = getByText("Cadastrar");
+
+    act(() => {
+      fireEvent.changeText(nome, "");
+      fireEvent.press(cadastrar);
+    });
+    const erroTitulo = getByTestId("Erro-nome");
+
+    expect(erroTitulo.props.children.props.text).toBe("Campo obrigatório!");
+  });
+
+  it("Salvar com nome muito grande", async () => {
+    const { getByText, getByPlaceholderText, getByTestId } = render(
+      <CadastrarIdoso />,
+    );
+
+    const titulo = getByPlaceholderText("Nome");
+    const cadastrar = getByText("Cadastrar");
+
+    act(() => {
+      fireEvent.changeText(
+        titulo,
+        "Por que o livro de matemática está sempre triste? Porque tem muitos problemas!",
+      );
+      fireEvent.press(cadastrar);
+    });
+    const erroTitulo = getByText("O nome completo deve ter no máximo 60 caractéres.");
+
+    expect(erroTitulo).toBeTruthy();
+  });
+
+  it("Salvar com nome curto", async () => {
+    const { getByText, getByPlaceholderText, getByTestId } = render(
+      <CadastrarIdoso />,
+    );
+
+    const nome = getByPlaceholderText("Nome");
+    const cadastrar = getByText("Cadastrar");
+
+    act(() => {
+      fireEvent.changeText(nome, "Jo");
+      fireEvent.press(cadastrar);
+    });
+    const erroTitulo = getByTestId("Erro-nome");
+
+    expect(erroTitulo.props.children.props.text).toBe("O nome completo deve ter pelo menos 5 caractéres.");
   });
 });
