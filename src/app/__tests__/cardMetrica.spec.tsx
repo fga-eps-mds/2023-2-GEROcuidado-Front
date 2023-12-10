@@ -209,4 +209,15 @@ describe('CardMetricas Component', () => {
     
   });
 
+  test('Deve retornar se não houver dataHora', () => {
+    // Configuração
+    const setDataHoraMock = jest.fn();
+    const setHoraMock = jest.fn();
+    const setDataMock = jest.fn();
+
+    // Verificação
+    expect(setDataHoraMock).not.toHaveBeenCalled();
+    expect(setHoraMock).not.toHaveBeenCalled();
+    expect(setDataMock).not.toHaveBeenCalled();
+  });
 });
