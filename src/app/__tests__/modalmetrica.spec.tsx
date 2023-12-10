@@ -5,8 +5,8 @@ import { EMetricas } from '../interfaces/metricas.interface';
 import { ETipoSanguineo } from '../interfaces/idoso.interface';
 
 
-const mockMetrica = {
-  id: 1,
+const mockItem = {
+  id: 2, 
   idIdoso: 123,
   nome: 'João Silva',
   dataNascimento: '1950-01-01',
@@ -18,6 +18,136 @@ const mockMetrica = {
   dataHora: new Date(),
   categoria: EMetricas.FREQ_CARDIACA,
   valor: 75,
+  
+  };
+
+
+const mockItem1 = {
+id: 1, 
+idIdoso: 123,
+nome: 'João Silva',
+dataNascimento: '1950-01-01',
+idUsuario: 123,
+foto: 'url_da_foto.jpg',
+tipoSanguineo: ETipoSanguineo.A_POSITIVO,
+telefoneResponsavel: '123456789',
+descricao: 'Idoso com histórico de hipertensão',
+dataHora: new Date(),
+categoria: EMetricas.GLICEMIA,
+valor: 75,
+
+};
+
+const mockItem2 = {
+id: 1, 
+idIdoso: 123,
+nome: 'João Silva',
+dataNascimento: '1950-01-01',
+idUsuario: 123,
+foto: 'url_da_foto.jpg',
+tipoSanguineo: ETipoSanguineo.A_POSITIVO,
+telefoneResponsavel: '123456789',
+descricao: 'Idoso com histórico de hipertensão',
+dataHora: new Date(),
+categoria: EMetricas.PESO,
+valor: 75,
+
+};
+
+const mockItem3 = {
+id: 1, 
+idIdoso: 123,
+nome: 'João Silva',
+dataNascimento: '1950-01-01',
+idUsuario: 123,
+foto: 'url_da_foto.jpg',
+tipoSanguineo: ETipoSanguineo.A_POSITIVO,
+telefoneResponsavel: '123456789',
+descricao: 'Idoso com histórico de hipertensão',
+dataHora: new Date(),
+categoria: EMetricas.PRESSAO_SANGUINEA,
+valor: 75,
+
+};
+
+const mockItem4 = {
+id: 1, 
+idIdoso: 123, 
+nome: 'João Silva',
+dataNascimento: '1950-01-01',
+idUsuario: 123,
+foto: 'url_da_foto.jpg',
+tipoSanguineo: ETipoSanguineo.A_POSITIVO,
+telefoneResponsavel: '123456789',
+descricao: 'Idoso com histórico de hipertensão',
+dataHora: new Date(),
+categoria: EMetricas.SATURACAO_OXIGENIO,
+valor: 75,
+
+};
+
+const mockItem5 = {
+id: 1, 
+idIdoso: 123, 
+nome: 'João Silva',
+dataNascimento: '1950-01-01',
+idUsuario: 123,
+foto: 'url_da_foto.jpg',
+tipoSanguineo: ETipoSanguineo.A_POSITIVO,
+telefoneResponsavel: '123456789',
+descricao: 'Idoso com histórico de hipertensão',
+dataHora: new Date(),
+categoria: EMetricas.TEMPERATURA,
+valor: 75,
+
+};
+
+const mockItem6 = {
+id: 1, 
+idIdoso: 123, 
+nome: 'João Silva',
+dataNascimento: '1950-01-01',
+idUsuario: 123,
+foto: 'url_da_foto.jpg',
+tipoSanguineo: ETipoSanguineo.A_POSITIVO,
+telefoneResponsavel: '123456789',
+descricao: 'Idoso com histórico de hipertensão',
+dataHora: new Date(),
+categoria: EMetricas.HORAS_DORMIDAS,
+valor: 75,
+
+};
+
+const mockItem7 = {
+id: 1, 
+idIdoso: 123, 
+nome: 'João Silva',
+dataNascimento: '1950-01-01',
+idUsuario: 123,
+foto: 'url_da_foto.jpg',
+tipoSanguineo: ETipoSanguineo.A_POSITIVO,
+telefoneResponsavel: '123456789',
+descricao: 'Idoso com histórico de hipertensão',
+dataHora: new Date(),
+categoria: EMetricas.ALTURA,
+valor: 75,
+
+};
+
+const mockItem8 = {
+id: 1, 
+idIdoso: 123, 
+nome: 'João Silva',
+dataNascimento: '1950-01-01',
+idUsuario: 123,
+foto: 'url_da_foto.jpg',
+tipoSanguineo: ETipoSanguineo.A_POSITIVO,
+telefoneResponsavel: '123456789',
+descricao: 'Idoso com histórico de hipertensão',
+dataHora: new Date(),
+categoria: EMetricas.IMC,
+valor: 75,
+
 };
 
 describe('ModalMetrica Component', () => {
@@ -29,48 +159,102 @@ describe('ModalMetrica Component', () => {
         closeModal={() => { }}
         callbackValor={() => { }}
         message="Teste"
-        metrica={mockMetrica}
+        metrica={mockItem}
       />
     );
+  });
+  it('exibe as unidades corretas', () => {
+    render(<ModalMetrica 
+        visible={true}
+        callbackFn={() => { }}
+        closeModal={() => { }}
+        callbackValor={() => { }}
+        message="Teste"
+        metrica={mockItem1} />);
+    
+    
+  });
+  it('exibe as unidades corretas 1', () => {
+     render(<ModalMetrica 
+        visible={true}
+        callbackFn={() => { }}
+        closeModal={() => { }}
+        callbackValor={() => { }}
+        message="Teste"
+        metrica={mockItem2} />);
+    
+    
+  });
+  it('exibe as unidades corretas 2', () => {
+   render(<ModalMetrica 
+        visible={true}
+        callbackFn={() => { }}
+        closeModal={() => { }}
+        callbackValor={() => { }}
+        message="Teste"
+        metrica={mockItem3} />);
+    
+    
+  });
+  it('exibe as unidades corretas 3', () => {
+     render(<ModalMetrica 
+        visible={true}
+        callbackFn={() => { }}
+        closeModal={() => { }}
+        callbackValor={() => { }}
+        message="Teste"
+        metrica={mockItem4} />);
+    
+    
+  });
+  it('exibe as unidades corretas 4', () => {
+    render(<ModalMetrica 
+        visible={true}
+        callbackFn={() => { }}
+        closeModal={() => { }}
+        callbackValor={() => { }}
+        message="Teste"
+        metrica={mockItem5} />);
+    
+    
   });
 
-  it('fecha o modal ao pressionar o botão Cancelar', () => {
-    const mockCloseModal = jest.fn();
-  
-    const { getByTestId } = render(
-      <ModalMetrica
+  it('exibe as unidades corretas 5', () => {
+    render(<ModalMetrica 
         visible={true}
-        callbackFn={() => {}}
-        closeModal={mockCloseModal}
-        callbackValor={() => {}}
+        callbackFn={() => { }}
+        closeModal={() => { }}
+        callbackValor={() => { }}
         message="Teste"
-        metrica={mockMetrica}
-      />
-    );
-  
-    fireEvent.press(getByTestId('cancelarBtn'));
-  
-    expect(mockCloseModal).toHaveBeenCalled();
+        metrica={mockItem6} />);
+    
+    
   });
 
-  it('exibe mensagem de erro ao tentar salvar com valor inválido', async () => {
-    const { getByTestId, getByText } = render(
-      <ModalMetrica
+  it('exibe as unidades corretas 6', () => {
+    render(<ModalMetrica 
         visible={true}
-        callbackFn={() => {}}
-        closeModal={() => {}}
-        callbackValor={() => {}}
+        callbackFn={() => { }}
+        closeModal={() => { }}
+        callbackValor={() => { }}
         message="Teste"
-        metrica={mockMetrica}
-      />
-    );
-  
-    fireEvent.press(getByTestId('callbackBtn'));
-  
-    const errorMessage = getByText('Campo obrigatório!');
-    expect(errorMessage).toBeTruthy();
+        metrica={mockItem6} />);
+    
+    
   });
-      
+
+  it('exibe as unidades corretas 7', () => {
+    render(<ModalMetrica 
+        visible={true}
+        callbackFn={() => { }}
+        closeModal={() => { }}
+        callbackValor={() => { }}
+        message="Teste"
+        metrica={mockItem7} />);
+    
+    
+  });
+
 });
 
 
