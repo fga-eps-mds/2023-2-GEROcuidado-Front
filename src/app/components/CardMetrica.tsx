@@ -181,12 +181,6 @@ export default function CardMetrica({ item }: IProps) {
             {data} às {hora}
           </Text>
         )}
-        <Icon
-          name="chevron-right"
-          size={16}
-          color={textColor}
-          style={styles.chevron}
-        />
       </View>
     </ScrollView>
   );
@@ -208,7 +202,7 @@ const styles = StyleSheet.create({
     borderRadius: 8,
     padding: 16,
     margin: 8,
-    width: 150,
+    width: 170,
     height: 150,
     shadowColor: "#000",
     shadowOffset: { width: 0, height: 2 },
