@@ -10,6 +10,8 @@ export interface IRotinaBody {
   idIdoso: number;
   categoria?: ECategoriaRotina | null;
   descricao?: string;
+  notificacao: boolean;
+  token?: string;
   dataHoraConcluidos: string[];
   dataHora: Date | string;
   dias: EDiasSemana[];

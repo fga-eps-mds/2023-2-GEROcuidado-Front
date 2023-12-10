@@ -35,3 +35,7 @@ yarn-error.*
 *.tsbuildinfo
 
 /coverage
+
+ios
+
+android
