@@ -1,5 +1,5 @@
 import React from 'react';
-import { render, fireEvent } from '@testing-library/react-native';
+import { render, fireEvent, act, waitFor } from '@testing-library/react-native';
 import ModalMetrica from '../components/ModalMetrica';
 import { EMetricas } from '../interfaces/metricas.interface';
 import { ETipoSanguineo } from '../interfaces/idoso.interface';
@@ -34,23 +34,43 @@ describe('ModalMetrica Component', () => {
     );
   });
 
-  it('chama callbackFn ao pressionar o botão de salvar', () => {
-    const mockCallbackFn = jest.fn();
-
+  it('fecha o modal ao pressionar o botão Cancelar', () => {
+    const mockCloseModal = jest.fn();
+  
     const { getByTestId } = render(
       <ModalMetrica
         visible={true}
-        callbackFn={mockCallbackFn}
-        closeModal={() => { }}
-        callbackValor={mockCallbackFn}
+        callbackFn={() => {}}
+        closeModal={mockCloseModal}
+        callbackValor={() => {}}
         message="Teste"
         metrica={mockMetrica}
       />
     );
-
-    fireEvent.press(getByTestId('callbackBtn'));
-    expect(mockCallbackFn).toHaveBeenCalled();
+  
+    fireEvent.press(getByTestId('cancelarBtn'));
+  
+    expect(mockCloseModal).toHaveBeenCalled();
   });
+
+  it('exibe mensagem de erro ao tentar salvar com valor inválido', async () => {
+    const { getByTestId, getByText } = render(
+      <ModalMetrica
+        visible={true}
+        callbackFn={() => {}}
+        closeModal={() => {}}
+        callbackValor={() => {}}
+        message="Teste"
+        metrica={mockMetrica}
+      />
+    );
+  
+    fireEvent.press(getByTestId('callbackBtn'));
+  
+    const errorMessage = getByText('Campo obrigatório!');
+    expect(errorMessage).toBeTruthy();
+  });
+      
 });
 
 
