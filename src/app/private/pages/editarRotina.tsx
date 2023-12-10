@@ -5,6 +5,8 @@ import {
   Text,
   View,
   TextInput,
+  Platform,
+  Switch,
 } from "react-native";
 import React, { useEffect, useState } from "react";
 import { ScrollView } from "react-native-gesture-handler";
@@ -23,6 +25,7 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import ErrorMessage from "../../components/ErrorMessage";
 import ModalConfirmation from "../../components/ModalConfirmation";
 import { IIdoso } from "../../interfaces/idoso.interface";
+import * as Notifications from "expo-notifications";
 
 interface IErrors {
   titulo?: string;
@@ -51,6 +54,10 @@ export default function EditarRotina() {
   const [hora, setHora] = useState("");
   const [showLoadingApagar, setShowLoadingApagar] = useState(false);
   const [modalVisible, setModalVisible] = useState(false);
+  const [notificacao, setNotificacao] = useState(
+    String(params.notificacao) === "true",
+  );
+  const [expoToken, setExpoToken] = useState(params.token);
 
   const getIdoso = () => {
     AsyncStorage.getItem("idoso").then((idosoString) => {
@@ -139,6 +146,8 @@ export default function EditarRotina() {
       dataHora: getDateIsoString(data, hora),
       categoria: categoria as ECategoriaRotina,
       dias,
+      token: expoToken,
+      notificacao,
       descricao,
     };
 
@@ -188,10 +197,48 @@ export default function EditarRotina() {
     }
   };
 
+  const handleNotificacao = async () => {
+    if (!notificacao) return;
+
+    if (Platform.OS === "android") {
+      Notifications.setNotificationChannelAsync("default", {
+        name: "default",
+        importance: Notifications.AndroidImportance.MAX,
+        vibrationPattern: [0, 250, 250, 250],
+        lightColor: "#FF231F7C",
+      });
+    }
+
+    const { status: existingStatus } =
+      await Notifications.getPermissionsAsync();
+
+    let finalStatus = existingStatus;
+
+    if (existingStatus !== "granted") {
+      const { status } = await Notifications.requestPermissionsAsync();
+      finalStatus = status;
+    }
+
+    if (finalStatus !== "granted") {
+      alert("É necessário permitir as notificações!");
+      setNotificacao(false);
+      return;
+    }
+
+    const response = await Notifications.getExpoPushTokenAsync({
+      projectId: "7028a81c-adee-41de-91a7-b7e80535a448",
+    });
+
+    setExpoToken(response.data);
+  };
+
   useEffect(() => getIdoso(), []);
   useEffect(() => getToken(), []);
   useEffect(() => handleErrors(), [titulo, data, hora, categoria, descricao]);
   useEffect(() => handleDataHora(), []);
+  useEffect(() => {
+    handleNotificacao();
+  }, [notificacao]);
 
   const confirmation = () => {
     setModalVisible(!modalVisible);
@@ -294,8 +341,16 @@ export default function EditarRotina() {
           <WeekDays dias={dias} callbackFn={setDias} />
         </View>
 
+        <View style={styles.notificacaoContainer}>
+          <Switch
+            trackColor={{ false: "#767577", true: "#2CCDB5" }}
+            onValueChange={setNotificacao}
+            value={notificacao}
+          />
+          <Text style={styles.notificacaoText}>Ativar notificação</Text>
+        </View>
+
         <View style={styles.descricao}>
-          {/* <Fontisto style={styles.iconDesciption} name="left-align" size={15} /> */}
           <TextInput
             onChangeText={setDescricao}
             value={descricao}
@@ -463,5 +518,18 @@ const styles = StyleSheet.create({
     fontWeight: "600",
     marginBottom: 25,
     alignItems: "center",
+  },
+  notificacaoContainer: {
+    flexDirection: "row",
+    alignItems: "center",
+    width: "100%",
+    fontWeight: "700",
+    marginBottom: 25,
+  },
+  notificacaoText: {
+    fontWeight: "600",
+    marginLeft: 7,
+    fontSize: 16,
+    color: "#616161",
   },
 });
