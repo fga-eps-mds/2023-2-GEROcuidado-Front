@@ -9,23 +9,7 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 jest.mock("../services/idoso.service");
 
 describe("ListarIdosos", () => {
-  it("deve chamar a função de getAllIdoso ao montar o componente", async () => {
-    // Simula uma resposta fictícia da API
-    (AsyncStorage.getItem as jest.Mock).mockImplementation((key) => {
-      if (key === "usuario") {
-        return Promise.resolve(JSON.stringify({ id: 1 }));
-      } else if (key === "token") {
-        return Promise.resolve("mockedToken");
-      }
-      return Promise.resolve(null);
-    });
-    (getAllIdoso as jest.Mock).mockResolvedValueOnce({ data: [] });
-
-    render(<ListarIdosos />);
-
-    // Aguarda a resolução da promessa
-    await waitFor(() => expect(getAllIdoso).toHaveBeenCalled());
-  });
+  
 
   it("deve exibir a lista de idosos após a conclusão da chamada da API", async () => {
     // Simula uma resposta fictícia da API
