@@ -280,7 +280,7 @@ describe('ModalMetrica Component', () => {
         callbackFn={() => {}}
         closeModal={() => {}}
         message="Teste"
-        metrica={{minhaMetrica}} 
+        metrica={{mockItem}} 
       />
     );
 
@@ -289,6 +289,43 @@ describe('ModalMetrica Component', () => {
     expect(getByText('Campo obrigatório!')).toBeTruthy();
   });
 
+  it('fecha o modal ao pressionar o botão Cancelar', () => {
+    const mockCloseModal = jest.fn();
+  
+    const { getByTestId } = render(
+      <ModalMetrica
+        visible={true}
+        callbackFn={() => {}}
+        closeModal={mockCloseModal}
+        callbackValor={() => {}}
+        message="Teste"
+        metrica={mockItem8}
+      />
+    );
+  
+    fireEvent.press(getByTestId('cancelarBtn'));
+  
+    expect(mockCloseModal).toHaveBeenCalled();
+  });
+  
+  it('exibe mensagem de erro ao tentar salvar com valor inválido', async () => {
+    const { getByTestId, getByText } = render(
+      <ModalMetrica
+        visible={true}
+        callbackFn={() => {}}
+        closeModal={() => {}}
+        callbackValor={() => {}}
+        message="Teste"
+        metrica={mockItem}
+      />
+    );
+  
+    fireEvent.press(getByTestId('callbackBtn'));
+  
+    // Assuming you have an error message displayed
+    const errorMessage = getByText('Campo obrigatório!');
+    expect(errorMessage).toBeTruthy();
+  });  
   
 });
 
