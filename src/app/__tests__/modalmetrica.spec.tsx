@@ -1,7 +1,7 @@
 import React from 'react';
 import { render, fireEvent } from '@testing-library/react-native';
 import ModalMetrica from '../components/ModalMetrica';
-import { EMetricas } from '../interfaces/metricas.interface';
+import { EMetricas, IMetrica } from '../interfaces/metricas.interface';
 import { ETipoSanguineo } from '../interfaces/idoso.interface';
 
 
@@ -59,7 +59,7 @@ id: 1,
 idIdoso: 123,
 nome: 'João Silva',
 dataNascimento: '1950-01-01',
-idUsuario: 123,
+idUsuario: 1234,
 foto: 'url_da_foto.jpg',
 tipoSanguineo: ETipoSanguineo.A_POSITIVO,
 telefoneResponsavel: '123456789',
@@ -72,7 +72,7 @@ valor: 75,
 
 const mockItem4 = {
 id: 1, 
-idIdoso: 123, 
+idIdoso: 1234, 
 nome: 'João Silva',
 dataNascimento: '1950-01-01',
 idUsuario: 123,
@@ -105,7 +105,7 @@ valor: 75,
 const mockItem6 = {
 id: 1, 
 idIdoso: 123, 
-nome: 'João Silva',
+nome: 'João Silva ',
 dataNascimento: '1950-01-01',
 idUsuario: 123,
 foto: 'url_da_foto.jpg',
@@ -123,14 +123,14 @@ id: 1,
 idIdoso: 123, 
 nome: 'João Silva',
 dataNascimento: '1950-01-01',
-idUsuario: 123,
+idUsuario: 13,
 foto: 'url_da_foto.jpg',
 tipoSanguineo: ETipoSanguineo.A_POSITIVO,
 telefoneResponsavel: '123456789',
 descricao: 'Idoso com histórico de hipertensão',
 dataHora: new Date(),
 categoria: EMetricas.ALTURA,
-valor: 75,
+valor: 95,
 
 };
 
@@ -139,14 +139,14 @@ id: 1,
 idIdoso: 123, 
 nome: 'João Silva',
 dataNascimento: '1950-01-01',
-idUsuario: 123,
+idUsuario: 12,
 foto: 'url_da_foto.jpg',
 tipoSanguineo: ETipoSanguineo.A_POSITIVO,
 telefoneResponsavel: '123456789',
 descricao: 'Idoso com histórico de hipertensão',
 dataHora: new Date(),
 categoria: EMetricas.IMC,
-valor: 75,
+valor: 70,
 
 };
 
@@ -266,6 +266,29 @@ describe('ModalMetrica Component', () => {
     
     
   });
+
+  test('Exibe mensagem de erro para valor vazio', () => {
+    const minhaMetrica: IMetrica = {
+      id: 1,
+      idIdoso: 123,
+      categoria: EMetricas.FREQ_CARDIACA,
+    };
+
+    const { getByTestId, getByText } = render(
+      <ModalMetrica
+        visible={true}
+        callbackFn={() => {}}
+        closeModal={() => {}}
+        message="Teste"
+        metrica={{minhaMetrica}} 
+      />
+    );
+
+    fireEvent.press(getByTestId('callbackBtn'));
+
+    expect(getByText('Campo obrigatório!')).toBeTruthy();
+  });
+
   
 });
 
