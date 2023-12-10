@@ -12,8 +12,7 @@ import ErrorMessage from "./ErrorMessage";
 import { Entypo } from "@expo/vector-icons";
 interface IProps {
   visible: boolean;
-  callbackFn: () => unknown;
-  callbackValor: (valor: string) => unknown;
+  callbackFn: (valor: string) => unknown;
   closeModal: () => unknown;
   message: string;
   metrica: IMetrica;
@@ -26,7 +25,6 @@ interface IErrors {
 export default function ModalMetrica({
   visible,
   callbackFn,
-  callbackValor,
   closeModal,
   metrica,
   message,
@@ -96,10 +94,7 @@ export default function ModalMetrica({
             <View style={styles.input}>
               <TextInput
                 value={valor}
-                onChangeText={(valor) => {
-                  setValor(valor);
-                  callbackValor(valor);
-                }}
+                onChangeText={setValor}
                 style={styles.textInput}
                 placeholderTextColor={"#3D3D3D"}
               />
@@ -123,7 +118,7 @@ export default function ModalMetrica({
                 if (Object.keys(erros).length > 0) {
                   setShowErrors(true);
                 } else {
-                  callbackFn();
+                  callbackFn(valor);
                 }
               }}
             >

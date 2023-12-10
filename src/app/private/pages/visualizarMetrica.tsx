@@ -19,7 +19,7 @@ import {
   postMetricaValue,
 } from "../../services/metricaValue.service";
 import Toast from "react-native-toast-message";
-import { FlatList, ScrollView } from "react-native-gesture-handler";
+import { FlatList } from "react-native-gesture-handler";
 import ModalMetrica from "../../components/ModalMetrica";
 import CardValorMetrica from "../../components/CardValorMetrica";
 import { getAllMetrica } from "../../services/metrica.service";
@@ -27,19 +27,11 @@ import { getAllMetrica } from "../../services/metrica.service";
 export default function VisualizarMetrica() {
   const params = useLocalSearchParams() as unknown as IMetrica;
   const [user, setUser] = useState<IUser | undefined>(undefined);
-  const [idoso, setIdoso] = useState<IIdoso>();
-  const [loading, setLoading] = useState(true);
   const [token, setToken] = useState<string>("");
   const [valueMetrica, setValueMetrica] = useState<IValorMetrica[]>([]);
-  const [valor, setValor] = useState<string>("");
+  const [idoso, setIdoso] = useState<IIdoso>();
   const [showLoading, setShowLoading] = useState(false);
   const [modalVisible, setModalVisible] = useState(false);
-  const [showErrors, setShowErrors] = useState(false);
-  const [altura, setAltura] = useState<IMetrica>();
-  const [alturaValue, setAlturaValue] = useState(0);
-  const [peso, setPeso] = useState<IMetrica>();
-  const [pesoValue, setPesoValue] = useState(0);
-  const [imc, setImc] = useState<IMetrica>();
 
   const order: IOrder = {
     column: "dataHora",
@@ -67,9 +59,7 @@ export default function VisualizarMetrica() {
   };
 
   const getMetricasValues = () => {
-    if (!idoso) return;
-
-    setLoading(true);
+    setShowLoading(true);
     const filter: IMetricaValueFilter = { idMetrica: params.id };
     getAllMetricaValues(filter, order)
       .then((response) => {
@@ -85,7 +75,7 @@ export default function VisualizarMetrica() {
         });
       })
       .finally(() => {
-        setLoading(false);
+        setShowLoading(false);
       });
   };
 
@@ -93,10 +83,10 @@ export default function VisualizarMetrica() {
     setModalVisible(true);
   };
 
-  const salvar = async () => {
+  const salvar = async (valor: string) => {
     const body = {
       idMetrica: Number(params.id),
-      valor: valor,
+      valor,
       dataHora: new Date(),
     };
 
@@ -108,10 +98,8 @@ export default function VisualizarMetrica() {
         text1: "Sucesso!",
         text2: response.message as string,
       });
-      router.replace({
-        pathname: "private/pages/visualizarMetrica",
-        params: params,
-      });
+      setModalVisible(false);
+      getMetricasValues();
     } catch (err) {
       const error = err as { message: string };
       Toast.show({
@@ -122,10 +110,6 @@ export default function VisualizarMetrica() {
     } finally {
       setShowLoading(false);
     }
-  };
-
-  const debounceValor = (valor: string) => {
-    setValor(valor);
   };
 
   const back = () => {
@@ -134,108 +118,65 @@ export default function VisualizarMetrica() {
     });
   };
 
-  const getMetricas = async () => {
-    if (params.categoria == EMetricas.IMC) {
-      if (idoso == undefined) return;
+  const getIMC = async () => {
+    if (params.categoria !== EMetricas.IMC || !idoso) return;
 
-      setLoading(true);
+    const metricaFilter: IMetricaFilter = {
+      idIdoso: Number(idoso.id),
+    };
 
-      const metricaFilter: IMetricaFilter = {
-        idIdoso: Number(idoso.id),
-      };
+    const response = await getAllMetrica(metricaFilter);
+    const newMetricas = response.data as IMetrica[];
 
-      getAllMetrica(metricaFilter)
-        .then((response) => {
-          const newMetricas = response.data as IMetrica[];
-          for (let metrica of newMetricas) {
-            if (metrica.categoria == EMetricas.PESO) {
-              // setPeso(metrica);
-              getPesoValue(metrica);
-            }
-            if (metrica.categoria == EMetricas.ALTURA) {
-              // setAltura(metrica);
-              getAlturaValue(metrica);
-            }
-            if (metrica.categoria == EMetricas.IMC) {
-              setImc(metrica);
-            }
-          }
-        })
-        .catch((err) => {
-          const error = err as { message: string };
-          Toast.show({
-            type: "error",
-            text1: "Erro!",
-            text2: error.message,
-          });
-        })
-        .finally(() => {
-          setLoading(false);
-        });
+    const metricaPeso = newMetricas.find((metrica) => {
+      return metrica.categoria == EMetricas.PESO;
+    }) as IMetrica;
+
+    const metricaAltura = newMetricas.find((metrica) => {
+      return metrica.categoria == EMetricas.ALTURA;
+    }) as IMetrica;
+
+    const peso = await getLastValue(metricaPeso.id);
+    const altura = await getLastValue(metricaAltura.id);
+
+    const alturaMetro = Number(altura) / 100;
+
+    return Number(peso) / (alturaMetro * alturaMetro);
+  };
+
+  const getLastValue = async (idMetrica: number) => {
+    const filter: IMetricaValueFilter = { idMetrica };
+    const response = await getAllMetricaValues(filter, order);
+    const newMetricasValues = response.data as IValorMetrica[];
+
+    const valor = newMetricasValues[0]?.valor;
+
+    if (!valor) {
+      throw new Error("Altura/Peso não cadastrado!");
     }
-  };
 
-  const getAlturaValue = (item: IMetrica) => {
-    if (!item) return;
-
-    const filter: IMetricaValueFilter = { idMetrica: item.id };
-    getAllMetricaValues(filter, order)
-      .then((response) => {
-        const newMetricasVAlues = response.data as IValorMetrica[];
-        setAlturaValue(Number(newMetricasVAlues[0].valor));
-      })
-      .catch((err) => {
-        const error = err as { message: string };
-        Toast.show({
-          type: "error",
-          text1: "Erro!",
-          text2: "Você ainda não cadastrou a altura!",
-        });
-      })
-      .finally(() => {});
-  };
-
-  const getPesoValue = (item: IMetrica) => {
-    if (!item) return;
-
-    const filter: IMetricaValueFilter = { idMetrica: item.id };
-    getAllMetricaValues(filter, order)
-      .then((response) => {
-        const newMetricasVAlues = response.data as IValorMetrica[];
-        setPesoValue(Number(newMetricasVAlues[0].valor));
-      })
-      .catch((err) => {
-        const error = err as { message: string };
-        Toast.show({
-          type: "error",
-          text1: "Erro!",
-          text2: "Você ainda não cadastrou o Peso!",
-        });
-      })
-      .finally(() => {});
+    return valor;
   };
 
   const calcular = async () => {
-    getMetricas();
-
-    const body = {
-      idMetrica: Number(params.id),
-      valor: (pesoValue / (alturaValue * alturaValue)).toString(),
-      dataHora: new Date(),
-    };
+    setShowLoading(true);
 
     try {
-      setShowLoading(true);
+      const IMC = await getIMC();
+
+      const body = {
+        idMetrica: Number(params.id),
+        valor: String(IMC?.toFixed(2)),
+        dataHora: new Date(),
+      };
+
       const response = await postMetricaValue(body, token);
       Toast.show({
         type: "success",
         text1: "Sucesso!",
         text2: response.message as string,
       });
-      router.replace({
-        pathname: "private/pages/visualizarMetrica",
-        params: params,
-      });
+      getMetricasValues();
     } catch (err) {
       const error = err as { message: string };
       Toast.show({
@@ -246,68 +187,66 @@ export default function VisualizarMetrica() {
     } finally {
       setShowLoading(false);
     }
-    useEffect(() => getIdoso(), []);
-    useEffect(() => handleUser(), []);
-    useEffect(() => getMetricasValues(), [idoso]);
   };
+
+  useEffect(() => {
+    getIdoso();
+    getMetricasValues();
+    handleUser();
+  }, []);
 
   return !user?.id ? (
     <NaoAutenticado />
   ) : (
     <View>
-      <View>
-        <View style={styles.header}>
-          <Pressable onPress={() => back()}>
-            <Icon name="chevron-left" size={40} color="#fff" />
-          </Pressable>
-          <Text style={styles.textheader}>{params.categoria}</Text>
-        </View>
+      <View style={styles.header}>
+        <Pressable onPress={() => back()}>
+          <Icon name="chevron-left" size={40} color="#fff" />
+        </Pressable>
+        <Text style={styles.textheader}>{params.categoria}</Text>
+      </View>
 
-        <View
-          style={
-            params.categoria == EMetricas.IMC ? styles.botoes : styles.botao
-          }
-        >
-          {params.categoria == EMetricas.IMC && (
-            <Pressable style={styles.botaoEditarMetricas} onPress={calcular}>
-              <Icon name="plus" color={"white"} size={20} />
-              <Text style={styles.textoBotaoEditarMetricas}>
-                Calcular automaticamente
-              </Text>
-            </Pressable>
-          )}
-          <Pressable style={styles.botaoEditarMetricas} onPress={novoValor}>
+      <View
+        style={params.categoria == EMetricas.IMC ? styles.botoes : styles.botao}
+      >
+        {params.categoria == EMetricas.IMC && (
+          <Pressable style={styles.botaoEditarMetricas} onPress={calcular}>
             <Icon name="plus" color={"white"} size={20} />
-            <Text style={styles.textoBotaoEditarMetricas}>Novo valor</Text>
+            <Text style={styles.textoBotaoEditarMetricas}>
+              Calcular automaticamente
+            </Text>
           </Pressable>
-        </View>
-        {/* 
+        )}
+        <Pressable style={styles.botaoEditarMetricas} onPress={novoValor}>
+          <Icon name="plus" color={"white"} size={20} />
+          <Text style={styles.textoBotaoEditarMetricas}>Novo valor</Text>
+        </Pressable>
+      </View>
+      {/* 
         {valueMetrica.length == 0 && <Text>foi</Text>}
         {valueMetrica.length == 0 && <Text>foi</Text>} */}
 
-        <FlatList
-          data={valueMetrica}
-          renderItem={({ item }) => (
-            <Pressable>
-              <CardValorMetrica
-                item={{ ...item, categoria: params.categoria }}
-                metrica={params}
-              />
-            </Pressable>
-          )}
-        />
-
-        {modalVisible && (
-          <ModalMetrica
-            visible={modalVisible}
-            callbackFn={salvar}
-            callbackValor={debounceValor}
-            closeModal={() => setModalVisible(false)}
-            metrica={params}
-            message={params.categoria}
-          />
+      <FlatList
+        data={valueMetrica}
+        renderItem={({ item }) => (
+          <Pressable>
+            <CardValorMetrica
+              item={{ ...item, categoria: params.categoria }}
+              metrica={params}
+            />
+          </Pressable>
         )}
-      </View>
+      />
+
+      {modalVisible && (
+        <ModalMetrica
+          visible={modalVisible}
+          callbackFn={salvar}
+          closeModal={() => setModalVisible(false)}
+          metrica={params}
+          message={params.categoria}
+        />
+      )}
     </View>
   );
 }
@@ -316,8 +255,7 @@ const styles = StyleSheet.create({
   header: {
     backgroundColor: "#2CCDB5",
     width: "100%",
-    padding: 10,
-    height: 100,
+    padding: 20,
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "flex-start",
