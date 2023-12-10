@@ -58,7 +58,9 @@ describe("EditarIdoso", () => {
       );
       fireEvent.press(salvar);
     });
-    const erroTitulo = getByText("O nome completo deve ter no máximo 60 caractéres.");
+    const erroTitulo = getByText(
+      "O nome completo deve ter no máximo 60 caractéres.",
+    );
 
     expect(erroTitulo).toBeTruthy();
   });
@@ -77,6 +79,8 @@ describe("EditarIdoso", () => {
     });
     const erroTitulo = getByTestId("Erro-nome");
 
-    expect(erroTitulo.props.children.props.text).toBe("O nome completo deve ter pelo menos 5 caractéres.");
+    expect(erroTitulo.props.children.props.text).toBe(
+      "O nome completo deve ter pelo menos 5 caractéres.",
+    );
   });
 });

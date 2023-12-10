@@ -58,7 +58,9 @@ describe("CadastrarIdoso component", () => {
       );
       fireEvent.press(cadastrar);
     });
-    const erroTitulo = getByText("O nome completo deve ter no máximo 60 caractéres.");
+    const erroTitulo = getByText(
+      "O nome completo deve ter no máximo 60 caractéres.",
+    );
 
     expect(erroTitulo).toBeTruthy();
   });
@@ -77,7 +79,9 @@ describe("CadastrarIdoso component", () => {
     });
     const erroTitulo = getByTestId("Erro-nome");
 
-    expect(erroTitulo.props.children.props.text).toBe("O nome completo deve ter pelo menos 5 caractéres.");
+    expect(erroTitulo.props.children.props.text).toBe(
+      "O nome completo deve ter pelo menos 5 caractéres.",
+    );
   });
 
   it("Salvar data com formato errado", async () => {
@@ -117,5 +121,4 @@ describe("CadastrarIdoso component", () => {
       "Deve estar no formato (XX)XXXXX-XXXX",
     );
   });
-
 });

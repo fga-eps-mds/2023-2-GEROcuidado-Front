@@ -5,7 +5,7 @@ export enum EMetricas {
   PESO = "Peso",
   GLICEMIA = "Glicemia",
   SATURACAO_OXIGENIO = "Saturação",
-  ALTURA = "Altura", 
+  ALTURA = "Altura",
   HORAS_DORMIDAS = "Horas Dormidas",
   IMC = "IMC",
 }
@@ -35,11 +35,11 @@ export interface IMetricaValueFilter {
   idMetrica: number;
 }
 
-export interface IValorMetricaCategoria extends IValorMetrica{
+export interface IValorMetricaCategoria extends IValorMetrica {
   categoria: EMetricas;
 }
 
 export interface IOrder {
-  column:string;
+  column: string;
   dir: "ASC" | "DESC";
 }

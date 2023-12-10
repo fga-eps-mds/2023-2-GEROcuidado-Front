@@ -15,7 +15,11 @@ import {
 } from "react-native";
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
 import { router } from "expo-router";
-import { IOrder, IRotina, IRotinaFilter } from "../../interfaces/rotina.interface";
+import {
+  IOrder,
+  IRotina,
+  IRotinaFilter,
+} from "../../interfaces/rotina.interface";
 import CardRotina from "../../components/CardRotina";
 import { getAllRotina } from "../../services/rotina.service";
 import Toast from "react-native-toast-message";
@@ -35,8 +39,8 @@ export default function Rotinas() {
   const [selectedDate, setSelectedDate] = useState(moment());
   const order: IOrder = {
     column: "dataHora",
-    dir: "ASC"
-  }
+    dir: "ASC",
+  };
 
   const datesWhitelist = [
     {
@@ -101,7 +105,7 @@ export default function Rotinas() {
       dataHora: dataHora.toISOString(),
     };
 
-    getAllRotina(rotinaFilter,order)
+    getAllRotina(rotinaFilter, order)
       .then((response) => {
         const newRotinas = response.data as IRotina[];
         const filteredRotinas = newRotinas.filter((rotina) => {
@@ -207,9 +211,12 @@ export default function Rotinas() {
           )}
           {rotinas.length === 0 && (
             <View>
-              <Text style={styles.semRotinas}>{`Você ainda não tem nenhuma rotina cadastrada no dia ${moment(selectedDate).format('DD/MM')}`}</Text>
+              <Text
+                style={styles.semRotinas}
+              >{`Você ainda não tem nenhuma rotina cadastrada no dia ${moment(
+                selectedDate,
+              ).format("DD/MM")}`}</Text>
             </View>
-
           )}
         </View>
       )}
@@ -275,10 +282,10 @@ const styles = StyleSheet.create({
     width: Dimensions.get("window").width,
     height: Dimensions.get("window").height,
   },
-  semRotinas:{
-    fontSize:35,
-    opacity:0.3,
-    textAlign:"center",
-    marginTop:"35%",
+  semRotinas: {
+    fontSize: 35,
+    opacity: 0.3,
+    textAlign: "center",
+    marginTop: "35%",
   },
 });

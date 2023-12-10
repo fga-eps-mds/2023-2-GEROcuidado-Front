@@ -66,9 +66,9 @@ export default function CadastrarIdoso() {
     { key: EMetricas.PRESSAO_SANGUINEA, value: EMetricas.PRESSAO_SANGUINEA },
     { key: EMetricas.SATURACAO_OXIGENIO, value: EMetricas.SATURACAO_OXIGENIO },
     { key: EMetricas.TEMPERATURA, value: EMetricas.TEMPERATURA },
-    { key: EMetricas.ALTURA, value: EMetricas.ALTURA},
-    { key: EMetricas.IMC, value: EMetricas.IMC},
-    { key: EMetricas.HORAS_DORMIDAS, value: EMetricas.HORAS_DORMIDAS},
+    { key: EMetricas.ALTURA, value: EMetricas.ALTURA },
+    { key: EMetricas.IMC, value: EMetricas.IMC },
+    { key: EMetricas.HORAS_DORMIDAS, value: EMetricas.HORAS_DORMIDAS },
   ];
 
   const salvar = async () => {
@@ -96,7 +96,7 @@ export default function CadastrarIdoso() {
         text1: "Sucesso!",
         text2: response.message as string,
       });
-      cadastrarMetricas(response.data?.id as Number);
+      cadastrarMetricas(response.data?.id as number);
       router.replace("private/pages/listarIdosos");
     } catch (err) {
       const error = err as { message: string };
@@ -110,7 +110,7 @@ export default function CadastrarIdoso() {
     }
   };
 
-  const cadastrarMetricas = async (idIdoso: Number) => {
+  const cadastrarMetricas = async (idIdoso: number) => {
     for (const metrica of metricas) {
       const body = {
         idIdoso: Number(idIdoso),
@@ -195,9 +195,9 @@ export default function CadastrarIdoso() {
               style={styles.textInput}
             />
           </View>
-        <View testID="Erro-nome">
-          <ErrorMessage show={showErrors} text={erros.nome} />
-        </View>
+          <View testID="Erro-nome">
+            <ErrorMessage show={showErrors} text={erros.nome} />
+          </View>
         </View>
 
         <View style={styles.formControl}>
@@ -215,9 +215,9 @@ export default function CadastrarIdoso() {
               placeholder="Data de Nascimento"
             />
           </View>
-        <View testID="Erro-data">
-          <ErrorMessage show={showErrors} text={erros.dataNascimento} />
-        </View> 
+          <View testID="Erro-data">
+            <ErrorMessage show={showErrors} text={erros.dataNascimento} />
+          </View>
         </View>
 
         <View style={styles.formControl}>
@@ -234,9 +234,9 @@ export default function CadastrarIdoso() {
               placeholder="Telefone Responsável"
             />
           </View>
-        <View testID="Erro-telefone">
-          <ErrorMessage show={showErrors} text={erros.telefoneResponsavel} />
-        </View>
+          <View testID="Erro-telefone">
+            <ErrorMessage show={showErrors} text={erros.telefoneResponsavel} />
+          </View>
         </View>
 
         <View style={styles.formControl}>

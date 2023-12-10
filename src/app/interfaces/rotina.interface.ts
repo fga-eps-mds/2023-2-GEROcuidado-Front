@@ -35,6 +35,6 @@ export enum EDiasSemana {
 }
 
 export interface IOrder {
-  column: string,
-  dir: "ASC",
+  column: string;
+  dir: "ASC";
 }

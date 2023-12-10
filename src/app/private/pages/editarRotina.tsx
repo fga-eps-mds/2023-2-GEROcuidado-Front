@@ -256,7 +256,8 @@ export default function EditarRotina() {
           <ErrorMessage show={showErrors} text={erros.hora} />
         </View>
 
-        <View>a
+        <View>
+          a
           <View style={styles.categoria}>
             {!categoria ||
               (categoria === ECategoriaRotina.GERAL && (

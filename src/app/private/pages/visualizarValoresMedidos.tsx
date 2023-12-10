@@ -4,12 +4,14 @@ import { IUser } from "../../interfaces/user.interface";
 import NaoAutenticado from "../../components/NaoAutenticado";
 import { View, StyleSheet, Pressable, Text } from "react-native";
 import Icon from "react-native-vector-icons/FontAwesome";
-import { useNavigation } from '@react-navigation/native';
+import { useNavigation } from "@react-navigation/native";
 
 export default function VisualizarValoresMedidos() {
   const [user, setUser] = useState<IUser | undefined>(undefined);
-  const [selectedMetric, setSelectedMetric] = useState<string | undefined>(undefined);
-  const [hasData, setHasData] = useState<boolean>(false); 
+  const [selectedMetric, setSelectedMetric] = useState<string | undefined>(
+    undefined,
+  );
+  const [hasData, setHasData] = useState<boolean>(false);
   const navigation = useNavigation();
 
   const handleUser = () => {
@@ -22,29 +24,31 @@ export default function VisualizarValoresMedidos() {
   useEffect(() => {
     handleUser();
 
-    AsyncStorage.getItem('selectedMetric').then((metric) => {
+    AsyncStorage.getItem("selectedMetric").then((metric) => {
       setSelectedMetric(metric || "");
     });
 
-    const temDados = false; 
+    const temDados = false;
     setHasData(temDados);
   }, []);
 
-  const novoValor = () => {
+  const novoValor = () => {};
 
-  };
+  const apagarMetrica = () => {};
 
-  const apagarMetrica = () => {
-
-  };
-
-  return !user?.id ? <NaoAutenticado /> : (
+  return !user?.id ? (
+    <NaoAutenticado />
+  ) : (
     <View style={styles.container}>
       <View style={styles.header}>
-        <Pressable onPress={() => navigation.goBack()} style={styles.iconContainer}>
+        <Pressable
+          onPress={() => navigation.goBack()}
+          style={styles.iconContainer}
+        >
           <Icon name="chevron-left" size={20} color="white" />
         </Pressable>
-        <Text style={styles.headerText}>{selectedMetric}</Text> {/*Substituir lógica tual de puxar o título/categoria da métrica*/}
+        <Text style={styles.headerText}>{selectedMetric}</Text>{" "}
+        {/*Substituir lógica tual de puxar o título/categoria da métrica*/}
       </View>
 
       <Pressable style={styles.botaoNovoValor} onPress={novoValor}>
@@ -53,7 +57,6 @@ export default function VisualizarValoresMedidos() {
       </Pressable>
 
       {hasData ? (
-
         <View>
           {/* ... outros componentes relacionados aos dados cadastrados */}
         </View>
@@ -102,7 +105,7 @@ const styles = StyleSheet.create({
     marginRight: 10,
     marginVertical: 10,
   },
-  
+
   textoBotaoNovoValor: {
     color: "white",
     fontWeight: "600",
@@ -111,22 +114,22 @@ const styles = StyleSheet.create({
   },
 
   nenhumDado: {
-    color: '#D3D3D3',
+    color: "#D3D3D3",
     fontSize: 18,
-    fontWeight:"bold",
-    textAlign: 'center',
+    fontWeight: "bold",
+    textAlign: "center",
     marginTop: 40,
   },
 
   apagarMetrica: {
-    position: 'absolute', 
-    bottom: 60, 
-    width: '100%', 
-    alignItems: 'center', 
+    position: "absolute",
+    bottom: 60,
+    width: "100%",
+    alignItems: "center",
   },
   textoApagarMetrica: {
-    color: '#FF7D7D',
-    fontSize: 18, 
-    fontWeight: '400', 
+    color: "#FF7D7D",
+    fontSize: 18,
+    fontWeight: "400",
   },
 });
