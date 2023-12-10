@@ -1,11 +1,5 @@
 import React, { useEffect, useState } from "react";
-import {
-  View,
-  StyleSheet,
-  ScrollView,
-  Text,
-  Image,
-} from "react-native";
+import { View, StyleSheet, ScrollView, Text, Image } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { IUser } from "../../interfaces/user.interface";
 import NaoAutenticado from "../../components/NaoAutenticado";
@@ -25,8 +19,11 @@ import { router } from "expo-router";
 import { Pressable } from "react-native";
 import { getAllMetrica } from "../../services/metrica.service";
 import Toast from "react-native-toast-message";
-import GridView from 'react-native-draggable-gridview'
-import { getAllMetricaValues, postMetricaValue } from "../../services/metricaValue.service";
+import GridView from "react-native-draggable-gridview";
+import {
+  getAllMetricaValues,
+  postMetricaValue,
+} from "../../services/metricaValue.service";
 
 export default function Registros() {
   const [user, setUser] = useState<IUser | undefined>(undefined);
@@ -42,15 +39,15 @@ export default function Registros() {
   const [token, setToken] = useState<string>("");
 
   const getToken = () => {
-      AsyncStorage.getItem("token").then((response) => {
+    AsyncStorage.getItem("token").then((response) => {
       setToken(response as string);
-      });
-};
+    });
+  };
 
   const order: IOrder = {
-        column: "dataHora",
-        dir: "DESC",
-    }
+    column: "dataHora",
+    dir: "DESC",
+  };
 
   const handleUser = () => {
     AsyncStorage.getItem("usuario").then((response) => {
@@ -89,10 +86,6 @@ export default function Registros() {
     );
   };
 
-  // const novaMetrica = () => {
-  //   router.push("private/pages/cadastrarMetrica");
-  // };
-
   const visualizarMetrica = (item: IMetrica) => {
     router.push({
       pathname: "private/pages/visualizarMetrica",
@@ -113,19 +106,19 @@ export default function Registros() {
       .then((response) => {
         const newMetricas = response.data as IMetrica[];
         setMetricas(newMetricas);
-        // for (let metrica of newMetricas) {
-        //   if (metrica.categoria == EMetricas.ALTURA) {
-        //     setAlturaMetrica(metrica);
-        //     // handleIMC(metrica);
-        //   }
-        //   if (metrica.categoria == EMetricas.PESO) {
-        //     setPesoMetrica(metrica);
-        //     // handleIMC(metrica);
-        //   }
-        //   if (metrica.categoria == EMetricas.IMC) {
-        //     setIdimc(metrica.id);
-        //   }
-        // }
+        for (let metrica of newMetricas) {
+          if (metrica.categoria == EMetricas.ALTURA) {
+            setAlturaMetrica(metrica);
+            // handleIMC(metrica);
+          }
+          if (metrica.categoria == EMetricas.PESO) {
+            setPesoMetrica(metrica);
+            // handleIMC(metrica);
+          }
+          if (metrica.categoria == EMetricas.IMC) {
+            setIdimc(metrica.id);
+          }
+        }
       })
       .catch((err) => {
         const error = err as { message: string };
@@ -191,16 +184,14 @@ export default function Registros() {
   //       text1: "Erro!",
   //       text2: error.message,
   //     });
-  //   } 
+  //   }
   // };
-
 
   useEffect(() => handleUser(), []);
   useEffect(() => getIdoso(), []);
   useEffect(() => getMetricas(), [idoso]);
   useEffect(() => getToken(), []);
   // useEffect(() => handleIMC(), [peso, altura]);
-
 
   return (
     <>
@@ -241,11 +232,11 @@ export default function Registros() {
             numColumns={2}
             renderItem={({ item }) => (
               <Pressable onPress={() => visualizarMetrica(item)}>
-                <CardMetrica item={item}/>
+                <CardMetrica item={item} />
               </Pressable>
             )}
           />
-              </View>
+        </View>
       </ScrollView>
     </>
   );
@@ -261,7 +252,7 @@ const styles = StyleSheet.create({
   },
 
   verMetrica: {
-    alignSelf:"center",
+    alignSelf: "center",
     width: "100%",
     justifyContent: "space-between",
   },
