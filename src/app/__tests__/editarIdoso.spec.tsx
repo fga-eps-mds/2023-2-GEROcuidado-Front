@@ -1,7 +1,8 @@
 import "@testing-library/jest-native/extend-expect";
-import { render } from "@testing-library/react-native";
+import { render, fireEvent, act } from "@testing-library/react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import EditarIdoso from "../private/pages/editarIdoso";
+import React from "react";
 
 // Mock AsyncStorage para retornar valores específicos durante o teste
 jest.mock("@react-native-async-storage/async-storage", () => ({
@@ -24,4 +25,6 @@ describe("EditarIdoso", () => {
 
     // Você pode continuar a escrever o teste de renderização aqui
   });
+
+  
 });

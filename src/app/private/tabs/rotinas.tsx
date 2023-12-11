@@ -280,7 +280,7 @@ const styles = StyleSheet.create({
   },
   rotinas: {
     width: Dimensions.get("window").width,
-    height: Dimensions.get("window").height - 315,
+    height: Dimensions.get("window").height,
   },
   semRotinas: {
     fontSize: 35,

@@ -267,7 +267,7 @@ export default function EditarRotina() {
             style={styles.inputTitulo}
           />
         </View>
-        <View style={styles.erroTitulo}>
+        <View style={styles.erroTitulo} testID="Erro-titulo">
           <ErrorMessage show={showErrors} text={erros.titulo} />
         </View>
         <View style={styles.dataHora}>
@@ -281,7 +281,7 @@ export default function EditarRotina() {
             placeholderTextColor={"#3D3D3D"}
           />
         </View>
-        <View style={styles.erro}>
+        <View style={styles.erro} testID="Erro-data">
           <ErrorMessage show={showErrors} text={erros.data} />
         </View>
 
@@ -300,7 +300,7 @@ export default function EditarRotina() {
             inputMaskChange={(hora) => setHora(hora)}
           />
         </View>
-        <View style={styles.erro}>
+        <View style={styles.erro} testID="Erro-data">
           <ErrorMessage show={showErrors} text={erros.hora} />
         </View>
 

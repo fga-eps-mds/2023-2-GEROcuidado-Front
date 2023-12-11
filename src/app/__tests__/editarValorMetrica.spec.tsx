@@ -1,14 +1,10 @@
 import React from "react";
-import { render, fireEvent, act } from "@testing-library/react-native";
+import { render, fireEvent, waitFor } from "@testing-library/react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import CriaPublicacao from "../private/pages/criaPublicacao";
+import "@react-native-async-storage/async-storage/jest/async-storage-mock";
+import VisualizarMetrica from "../private/pages/visualizarMetrica";
 
-// Mock AsyncStorage
-jest.mock("@react-native-async-storage/async-storage", () => ({
-  getItem: jest.fn(),
-}));
-
-describe("CriaPublicacao", () => {
+describe("EditarMetrica Component", () => {
   test("The component rendered", () => {
     // Mock the response for AsyncStorage.getItem
     (AsyncStorage.getItem as jest.Mock).mockImplementation((key) => {
@@ -20,8 +16,6 @@ describe("CriaPublicacao", () => {
       return Promise.resolve(null);
     });
 
-    render(<CriaPublicacao />);
+    render(<VisualizarMetrica />);
   });
-
-  
 });

@@ -217,7 +217,9 @@ export default function EditarIdoso() {
               style={styles.textInput}
             />
           </View>
-          <ErrorMessage show={showErrors} text={erros.nome} />
+          <View testID="Erro-nome">
+            <ErrorMessage show={showErrors} text={erros.nome} />
+          </View>
         </View>
 
         <View style={styles.formControl}>

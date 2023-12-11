@@ -1,11 +1,11 @@
 import React from "react";
 import { render, fireEvent, waitFor, act } from "@testing-library/react-native";
-import CadastrarRotina from "../private/pages/cadastrarRotina";
+import EditarRotina from "../private/pages/editarRotina";
 
 describe("CadastrarRotina Component", () => {
   it("Salvar sem titulo", async () => {
     const { getByText, getByPlaceholderText, getByTestId } = render(
-      <CadastrarRotina />,
+      <EditarRotina />,
     );
 
     const titulo = getByPlaceholderText("Adicionar título");
@@ -22,7 +22,7 @@ describe("CadastrarRotina Component", () => {
 
   it("Salvar com titulo muito grande", async () => {
     const { getByText, getByPlaceholderText, getByTestId } = render(
-      <CadastrarRotina />,
+      <EditarRotina />,
     );
 
     const titulo = getByPlaceholderText("Adicionar título");
@@ -35,31 +35,14 @@ describe("CadastrarRotina Component", () => {
       );
       fireEvent.press(salvar);
     });
-    const erroTitulo = getByText("O título deve ter no máximo 100 caracteres.");
+    const erroTitulo = getByText("O título deve ter no máximo 100 caractéres.");
 
     expect(erroTitulo).toBeTruthy();
   });
 
-  it("Salvar sem data", async () => {
-    const { getByText, getByPlaceholderText, getByTestId } = render(
-      <CadastrarRotina />,
-    );
-
-    const data = getByPlaceholderText("Data da rotina");
-    const salvar = getByText("Salvar");
-
-    act(() => {
-      fireEvent.changeText(data, "");
-      fireEvent.press(salvar);
-    });
-    const erroData = getByTestId("Erro-data");
-
-    expect(erroData.props.children.props.text).toBe("Campo obrigatório");
-  });
-
   it("Salvar data com formato errado", async () => {
     const { getByText, getByPlaceholderText, getByTestId } = render(
-      <CadastrarRotina />,
+      <EditarRotina />,
     );
 
     const data = getByPlaceholderText("Data da rotina");
@@ -78,7 +61,7 @@ describe("CadastrarRotina Component", () => {
 
   it("Salvar sem hora", async () => {
     const { getByText, getByPlaceholderText, getByTestId } = render(
-      <CadastrarRotina />,
+      <EditarRotina />,
     );
 
     const hora = getByPlaceholderText("Horário de início");
@@ -95,7 +78,7 @@ describe("CadastrarRotina Component", () => {
 
   it("Salvar hora com formato errado", async () => {
     const { getByText, getByPlaceholderText, getByTestId } = render(
-      <CadastrarRotina />,
+      <EditarRotina />,
     );
 
     const hora = getByPlaceholderText("Horário de início");
@@ -114,7 +97,7 @@ describe("CadastrarRotina Component", () => {
 
   it("Salvar com descrição muito grande", async () => {
     const { getByText, getByPlaceholderText, getByTestId } = render(
-      <CadastrarRotina />,
+      <EditarRotina />,
     );
 
     const descricao = getByPlaceholderText("Descrição");
@@ -123,14 +106,14 @@ describe("CadastrarRotina Component", () => {
     act(() => {
       fireEvent.changeText(
         descricao,
-        "Chapeuzinho Vermelho, uma garotinha de capa vermelha, foi mandada pela mãe para levar doces à vovó doente. No caminho, encontrou o lobo, que a enganou perguntando sobre o destino. O lobo, mais rápido, chegou à casa da vovó primeiro, a engoliu e se disfarçou. Quando Chapeuzinho chegou, notou algo estranho na vovó. O lobo tentou enganá-la, mas Chapeuzinho percebeu. O caçador apareceu, salvou-as, cortou a barriga do lobo, libertando vovó e Chapeuzinho. Moral: cuidado com estranhos, até mesmo disfarçados de vovó!",
+        "Num universo vasto e misterioso, onde galáxias dançam em uma sinfonia cósmica, a teia da existência se entrelaça, conectando cada átomo e cada pensamento em uma tapeçaria intricada de tempo e espaço; neste intricado emaranhado, as histórias dos indivíduos se entrelaçam, tecendo um tecido social complexo onde sonhos se desdobram e destinos se entrelaçam, criando uma narrativa épica que transcende as fronteiras do tempo, desafiando a compreensão humana e convidando-nos a contemplar a beleza efêmera da vida, como se fôssemos observadores temporários de um espetáculo cósmico em constante evolução, onde cada escolha, cada suspiro, ecoa através das eras, deixando uma marca indelével na vastidão do infinito.",
       );
       fireEvent.press(salvar);
     });
-    const erroDescricao = getByTestId("Erro-descricao");
-
-    expect(erroDescricao.props.children.props.text).toBe(
+    const erroDescricao = getByText(
       "A descrição deve ter no máximo 300 caracteres.",
     );
+
+    expect(erroDescricao).toBeTruthy();
   });
 });

@@ -1,14 +1,18 @@
 import React from "react";
-import { render, fireEvent, act } from "@testing-library/react-native";
+import { render, fireEvent } from "@testing-library/react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import CriaPublicacao from "../private/pages/criaPublicacao";
+import VisualizarValoresMedidos from "../private/pages/visualizarValoresMedidos";
 
-// Mock AsyncStorage
+jest.mock("@react-navigation/native", () => ({
+  ...jest.requireActual("@react-navigation/native"),
+  useNavigation: () => ({ goBack: jest.fn() }),
+}));
+
 jest.mock("@react-native-async-storage/async-storage", () => ({
   getItem: jest.fn(),
 }));
 
-describe("CriaPublicacao", () => {
+describe("VisualizarValoresMedidos", () => {
   test("The component rendered", () => {
     // Mock the response for AsyncStorage.getItem
     (AsyncStorage.getItem as jest.Mock).mockImplementation((key) => {
@@ -20,8 +24,6 @@ describe("CriaPublicacao", () => {
       return Promise.resolve(null);
     });
 
-    render(<CriaPublicacao />);
+    render(<VisualizarValoresMedidos />);
   });
-
-  
 });
