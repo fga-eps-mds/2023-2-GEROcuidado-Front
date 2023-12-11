@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { View, Text, StyleSheet, Pressable, ScrollView } from "react-native";
+import { View, Text, StyleSheet } from "react-native";
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
 import FontAwesome from "react-native-vector-icons/FontAwesome";
 import {
@@ -7,11 +7,10 @@ import {
   IMetrica,
   IValorMetricaCategoria,
 } from "../interfaces/metricas.interface";
-import { Entypo } from "@expo/vector-icons";
-import { Octicons } from "@expo/vector-icons";
+import { Entypo, Octicons } from "@expo/vector-icons";
 import { deleteMetricaValue } from "../services/metricaValue.service";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { router, useRouter } from "expo-router";
+import { router } from "expo-router";
 import Toast from "react-native-toast-message";
 
 interface IProps {
@@ -131,7 +130,7 @@ export default function CardValorMetrica({ item, metrica }: IProps) {
         text2: error.message,
       });
     } finally {
-      //   setShowLoadingApagar(false);
+      
     }
   };
 
