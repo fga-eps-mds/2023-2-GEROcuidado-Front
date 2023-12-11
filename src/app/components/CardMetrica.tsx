@@ -5,7 +5,6 @@ import FontAwesome from "react-native-vector-icons/FontAwesome";
 import {
   EMetricas,
   IMetrica,
-  IMetricaFilter,
   IMetricaValueFilter,
   IOrder,
   IValorMetrica,
@@ -13,9 +12,6 @@ import {
 import { getAllMetricaValues } from "../services/metricaValue.service";
 import Toast from "react-native-toast-message";
 import { Entypo } from "@expo/vector-icons";
-import { getAllMetrica } from "../services/metrica.service";
-import AsyncStorage from "@react-native-async-storage/async-storage";
-import { IIdoso } from "../interfaces/idoso.interface";
 
 interface IProps {
   item: IMetrica;
