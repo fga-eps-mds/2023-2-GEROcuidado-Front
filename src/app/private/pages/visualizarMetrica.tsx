@@ -113,7 +113,7 @@ export default function VisualizarMetrica() {
   };
 
   const back = () => {
-    router.push({
+    router.replace({
       pathname: "private/tabs/registros",
     });
   };
