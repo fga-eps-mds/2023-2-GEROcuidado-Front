@@ -12,11 +12,10 @@ import Icon from "react-native-vector-icons/FontAwesome";
 import { IUser } from "../../interfaces/user.interface";
 import { IIdoso } from "../../interfaces/idoso.interface";
 import { router } from "expo-router";
-import { getAllMetrica, postMetrica } from "../../services/metrica.service";
+import { postMetrica } from "../../services/metrica.service";
 import {
   EMetricas,
   IMetrica,
-  IMetricaFilter,
 } from "../../interfaces/metricas.interface";
 import Toast from "react-native-toast-message";
 
@@ -25,12 +24,6 @@ export default function criarMetrica() {
   const [idoso, setIdoso] = useState<IIdoso>();
   const [token, setToken] = useState<string>("");
   const [showLoading, setShowLoading] = useState(false);
-  const [loading, setLoading] = useState(true);
-  const [metricas, setMetricas] = useState<IMetrica[]>([]);
-  const [metricaSelecionada, setMetricaSelecionada] = useState<IMetrica | null>(
-    null,
-  );
-
   const getToken = () => {
     AsyncStorage.getItem("token").then((response) => {
       setToken(response as string);
