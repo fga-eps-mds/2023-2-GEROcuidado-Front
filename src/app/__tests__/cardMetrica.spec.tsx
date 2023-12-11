@@ -1,6 +1,5 @@
 import React from "react";
 import { render } from "@testing-library/react-native";
-import CardIdoso from "../components/CardIdoso";
 import { ETipoSanguineo } from "../interfaces/idoso.interface";
 import { EMetricas } from "../interfaces/metricas.interface";
 import CardMetrica from "../components/CardMetrica";
