@@ -3,13 +3,11 @@ import { Modal, StyleSheet, Text, Pressable, View } from "react-native";
 import {
   EMetricas,
   IMetrica,
-  IValorMetrica,
 } from "../interfaces/metricas.interface";
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
-import { FontAwesome } from "@expo/vector-icons";
+import { FontAwesome, Entypo } from "@expo/vector-icons";
 import { TextInput } from "react-native-gesture-handler";
 import ErrorMessage from "./ErrorMessage";
-import { Entypo } from "@expo/vector-icons";
 interface IProps {
   visible: boolean;
   callbackFn: (valor: string) => unknown;
