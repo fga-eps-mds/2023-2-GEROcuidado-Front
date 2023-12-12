@@ -23,7 +23,11 @@ import { FlatList } from "react-native-gesture-handler";
 import ModalMetrica from "../../components/ModalMetrica";
 import ModalMeta from "../../components/ModalMeta";
 import CardValorMetrica from "../../components/CardValorMetrica";
-import { getAllMetrica, updateMetrica } from "../../services/metrica.service";
+import {
+  getAllMetrica,
+  getSomaHidratacao,
+  updateMetrica,
+} from "../../services/metrica.service";
 
 export default function VisualizarMetrica() {
   const params = useLocalSearchParams() as unknown as IMetrica;
@@ -50,6 +54,7 @@ export default function VisualizarMetrica() {
 
     AsyncStorage.getItem("token").then((response) => {
       setToken(response as string);
+      getHidratacao(response as string);
     });
   };
 
@@ -225,8 +230,14 @@ export default function VisualizarMetrica() {
     }
   };
 
-  const limparValorHidratacao = () => {
-    console.log("LIMPOU");
+  const getHidratacao = (token: string) => {
+    if (params.categoria !== EMetricas.HIDRATACAO) return;
+
+    getSomaHidratacao(params.id, token)
+      .then((response) => {
+        setSomaMeta(response);
+      })
+      .catch((err) => console.log(err));
   };
 
   useEffect(() => {
@@ -283,12 +294,6 @@ export default function VisualizarMetrica() {
                 ]}
               >{`${somaMeta} ml/${meta} ml`}</Text>
             </View>
-            <Pressable
-              style={styles.botaoLimpar}
-              onPress={limparValorHidratacao}
-            >
-              <Text style={styles.textoBotaoLimpar}>Limpar</Text>
-            </Pressable>
           </View>
         )}
       </View>

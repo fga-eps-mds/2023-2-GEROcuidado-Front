@@ -76,3 +76,25 @@ export const updateMetrica = async (
 
   return json;
 };
+
+export const getSomaHidratacao = async (
+  id: number,
+  token: string,
+): Promise<number> => {
+  const response = await fetch(`${BASE_URL}/soma-hidratacao/${id}`, {
+    method: "GET",
+    headers: {
+      Accept: "application/json",
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${token}`,
+    },
+  });
+
+  const json = await response.json();
+
+  if (response.status !== 200) {
+    throw new Error(json.message as string);
+  }
+
+  return json.data;
+};
