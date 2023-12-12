@@ -12,6 +12,7 @@ import { deleteMetricaValue } from "../services/metricaValue.service";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { router } from "expo-router";
 import Toast from "react-native-toast-message";
+import ModalConfirmation from "./ModalConfirmation";
 
 interface IProps {
   item: IValorMetricaCategoria;
@@ -22,6 +23,7 @@ export default function CardValorMetrica({ item, metrica }: IProps) {
   const [data, setData] = useState("");
   const [hora, setHora] = useState("");
   const [token, setToken] = useState<string>("");
+  const [modalVisible, setModalVisible] = useState(false);
 
   const titleColor = "#000";
   const textColor = "#888";
@@ -116,6 +118,7 @@ export default function CardValorMetrica({ item, metrica }: IProps) {
   };
 
   const apagarValor = async () => {
+    setModalVisible(false);
     try {
       await deleteMetricaValue(item.id, token);
       router.replace({
@@ -130,8 +133,15 @@ export default function CardValorMetrica({ item, metrica }: IProps) {
         text2: error.message,
       });
     } finally {
-      
     }
+  };
+
+  const confirmation = () => {
+    setModalVisible(!modalVisible);
+  };
+
+  const closeModal = () => {
+    setModalVisible(false);
   };
 
   useEffect(() => separaDataHora(), []);
@@ -160,7 +170,14 @@ export default function CardValorMetrica({ item, metrica }: IProps) {
           style={styles.apagar}
           size={22}
           color={"#FF7F7F"}
-          onPress={apagarValor}
+          onPress={confirmation}
+        />
+        <ModalConfirmation
+          visible={modalVisible}
+          callbackFn={apagarValor}
+          closeModal={closeModal}
+          message={`Apagar registro ${item.categoria}?`}
+          messageButton="Apagar"
         />
         <View style={styles.dataHora}>
           <Text style={[styles.time, { color: textColor }]}>{data}</Text>
