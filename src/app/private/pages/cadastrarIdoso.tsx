@@ -69,6 +69,7 @@ export default function CadastrarIdoso() {
     { key: EMetricas.ALTURA, value: EMetricas.ALTURA },
     { key: EMetricas.IMC, value: EMetricas.IMC },
     { key: EMetricas.HORAS_DORMIDAS, value: EMetricas.HORAS_DORMIDAS },
+    { key: EMetricas.HIDRATACAO, value: EMetricas.HIDRATACAO },
   ];
 
   const salvar = async () => {
@@ -115,6 +116,7 @@ export default function CadastrarIdoso() {
       const body = {
         idIdoso: Number(idIdoso),
         categoria: metrica.value,
+        valorMaximo: "0",
       };
 
       try {
@@ -194,7 +196,12 @@ export default function CadastrarIdoso() {
               placeholder="Nome"
               style={styles.textInput}
             />
-            <Icon style={styles.requiredIcon} name="asterisk" size={10} color="red" />
+            <Icon
+              style={styles.requiredIcon}
+              name="asterisk"
+              size={10}
+              color="red"
+            />
           </View>
           <View testID="Erro-nome">
             <ErrorMessage show={showErrors} text={erros.nome} />
@@ -215,7 +222,12 @@ export default function CadastrarIdoso() {
               mask={Masks.DATE_DDMMYYYY}
               placeholder="Data de Nascimento"
             />
-            <Icon style={styles.requiredIcon} name="asterisk" size={10} color="red" />
+            <Icon
+              style={styles.requiredIcon}
+              name="asterisk"
+              size={10}
+              color="red"
+            />
           </View>
           <View testID="Erro-data">
             <ErrorMessage show={showErrors} text={erros.dataNascimento} />
@@ -235,7 +247,12 @@ export default function CadastrarIdoso() {
               mask={Masks.BRL_PHONE}
               placeholder="Telefone Responsável"
             />
-            <Icon style={styles.requiredIcon} name="asterisk" size={10} color="red" />
+            <Icon
+              style={styles.requiredIcon}
+              name="asterisk"
+              size={10}
+              color="red"
+            />
           </View>
           <View testID="Erro-telefone">
             <ErrorMessage show={showErrors} text={erros.telefoneResponsavel} />

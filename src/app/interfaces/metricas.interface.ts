@@ -8,11 +8,13 @@ export enum EMetricas {
   ALTURA = "Altura",
   HORAS_DORMIDAS = "Horas Dormidas",
   IMC = "IMC",
+  HIDRATACAO = "Hidratação",
 }
 
 export interface IMetricaBody {
   idIdoso: number;
   categoria: EMetricas;
+  valorMaximo?: string;
 }
 export interface IMetrica extends IMetricaBody {
   id: number;

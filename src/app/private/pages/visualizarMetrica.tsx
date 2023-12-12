@@ -21,8 +21,9 @@ import {
 import Toast from "react-native-toast-message";
 import { FlatList } from "react-native-gesture-handler";
 import ModalMetrica from "../../components/ModalMetrica";
+import ModalMeta from "../../components/ModalMeta";
 import CardValorMetrica from "../../components/CardValorMetrica";
-import { getAllMetrica } from "../../services/metrica.service";
+import { getAllMetrica, updateMetrica } from "../../services/metrica.service";
 
 export default function VisualizarMetrica() {
   const params = useLocalSearchParams() as unknown as IMetrica;
@@ -32,6 +33,9 @@ export default function VisualizarMetrica() {
   const [idoso, setIdoso] = useState<IIdoso>();
   const [showLoading, setShowLoading] = useState(false);
   const [modalVisible, setModalVisible] = useState(false);
+  const [modalMetaVisible, setModalMetaVisible] = useState(false);
+  const [meta, SetMeta] = useState(params.valorMaximo);
+  const [somaMeta, setSomaMeta] = useState(0);
 
   const order: IOrder = {
     column: "dataHora",
@@ -81,6 +85,10 @@ export default function VisualizarMetrica() {
 
   const novoValor = () => {
     setModalVisible(true);
+  };
+
+  const novaMeta = () => {
+    setModalMetaVisible(true);
   };
 
   const salvar = async (valor: string) => {
@@ -189,6 +197,38 @@ export default function VisualizarMetrica() {
     }
   };
 
+  const adicionarMeta = async (valorMaximo: string) => {
+    const body = {
+      valorMaximo: valorMaximo,
+    };
+
+    try {
+      setShowLoading(true);
+      const response = await updateMetrica(params.id, body, token);
+      SetMeta(response.data?.valorMaximo);
+      Toast.show({
+        type: "success",
+        text1: "Sucesso!",
+        text2: response.message as string,
+      });
+      setModalMetaVisible(false);
+      getMetricasValues();
+    } catch (err) {
+      const error = err as { message: string };
+      Toast.show({
+        type: "error",
+        text1: "Erro!",
+        text2: error.message,
+      });
+    } finally {
+      setShowLoading(false);
+    }
+  };
+
+  const limparValorHidratacao = () => {
+    console.log("LIMPOU");
+  };
+
   useEffect(() => {
     getIdoso();
     getMetricasValues();
@@ -217,15 +257,41 @@ export default function VisualizarMetrica() {
             </Text>
           </Pressable>
         )}
+        {params.categoria == EMetricas.HIDRATACAO && (
+          <Pressable style={styles.botaoAdicionarMeta} onPress={novaMeta}>
+            <Text style={styles.textoBotaoAdicionarMeta}>Adicionar meta</Text>
+          </Pressable>
+        )}
         <Pressable style={styles.botaoEditarMetricas} onPress={novoValor}>
           <Icon name="plus" color={"white"} size={20} />
           <Text style={styles.textoBotaoEditarMetricas}>Novo valor</Text>
         </Pressable>
       </View>
-      {/* 
-        {valueMetrica.length == 0 && <Text>foi</Text>}
-        {valueMetrica.length == 0 && <Text>foi</Text>} */}
-
+      <View style={styles.valorMaximoHidratacao}>
+        {params.categoria == EMetricas.HIDRATACAO && (
+          <View>
+            <View
+              style={[
+                styles.valorAtualCotainer,
+                { borderColor: somaMeta >= Number(meta) ? "green" : "#000" },
+              ]}
+            >
+              <Text
+                style={[
+                  styles.valorAtualTexto,
+                  { color: somaMeta >= Number(meta) ? "green" : "#000" },
+                ]}
+              >{`${somaMeta} ml/${meta} ml`}</Text>
+            </View>
+            <Pressable
+              style={styles.botaoLimpar}
+              onPress={limparValorHidratacao}
+            >
+              <Text style={styles.textoBotaoLimpar}>Limpar</Text>
+            </Pressable>
+          </View>
+        )}
+      </View>
       <FlatList
         data={valueMetrica}
         renderItem={({ item }) => (
@@ -242,6 +308,15 @@ export default function VisualizarMetrica() {
         <ModalMetrica
           visible={modalVisible}
           callbackFn={salvar}
+          closeModal={() => setModalVisible(false)}
+          metrica={params}
+          message={params.categoria}
+        />
+      )}
+      {modalMetaVisible && (
+        <ModalMeta
+          visible={modalMetaVisible}
+          callbackFn={adicionarMeta}
           closeModal={() => setModalVisible(false)}
           metrica={params}
           message={params.categoria}
@@ -271,11 +346,30 @@ const styles = StyleSheet.create({
     marginVertical: 10,
   },
 
+  botaoAdicionarMeta: {
+    flexDirection: "row",
+    alignItems: "center",
+    backgroundColor: "#B4026D",
+    paddingHorizontal: 10,
+    paddingVertical: 5,
+    borderRadius: 10,
+    marginVertical: 10,
+    position: "absolute",
+    left: 10,
+  },
+
   textoBotaoEditarMetricas: {
     color: "white",
     fontWeight: "600",
     fontSize: 14,
     marginLeft: 5,
+  },
+  textoBotaoAdicionarMeta: {
+    color: "white",
+    fontWeight: "600",
+    fontSize: 14,
+    marginLeft: 5,
+    padding: 3,
   },
 
   textheader: {
@@ -294,5 +388,28 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     justifyContent: "flex-end",
     marginRight: 10,
+  },
+  valorMaximoHidratacao: {
+    alignItems: "center",
+    marginTop: 15,
+    marginBottom: 15,
+  },
+  valorAtualCotainer: {
+    borderWidth: 1,
+    borderRadius: 10,
+    padding: 5,
+    paddingHorizontal: 15,
+    opacity: 0.7,
+  },
+  valorAtualTexto: {
+    fontSize: 25,
+  },
+  botaoLimpar: {
+    alignItems: "center",
+    marginTop: 10,
+  },
+  textoBotaoLimpar: {
+    fontSize: 15,
+    textDecorationLine: "underline",
   },
 });

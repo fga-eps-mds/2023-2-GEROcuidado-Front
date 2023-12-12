@@ -52,3 +52,27 @@ export const getAllMetrica = async (
 
   return json;
 };
+
+export const updateMetrica = async (
+  id: number,
+  body: Partial<IMetricaBody>,
+  token: string,
+): Promise<IResponse<IMetricaBody | null>> => {
+  const response = await fetch(`${BASE_URL}/${id}`, {
+    method: "PATCH",
+    headers: {
+      Accept: "application/json",
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${token}`,
+    },
+    body: JSON.stringify(body),
+  });
+
+  const json = await response.json();
+
+  if (response.status !== 200) {
+    throw new Error(json.message as string);
+  }
+
+  return json;
+};
