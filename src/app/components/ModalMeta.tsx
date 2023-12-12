@@ -47,7 +47,7 @@ export default function ModalMeta({
     <Modal animationType="fade" transparent={true} visible={visible}>
       <View style={styles.centeredView}>
         <View style={styles.modalView}>
-          <Text style={styles.modalText}>{message}</Text>
+          <Text style={styles.modalText}>Adicionar uma nova meta</Text>
           <View style={styles.modal}>
             {metrica.categoria == EMetricas.HIDRATACAO && (
               <MaterialCommunityIcons

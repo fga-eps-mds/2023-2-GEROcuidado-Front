@@ -113,6 +113,7 @@ export default function VisualizarMetrica() {
       });
       setModalVisible(false);
       getMetricasValues();
+      getHidratacao(token);
     } catch (err) {
       const error = err as { message: string };
       Toast.show({
@@ -322,7 +323,7 @@ export default function VisualizarMetrica() {
         <ModalMeta
           visible={modalMetaVisible}
           callbackFn={adicionarMeta}
-          closeModal={() => setModalVisible(false)}
+          closeModal={() => setModalMetaVisible(false)}
           metrica={params}
           message={params.categoria}
         />
