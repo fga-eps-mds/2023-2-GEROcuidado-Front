@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { View, Text, StyleSheet, ScrollView } from "react-native";
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
 import FontAwesome from "react-native-vector-icons/FontAwesome";
+import { MaterialCommunityIcons } from "@expo/vector-icons";
 import {
   EMetricas,
   IMetrica,
@@ -59,6 +60,9 @@ export default function CardMetrica({ item }: IProps) {
     if (item.categoria == EMetricas.IMC) {
       return "kg/m²";
     }
+    if (item.categoria == EMetricas.HIDRATACAO) {
+      return "ml";
+    }
   };
 
   const icone = () => {
@@ -101,6 +105,11 @@ export default function CardMetrica({ item }: IProps) {
     }
     if (item.categoria == EMetricas.IMC) {
       return <Entypo name="calculator" color={"#000"} size={25} />;
+    }
+    if (item.categoria == EMetricas.HIDRATACAO) {
+      return (
+        <MaterialCommunityIcons name="cup-water" color={"#1075c8"} size={25} />
+      );
     }
   };
 

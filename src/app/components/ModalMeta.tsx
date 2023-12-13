@@ -1,9 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { Modal, StyleSheet, Text, Pressable, View } from "react-native";
 import { EMetricas, IMetrica } from "../interfaces/metricas.interface";
-import Icon from "react-native-vector-icons/MaterialCommunityIcons";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
-import { FontAwesome, Entypo } from "@expo/vector-icons";
 import { TextInput } from "react-native-gesture-handler";
 import ErrorMessage from "./ErrorMessage";
 interface IProps {
@@ -18,7 +16,7 @@ interface IErrors {
   valor?: string;
 }
 
-export default function ModalMetrica({
+export default function ModalMeta({
   visible,
   callbackFn,
   closeModal,
@@ -49,44 +47,8 @@ export default function ModalMetrica({
     <Modal animationType="fade" transparent={true} visible={visible}>
       <View style={styles.centeredView}>
         <View style={styles.modalView}>
-          <Text style={styles.modalText}>{message}</Text>
+          <Text style={styles.modalText}>Adicionar uma nova meta</Text>
           <View style={styles.modal}>
-            {metrica.categoria == EMetricas.FREQ_CARDIACA && (
-              <FontAwesome name="heartbeat" color={"#FF7D7D"} size={60} />
-            )}
-            {metrica.categoria === EMetricas.HORAS_DORMIDAS && (
-              <FontAwesome name="bed" color={"#4B0082"} size={60} />
-            )}
-            {metrica.categoria == EMetricas.GLICEMIA && (
-              <FontAwesome name="cubes" color={"#3F3F3F"} size={60} />
-            )}
-            {metrica.categoria == EMetricas.ALTURA && (
-              <Entypo
-                name="ruler"
-                color={"#000"}
-                size={60}
-                style={{ opacity: 0.8 }}
-              />
-            )}
-            {metrica.categoria == EMetricas.TEMPERATURA && (
-              <FontAwesome name="thermometer" color={"#FFAC7D"} size={60} />
-            )}
-            {metrica.categoria == EMetricas.PRESSAO_SANGUINEA && (
-              <FontAwesome name="tint" color={"#FF7D7D"} size={60} />
-            )}
-            {metrica.categoria == EMetricas.PESO && (
-              <Icon name="scale-bathroom" color={"#B4026D"} size={60} />
-            )}
-            {metrica.categoria == EMetricas.SATURACAO_OXIGENIO && (
-              <View>
-                <Text style={{ fontSize: 60 }}>
-                  O<Text style={{ fontSize: 30 }}>2</Text>
-                </Text>
-              </View>
-            )}
-            {metrica.categoria == EMetricas.IMC && (
-              <Entypo name="calculator" color={"#000"} size={60} />
-            )}
             {metrica.categoria == EMetricas.HIDRATACAO && (
               <MaterialCommunityIcons
                 name="cup-water"

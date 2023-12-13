@@ -13,10 +13,7 @@ import { IUser } from "../../interfaces/user.interface";
 import { IIdoso } from "../../interfaces/idoso.interface";
 import { router } from "expo-router";
 import { postMetrica } from "../../services/metrica.service";
-import {
-  EMetricas,
-  IMetrica,
-} from "../../interfaces/metricas.interface";
+import { EMetricas, IMetrica } from "../../interfaces/metricas.interface";
 import Toast from "react-native-toast-message";
 
 export default function criarMetrica() {
@@ -215,6 +212,13 @@ export default function criarMetrica() {
           "bed",
           "Horas Dormidas",
           "#3F3F3F",
+        )}
+
+        {renderMetricCard(
+          EMetricas.HIDRATACAO,
+          "cup-water",
+          "Hidratação",
+          "#1075c8",
         )}
       </View>
 

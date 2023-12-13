@@ -12,6 +12,8 @@ import { deleteMetricaValue } from "../services/metricaValue.service";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { router } from "expo-router";
 import Toast from "react-native-toast-message";
+import ModalConfirmation from "./ModalConfirmation";
+import { MaterialCommunityIcons } from "@expo/vector-icons";
 
 interface IProps {
   item: IValorMetricaCategoria;
@@ -22,6 +24,7 @@ export default function CardValorMetrica({ item, metrica }: IProps) {
   const [data, setData] = useState("");
   const [hora, setHora] = useState("");
   const [token, setToken] = useState<string>("");
+  const [modalVisible, setModalVisible] = useState(false);
 
   const titleColor = "#000";
   const textColor = "#888";
@@ -60,7 +63,11 @@ export default function CardValorMetrica({ item, metrica }: IProps) {
     if (item.categoria == EMetricas.IMC) {
       return "kg/m²";
     }
+    if (item.categoria == EMetricas.HIDRATACAO) {
+      return "ml";
+    }
   };
+
   const separaDataHora = () => {
     const dataHoraNum = new Date(item.dataHora).getTime();
     const fuso = new Date(item.dataHora).getTimezoneOffset() * 60000;
@@ -113,9 +120,15 @@ export default function CardValorMetrica({ item, metrica }: IProps) {
     if (item.categoria == EMetricas.IMC) {
       return <Entypo name="calculator" color={"#000"} size={25} />;
     }
+    if (item.categoria == EMetricas.HIDRATACAO) {
+      return (
+        <MaterialCommunityIcons name="cup-water" color={"#1075c8"} size={25} />
+      );
+    }
   };
 
   const apagarValor = async () => {
+    setModalVisible(false);
     try {
       await deleteMetricaValue(item.id, token);
       router.replace({
@@ -130,8 +143,15 @@ export default function CardValorMetrica({ item, metrica }: IProps) {
         text2: error.message,
       });
     } finally {
-      
     }
+  };
+
+  const confirmation = () => {
+    setModalVisible(!modalVisible);
+  };
+
+  const closeModal = () => {
+    setModalVisible(false);
   };
 
   useEffect(() => separaDataHora(), []);
@@ -160,7 +180,14 @@ export default function CardValorMetrica({ item, metrica }: IProps) {
           style={styles.apagar}
           size={22}
           color={"#FF7F7F"}
-          onPress={apagarValor}
+          onPress={confirmation}
+        />
+        <ModalConfirmation
+          visible={modalVisible}
+          callbackFn={apagarValor}
+          closeModal={closeModal}
+          message={`Apagar registro ${item.categoria}?`}
+          messageButton="Apagar"
         />
         <View style={styles.dataHora}>
           <Text style={[styles.time, { color: textColor }]}>{data}</Text>

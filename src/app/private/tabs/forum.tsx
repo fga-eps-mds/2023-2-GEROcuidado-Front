@@ -169,7 +169,7 @@ export default function Forum() {
             boxStyles={styles.boxDropDown}
             inputStyles={styles.boxInputDropDown}
             dropdownStyles={styles.dropDown}
-            defaultOption={data[4]}
+            defaultOption={{key: ECategoriaPesquisa.TODAS, value: ECategoriaPesquisa.TODAS}}
             placeholder="Todas"
           />
       </View>
